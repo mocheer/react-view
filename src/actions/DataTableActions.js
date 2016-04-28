@@ -9,10 +9,14 @@ export function loadingAction(url,store){
             newState = {dataProvider:result}
         }else
         {
-            newState = {
-                columns:result.columns,
-                dataProvider:result.dataProvider
-            }  
+            newState = {};
+            var {columns,dataProvider} = result;
+            if(columns!==undefined){
+                newState.columns = columns;
+            }
+            if(dataProvider!==undefined){
+                newState.dataProvider = dataProvider;
+            }
         }
         store.dispatch(loadedAction(newState));
     });

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 export class ComboBox extends Component{
     constructor(props) {
         super(props);
-        var {opened,dataProvider,selectedIndex} = props;
+        var {opened,dataField,dataProvider,selectedIndex} = props;
         var selectedItem;
         if(selectedIndex>0 && selectedIndex<dataProvider){
             selectedItem = dataProvider[selectedIndex];
@@ -12,7 +12,7 @@ export class ComboBox extends Component{
             selectedIndex = 0;
             selectedItem = dataProvider[0];
         }
-        this.state =  {
+        this.state = {
             dataProvider:dataProvider,
             selectedItem:selectedItem,
             selectedIndex:selectedIndex,
@@ -36,22 +36,27 @@ export class ComboBox extends Component{
     }
     render(){
         var {props,state,getItemLabel,handleClick,handleChange} = this;
-        var {dropType} = props;
-        var {opened,dataProvider,selectedItem} = state;
+        var {type} = props;
+        var {opened,dataProvider,selectedIndex,selectedItem} = state;
         var label = getItemLabel(selectedItem);
         var dataList;
         handleClick = handleClick.bind(this);
         if(opened){
             var dataRows = dataProvider.map((data,index)=>{
                 var dataLabel = getItemLabel(data);
-                return  <li key={index} onClick={handleChange.bind(this,event,index)} ><a href="javascript:void(0)" data={index} >{dataLabel}</a></li>
+                var liClass = classNames({
+                    "active":selectedIndex===index,
+                    "disabled":data.disabled
+                })
+                return <li className={liClass} key={index} onClick={handleChange.bind(this,event,index)}  ><a href="javascript:void(0)">{dataLabel}</a></li>
             });
             dataList = <ul className="dropdown-menu" >{dataRows}</ul>;
         }
-        var dropClass = classNames(dropType,{open:opened},"ComboBox");
+        var dropClass = classNames(type,{open:opened},"ComboBox");
+        var btnClass = classNames("btn","btn-default","dropdown-toggle");
         return (
-            <div className={dropClass} style={{display:'inline'}}>
-                <button className="btn btn-default dropdown-toggle" type="button" onClick={handleClick} >
+            <div className={dropClass}>
+                <button className={btnClass} type="button" onClick={handleClick} >
                    {label} <span className="caret"></span>
                 </button>
                 {dataList}
@@ -59,10 +64,10 @@ export class ComboBox extends Component{
         );
     }
 }
-
+//设置默认属性
 ComboBox.defaultProps ={
     selectedIndex:-1,
     dataProvider:[],
     opened:false,
-    dropType:"dropdown"//dropup
-};//设置默认属性
+    type:"dropdown"//dropup
+};

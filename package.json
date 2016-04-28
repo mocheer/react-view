@@ -1,7 +1,7 @@
 {
   "name": "react-view",
   "version": "0.0.1",
-  "author":"mocheer",
+  "author": "mocheer",
   "description": "a collection of components for React",
   "script": {
     "build": "WEBPACK_ENV=build webpack",
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "moment": "^2.14.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-redux": "^4.4.5",

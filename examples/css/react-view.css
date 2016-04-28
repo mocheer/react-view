@@ -4,10 +4,27 @@ html,body{
   height: 100%;
   width: 100%;
 }
-.DataTable th, .DataTable td { 
-    text-align: center; 
-    height:33px;
+.DataTable table{
+  margin-bottom:0px;
+}
+.DataTable bodyContainer{
+  overflow: auto
+}
+.DataTable th{
+  cursor: default;
+  white-space: nowrap;
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+.DataTable td {
+  cursor: pointer;
+  font-size: 12px;
+  vertical-align: middle !important;
+}
+.ComboBox{
+  display:inline;
 }
 .ComboBox .btn{
-    padding:4px 8px;
+  padding:4px 8px;
 }
