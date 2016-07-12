@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>react-view</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/react-view.css" />
+  </head>
+  <body>
+    <div id="app" type="panel" title="山洪灾害系统" >
+        <div  type="pagebox" count="5" ></div>
+        <div  type="advanceddatatable" source="config/data.json" ></div>
+    </div>
+  </body>
+  <script src="js/jquery-1.6.2.js" ></script>
+  <script src="js/react-view.js" ></script>
+  <script>
+      ReactView.render(document.getElementById("app"))
+  </script>
+</html>
