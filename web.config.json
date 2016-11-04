@@ -1,0 +1,7 @@
+{
+    "port": "8576",
+    "fileServer": {
+        "./examples": "/"
+    },
+    "urlServer": "/u/"
+}

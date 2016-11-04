@@ -1,41 +1,34 @@
-import 'babel-polyfill'
 import React from 'react';
 import ReactDOM from 'react-dom';
 //component
-import {AdvancedDataTable} from './components/AdvancedDataTable.js';
-import {DataList} from './components/DataList.js';
-import {ComboBox} from './components/ComboBox.js';
-import {PageBox} from './components/PageBox.js';
+import AdvancedDataTable from './components/AdvancedDataTable';
+import DataList from './components/DataList';
+import ComboBox from './components/ComboBox';
+import Pagination from './components/Pagination';
 //container
-import {Panel} from './containers/Panel.js';
+import Panel from './containers/Panel';
 //
-import {actions} from './ReactActions.js';
-import {stores} from './ReactStores.js';
+import { actions } from './ReactActions';
+import { stores } from './ReactStores';
 //
-import {setGlobal} from './utilities/Global.js';
+import { setGlobal } from './utilities/Global';
 
-var views = {
+let views = {
     advanceddatatable: AdvancedDataTable,
     datalist: DataList,
     combobox: ComboBox,
-    pagebox: PageBox,
+    pagination: Pagination,
     panel: Panel
-}
-//
-var ReactView = {
-    actions: actions,
-    stores: stores,
-    createStores: null,
-    createElement: createElement,
-    render: render
-}
+},
+    ReactView = {
+        actions: actions,
+        stores: stores,
+        createStores: null,
+        createElement: createElement,
+        render: render
+    }
 
-setGlobal({ReactView: ReactView});
-
-//DOMContentLoaded之后执行：等待action和stores的装载
-// document.addEventListener('DOMContentLoaded', function () {
-//     autoRender();
-// });
+setGlobal({ ReactView: ReactView });
 
 function createElement(type, target, props) {
     // get the props config
@@ -94,5 +87,3 @@ function autoRender() {
         }
     }
 }
-
-

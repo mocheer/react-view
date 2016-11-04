@@ -2,7 +2,7 @@ import React,{Component,PropTypes} from 'react'
 /**
  * props{title,content,footer}
  */
-export class Panel extends Component {
+export default class Panel extends Component {
     constructor(props) {
         super(props);
     }
@@ -27,4 +27,3 @@ export class Panel extends Component {
         );
     }
 }
-

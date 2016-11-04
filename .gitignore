@@ -1,7 +1,4 @@
 # Build and Release Folders
 node_modules/
-main.exe
-
-# TideForecast
-TideForecast.js
-
+examples/libs/data/
+apps/

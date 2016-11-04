@@ -1,6 +1,7 @@
 import React,{Component,PropTypes} from 'react'
+import classNames from 'classnames'
 //TODO action
-export class PageBox extends Component{
+export default class Pagination extends Component{
     constructor(props) {
          super(props)
          this.state =  {
@@ -44,9 +45,12 @@ export class PageBox extends Component{
                 pageIndexs.push(li)
             }
         }
+        const ulClass = classNames("pagination",
+            {"pagination-lg":false},
+            {"pagination-sm":false})
         return (
            <nav>
-                <ul className="pagination">
+                <ul className={ulClass}>
                     <li><a href="javascript:void(0)" onClick={handleBack.bind(this)}><span>&laquo;</span></a></li>
                     {pageIndexs}
                     <li><a href="javascript:void(0)" onClick={handleForward.bind(this)}><span>&raquo;</span></a></li>

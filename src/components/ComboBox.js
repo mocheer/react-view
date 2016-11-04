@@ -1,7 +1,7 @@
 import React,{Component,PropTypes} from 'react'
-import classNames from 'classnames';
+import classNames from 'classnames'
 //TODO action
-export class ComboBox extends Component{
+export default class ComboBox extends Component{
     constructor(props) {
         super(props);
         var {opened,dataField,dataProvider,selectedIndex} = props;

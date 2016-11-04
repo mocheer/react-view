@@ -3,7 +3,7 @@ import React,{Component,PropTypes} from 'react'
  * actions:{loadingAction,clickAction}
  * store
  */
-export class DataList extends Component{
+export default class DataList extends Component{
     constructor(props) {
         super(props)
         this.state = {

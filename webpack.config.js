@@ -1,30 +1,30 @@
-var webpack = require('webpack');  
+var webpack = require('webpack');
 module.exports = {
     entry: {
         // "react-view":'./src/ReactView.js',
-        "TideForecast":"./apps/TideForecast.js"
+        "typhoon": "./apps/typhoon.js"
     },
     output: {
         path: __dirname,
-        filename: 'examples/js/[name].js'
+        filename: 'examples/libs/js/[name].js'
     },
     resolve: {
-        extensions: ['','.js', '.jsx']
+        extensions: ['', '.js', '.jsx']
     },
     module: {
-       loaders: [
-            {
-                 test: /\.js(x)?$/,
-                 exclude: /(node_modules|bower_components)/,//npm,bower
-                 loader: 'babel-loader'
-            }
-        ],
-        postLoaders: [
+        loaders: [
             {
                 test: /\.js(x)?$/,
-                loaders: ['es3ify-loader']
+                exclude: /(node_modules|bower_components)/,//npm,bower
+                loader: 'babel-loader'
             }
-        ]
+        ],
+        // postLoaders: [
+        //     {
+        //         test: /\.js(x)?$/,
+        //         loaders: ['es3ify-loader']
+        //     }
+        // ]
     },
     plugins: [
         // new webpack.optimize.OccurenceOrderPlugin(),//维持构建编译代码

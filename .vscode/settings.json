@@ -1,5 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     "files.autoSave":"onFocusChange",
-    "editor.wrappingColumn": 200
+    "editor.wrappingColumn": 200,
+    "typescript.check.workspaceVersion": false
 }
