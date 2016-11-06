@@ -1,2 +1,2 @@
 # react-view
-    React component
+React component
