@@ -19820,7 +19820,8 @@
 
 	        _this.state = {
 	            dataProvider: props.dataProvider,
-	            columns: props.columns
+	            columns: props.columns,
+	            selItems: []
 	        };
 	        return _this;
 	    }
@@ -19880,8 +19881,7 @@
 	            ths = nths;
 	        }
 	        for (var _i = 0; _i < columnCount; _i++) {
-	            var tdw = _i === 0 ? tds[_i].offsetWidth - 1 : tds[_i].offsetWidth;
-	            ths[_i].style.width = tdw + 'px';
+	            ths[_i].width = tds[_i].offsetWidth;
 	        }
 	    };
 	    /**
@@ -19958,8 +19958,9 @@
 	     */
 
 
-	    AdvancedDataTable.prototype.createRows = function createRows(columns, dataProvider, onItemClick, labelFunc) {
-	        var dataRows = void 0;
+	    AdvancedDataTable.prototype.createRows = function createRows(columns, dataProvider, onItemClick) {
+	        var dataRows = void 0,
+	            labelFunc = this.labelFunc.bind(this);
 	        if (dataProvider) {
 	            dataRows = dataProvider.map(function (data, rowid) {
 	                var dataColumns = columns.map(function (column, columnid) {
@@ -19976,6 +19977,7 @@
 	                    }
 	                    switch (type) {
 	                        case "group":
+	                            //将同一组的数据合并成一行（前提是已经按序排列）
 	                            if (rowid === 0 || dataProvider[rowid - 1][dataField] !== label) {
 	                                var rowSpan = 1;
 	                                var rowCount = dataProvider.length;
@@ -20012,6 +20014,19 @@
 	        return dataRows;
 	    };
 
+	    AdvancedDataTable.prototype.onCheck = function onCheck(column, data) {
+	        var checked = data.checked = !data.checked;
+	        var state = this.state;
+	        var index = state.selItems.indexOf(data);
+	        if (checked && index === -1) {
+	            state.selItems.push(data);
+	        } else if (!checked && index !== -1) {
+	            state.selItems.splice(index, 1);
+	        }
+	        column.onChange(column, data, state.selItems);
+	        this.setState({});
+	    };
+
 	    /**
 	    * 格式化
 	    */
@@ -20020,6 +20035,9 @@
 	    AdvancedDataTable.prototype.labelFunc = function labelFunc(data, rowid, column, dataField) {
 	        var label;
 	        switch (column.f) {
+	            case "check":
+	                label = _react2.default.createElement('input', { type: 'checkbox', checked: data.checked, onChange: this.onCheck.bind(this, column, data) });
+	                break;
 	            case "toFixed":
 	                label = data[dataField] && label.toFixed(column.format);
 	                break;
@@ -20052,9 +20070,6 @@
 	    AdvancedDataTable.prototype.render = function render() {
 	        var props = this.props;
 	        var state = this.state;
-	        var createHeader = this.createHeader;
-	        var createRows = this.createRows;
-	        var labelFunc = this.labelFunc;
 	        var columns = state.columns;
 	        var dataProvider = state.dataProvider;
 	        var height = props.height;
@@ -20063,29 +20078,33 @@
 	        if (!columns) {
 	            return null;
 	        }
-	        var headerRows = createHeader(columns, props),
-	            dataRows = createRows(columns, dataProvider, onItemClick, labelFunc),
+
+	        var headerRows = this.createHeader(columns, props),
+	            dataRows = this.createRows(columns, dataProvider, onItemClick),
 	            tableClass = (0, _classnames2.default)("table", { "table-hover": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
 	            bodyStyle = {};
 	        if (height) {
 	            bodyStyle.height = height - 25 * headerRows.length;
-	            bodyStyle.overflow = 'auto';
 	        }
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'table-responsive DataTable' },
 	            _react2.default.createElement(
-	                'table',
-	                { className: tableClass },
+	                'div',
+	                { className: 'tableheader' },
 	                _react2.default.createElement(
-	                    'thead',
-	                    { ref: 'header' },
-	                    headerRows
+	                    'table',
+	                    { className: tableClass },
+	                    _react2.default.createElement(
+	                        'thead',
+	                        { ref: 'header' },
+	                        headerRows
+	                    )
 	                )
 	            ),
 	            _react2.default.createElement(
 	                'div',
-	                { className: 'bodyContainer', style: bodyStyle },
+	                { className: 'tablebody', style: bodyStyle },
 	                _react2.default.createElement(
 	                    'table',
 	                    { className: tableClass },

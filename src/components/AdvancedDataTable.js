@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-import moment from 'moment'
+// import moment from 'moment'
 /**
  * column {dataField,headerText,type,width,group}
  * actions:{loadingAction,clickAction}
@@ -11,7 +11,8 @@ export default class AdvancedDataTable extends Component {
         super(props);
         this.state = {
             dataProvider: props.dataProvider,
-            columns: props.columns
+            columns: props.columns,
+            selItems: [],
         };
     }
     componentDidMount() {
@@ -106,7 +107,7 @@ export default class AdvancedDataTable extends Component {
     /**
      * 创建数据行
      */
-    createRows(columns, dataProvider, onItemClick) {
+    createRows(columns, dataProvider, onItemClick, onItemOver) {
         let dataRows,
             labelFunc = this.labelFunc.bind(this)
         if (dataProvider) {
@@ -117,9 +118,6 @@ export default class AdvancedDataTable extends Component {
                         tdProps = { key: columnid };
                     if (style) {
                         tdProps.style = style;
-                    }
-                    if (onItemClick) {
-                        tdProps.onClick = onItemClick.bind(data);
                     }
                     switch (type) {
                         case "group"://将同一组的数据合并成一行（前提是已经按序排列）
@@ -140,14 +138,29 @@ export default class AdvancedDataTable extends Component {
                         default:
                             return <td {...tdProps} >{label}</td>
                     }
-                });
-                return <tr key={rowid}   >{dataColumns}</tr>
+                }),
+                    trProps = { key: rowid }
+                onItemClick && (trProps.onClick = onItemClick.bind(data, data, rowid));
+                onItemOver && (trProps.onMouseOver = onItemOver.bind(data, data, rowid));
+                return <tr {...trProps} >{dataColumns}</tr>
             });
         }
         return dataRows;
     }
 
-
+    onCheck(column, data) {
+        var checked = data.checked = !data.checked,
+            {state} = this,
+            {selItems} = state,
+            index = selItems.indexOf(data);
+        if (checked && index === -1) {
+            state.selItems.push(data)
+        } else if (!checked && index !== -1) {
+            state.selItems.splice(index, 1)
+        }
+        column.onChange(data, column, selItems)
+        this.setState({})
+    }
 
     /**
     * 格式化
@@ -156,13 +169,7 @@ export default class AdvancedDataTable extends Component {
         var label;
         switch (column.f) {
             case "check":
-                var onCheck = evt => {
-                    data.checked = !data.checked;
-                    column.onCheck(evt, data)
-                    this.setState({})
-                },
-                    label = <input type="checkbox" checked={data.checked} onChange={onCheck} />
-                data.checked && column.onCheck(null, data)
+                label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, column, data)} />
                 break;
             case "toFixed":
                 label = data[dataField] && label.toFixed(column.format)
@@ -191,13 +198,13 @@ export default class AdvancedDataTable extends Component {
     render() {
         var {props, state} = this,
             {columns, dataProvider} = state,
-            {height, onItemClick} = props;
+            {height, onItemClick, onItemOver} = props;
         if (!columns) {
             return null;
         }
 
         var headerRows = this.createHeader(columns, props),
-            dataRows = this.createRows(columns, dataProvider, onItemClick),
+            dataRows = this.createRows(columns, dataProvider, onItemClick, onItemOver),
             tableClass = classNames("table", { "table-hover": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
