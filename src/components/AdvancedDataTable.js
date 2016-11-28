@@ -13,6 +13,7 @@ export default class AdvancedDataTable extends Component {
             dataProvider: props.dataProvider,
             columns: props.columns,
             selItems: [],
+            // selIndex:-1,
         };
     }
     componentDidMount() {
@@ -107,7 +108,7 @@ export default class AdvancedDataTable extends Component {
     /**
      * 创建数据行
      */
-    createRows(columns, dataProvider, onItemClick, onItemOver) {
+    createRows(columns, dataProvider, selIndex) {
         let dataRows,
             labelFunc = this.labelFunc.bind(this)
         if (dataProvider) {
@@ -140,8 +141,7 @@ export default class AdvancedDataTable extends Component {
                     }
                 }),
                     trProps = { key: rowid }
-                onItemClick && (trProps.onClick = onItemClick.bind(data, data, rowid));
-                onItemOver && (trProps.onMouseOver = onItemOver.bind(data, data, rowid));
+                selIndex === rowid && (trProps.className = 'info')
                 return <tr {...trProps} >{dataColumns}</tr>
             });
         }
@@ -160,6 +160,37 @@ export default class AdvancedDataTable extends Component {
         }
         column.onChange(data, column, selItems)
         this.setState({})
+    }
+
+    getEventInfo(event) {
+        var info = {},
+            {props, state} = this,
+            {dataProvider} = state,
+            {reverse} = props,
+            td = event.target,
+            rowid = td.parentElement.rowIndex;
+        if(!dataProvider){
+            return {}
+        }
+        info.target = td;
+        info.rowid = rowid;
+        info.dataProvider = dataProvider;
+        info.index = reverse ? dataProvider.length - 1 - rowid : rowid;
+        info.data = dataProvider[info.index];
+        return info
+    }
+
+    onTableClick(event) {
+        var info = this.getEventInfo(event),
+            {onItemClick} = this.props
+        onItemClick && onItemClick(info)
+        this.setState({ selIndex: info.index })
+    }
+
+    onTableOver(event) {
+        var info = this.getEventInfo(event),
+            {onItemOver} = this.props
+        onItemOver && onItemOver(info)
     }
 
     /**
@@ -196,20 +227,20 @@ export default class AdvancedDataTable extends Component {
         return label;
     }
     render() {
-        var {props, state} = this,
-            {columns, dataProvider} = state,
-            {height, onItemClick, onItemOver} = props;
-        if (!columns) {
+        var {props, state, onTableClick, onTableOver} = this,
+            {columns, dataProvider, selIndex} = state,
+            {height,reverse} = props;
+        if (!columns ) {
             return null;
         }
-
         var headerRows = this.createHeader(columns, props),
-            dataRows = this.createRows(columns, dataProvider, onItemClick, onItemOver),
-            tableClass = classNames("table", { "table-hover": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
+            dataRows = this.createRows(columns, dataProvider, selIndex),
+            tableClass = classNames("table", {"table-hover": true },{"table-condensed":true},{ "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
-            bodyStyle.height = height - 25 * headerRows.length;
+            bodyStyle.height = height - 33 * headerRows.length;//减去头部高度
         }
+        reverse && dataRows && dataRows.reverse()
         return (
             <div className="table-responsive DataTable">
                 <div className="tableheader" >
@@ -217,7 +248,7 @@ export default class AdvancedDataTable extends Component {
                         <thead ref="header">{headerRows}</thead>
                     </table>
                 </div>
-                <div className="tablebody" style={bodyStyle}>
+                <div className="tablebody" onClick={onTableClick.bind(this)} onMouseOver={onTableOver.bind(this)} style={bodyStyle}>
                     <table className={tableClass} >
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>

@@ -18,26 +18,27 @@ export default class NavTab extends Component {
             {height,children} = props,
             {selIndex} = state,
             list = [],
-            selectedItem
+            selItem
 
         children.length || (children = [children])
         for (let i = 0, l = children.length, item, li, label; i < l; i++) {
             item = children[i]
-            label = <a href="#">{item.props.label}</a>
+            label = <a href="#">{ (l===1 && state.label ) || item.props.label}</a>
             if (i === selIndex) {
-                selectedItem = item;
+                selItem = item;
                 li = <li key={i} className="active" >{label}</li>
             } else {
                 li = <li key={i} onClick={onClick.bind(this, i)} >{label}</li>
             }
             list.push(li)
         }
+       
         return (
             <div className="NavTab" style={{height:height || 50}}>
                 <ul className="nav nav-tabs Tabs" >
                     {list}
                 </ul>
-                {selectedItem}
+                {selItem}
             </div>
         );
     }

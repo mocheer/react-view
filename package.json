@@ -5,8 +5,8 @@
   "description": "a collection of components for React",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack --progress --colors --watch"
+    "dev": "set task=dev&&webpack --progress --colors --watch",
+    "build": "set task=build&&webpack"
   },
   "dependencies": {
     "classnames": "^2.2.5",
