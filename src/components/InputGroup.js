@@ -1,7 +1,7 @@
 import React,{Component,PropTypes} from 'react'
 import classNames from 'classnames';
 //{text}
-export class InputGroup extends Component{
+export default class InputGroup extends Component{
     constructor(props) {
          super(props)
     }

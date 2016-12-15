@@ -1,6 +1,7 @@
 import React,{Component,PropTypes} from 'react'
 import classNames from 'classnames'
 //TODO action
+//divider 分割
 export default class ComboBox extends Component{
     constructor(props) {
         super(props);
@@ -12,6 +13,7 @@ export default class ComboBox extends Component{
             selectedIndex = 0;
             selectedItem = dataProvider[0];
         }
+        console.log(dataProvider)
         this.state = {
             dataProvider:dataProvider,
             selectedItem:selectedItem,
@@ -54,6 +56,7 @@ export default class ComboBox extends Component{
         }
         var dropClass = classNames(type,{open:opened},"ComboBox");
         var btnClass = classNames("btn","btn-default","dropdown-toggle");
+        
         return (
             <div className={dropClass}>
                 <button className={btnClass} type="button" onClick={handleClick} >

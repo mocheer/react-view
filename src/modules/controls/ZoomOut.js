@@ -12,12 +12,9 @@ export default class ZoomOut extends Component {
         mapbox.zoomBy(-1)
     }
     render() {
-        let {onClick} = this,
-            styl = {
-                paddingLeft:5
-            }
+        let {onClick} = this
         return (
-            <span className="glyphicon glyphicon-minus" style={styl} onClick={onClick.bind(this)} ></span>
+            <i className="fa fa-minus"  onClick={onClick.bind(this)} />
         )
     }
 }

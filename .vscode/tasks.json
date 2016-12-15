@@ -7,6 +7,20 @@
     "showOutput": "always",
     "suppressTaskName": true,
     "tasks": [
+         {
+            "taskName": "run&start",
+            "args": [
+                "run",
+                "run-start"
+            ]
+        },
+        {
+            "taskName": "start",
+            "args": [
+                "run",
+                "start"
+            ]
+        },
         {
             "taskName": "dev",
             "args": [
@@ -19,6 +33,20 @@
             "args": [
                 "run",
                 "build"
+            ]
+        },
+        {
+            "taskName": "build-css",
+            "args": [
+                "run",
+                "build-css"
+            ]
+        },
+        {
+            "taskName": "build&watch",
+            "args": [
+                "run",
+                "buildwatch"
             ]
         }
     ]

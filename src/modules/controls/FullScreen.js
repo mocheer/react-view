@@ -1,15 +1,39 @@
 import React, { Component, PropTypes } from 'react'
+import classNames from 'classnames'
 /**
  * 
  */
 export default class Panel extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isFullscreen: false
+        }
+        // var container = document.getElementById('trunk');
+        // container.addEventListener('mozfullscreenchange', () => {
+        //     console.log('mozfullscreenchange')
+        //     this.setState({
+        //         isFullscreen: isFullscreen
+        //     })
+        // });
+        // container.addEventListener('webkitfullscreenchange',  () => {
+        //     console.log('webkitfullscreenchange')
+        //     this.setState({
+        //         isFullscreen: isFullscreen
+        //     })
+        // });
+        // container.addEventListener('fullscreenchange',  () => {
+        //       console.log('fullscreenchange')
+        //     this.setState({
+        //         isFullscreen: isFullscreen
+        //     })
+        // });
+
     }
-    
+
     onClick() {
-        // let {isFullscreen} = this.state;
-        let isFullscreen =  window.document.body.clientHeight == window.screen.height
+        let {isFullscreen} = this.state;
+        // let isFullscreen =  window.document.body.clientHeight == window.screen.height
         if (isFullscreen) {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
@@ -21,7 +45,7 @@ export default class Panel extends Component {
                 document.msExitFullscreen();
             }
         } else {
-            var container = document.getElementById('trunk')
+            var container = document.getElementById('trunk');
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.mozRequestFullScreen) {
@@ -30,13 +54,18 @@ export default class Panel extends Component {
                 container.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
             } else if (container.msRequestFullscreen) {
                 container.msRequestFullscreen();
-            } 
+            }
         }
+        this.setState({
+            isFullscreen: !isFullscreen
+        })
     }
     render() {
-        let {onClick} = this
+        let {state, onClick} = this,
+            {isFullscreen} = state,
+            className = classNames('fa', isFullscreen ? 'fa-compress' : 'fa-expand');
         return (
-            <span className="glyphicon glyphicon-fullscreen" onClick={onClick.bind(this)} ></span>
+            <i className={className} onClick={onClick.bind(this)} />
         )
     }
 }

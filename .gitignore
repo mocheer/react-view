@@ -3,3 +3,4 @@ node_modules/
 examples/libs/data/
 apps/
 typings/
+*.exe

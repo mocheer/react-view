@@ -32,7 +32,8 @@ export default class NavTab extends Component {
             }
             list.push(li)
         }
-       
+        //nav-pills 胶囊式标签页  nav-stacked 垂直排列  nav-justified 同等宽度
+        //nav-tabs
         return (
             <div className="NavTab" style={{height:height || 50}}>
                 <ul className="nav nav-tabs Tabs" >

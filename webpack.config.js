@@ -55,15 +55,15 @@ switch (env.task) {
 module.exports = {
     entry: {
         // "react-view":'./src/ReactView.js',
-        //  "controlbox": "./src/apps/ControlBox.js"
-        "typhoon": "./src/apps/Typhoon.js",
-       
+        "typhoon/typhoon": "./src/apps/Typhoon.js",
+        "controlbox": "./src/apps/ControlBox.js",
+        "contextmenu": "./src/apps/ContextMenu.js",
+        "legendbox": "./src/apps/LegendBox.js",
     },
     output: {
         path: dir,
-        //filename: 'examples/libs/js/[name].js'
-        // filename:'../trunk-map/examples/libs/leaves/[name].js'
-        filename:'../trunk-map/examples/libs/leaves/typhoon/[name].js'
+        // filename: 'examples/libs/js/[name].js',
+        filename:'../trunk-map/examples/libs/leaves/[name].js',
     },
     externals: {
         'react': 'React',

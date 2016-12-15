@@ -14,7 +14,7 @@ export default class ZoomIn extends Component {
     render() {
         let {onClick} = this
         return (
-            <span className="glyphicon glyphicon-plus" onClick={onClick.bind(this)} ></span>
+            <i className="fa fa-plus" onClick={onClick.bind(this)} />
         )
     }
 }

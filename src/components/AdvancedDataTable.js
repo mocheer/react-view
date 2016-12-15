@@ -12,7 +12,7 @@ export default class AdvancedDataTable extends Component {
         this.state = {
             dataProvider: props.dataProvider,
             columns: props.columns,
-            selItems: [],
+            // selItems: [],
             // selIndex:-1,
         };
     }
@@ -149,15 +149,15 @@ export default class AdvancedDataTable extends Component {
     }
 
     onCheck(column, data) {
-        var checked = data.checked = !data.checked,
+        let checked = data.checked = !data.checked,
             {state} = this,
-            {selItems} = state,
-            index = selItems.indexOf(data);
-        if (checked && index === -1) {
-            state.selItems.push(data)
-        } else if (!checked && index !== -1) {
-            state.selItems.splice(index, 1)
+            {dataProvider} = state,
+            selItems = []
+        for(let i=0,l=dataProvider.length,item;i<l;i++){
+           item = dataProvider[i];
+           item!==data && item.checked && selItems.push(item)
         }
+        checked && selItems.push(data)
         column.onChange(data, column, selItems)
         this.setState({})
     }
@@ -168,11 +168,13 @@ export default class AdvancedDataTable extends Component {
             {dataProvider} = state,
             {reverse} = props,
             td = event.target,
-            rowid = td.parentElement.rowIndex;
+            columnid = td.cellIndex, //
+            rowid = td.parentElement.rowIndex;//td.parentElement = tr
         if(!dataProvider){
             return {}
         }
         info.target = td;
+        info.columnid = columnid;
         info.rowid = rowid;
         info.dataProvider = dataProvider;
         info.index = reverse ? dataProvider.length - 1 - rowid : rowid;

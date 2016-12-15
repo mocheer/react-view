@@ -45,10 +45,6 @@ html,body{
   padding:4px 8px;
 }
 
-/*.NavTab {
-  background-color: #5190C7;
-}*/
-
 .NavTab li{
   margin: 5px 0px 0px 0px;
 }
@@ -63,6 +59,12 @@ html,body{
   padding:4px 8px
 }
 
+.ContextMenu li{
+   /*padding:10px 15px*/
+  padding:2px 8px;
+  cursor:pointer;
+}
+
 .ControlBox{
     cursor:pointer;
     font-size: 14px;
@@ -71,12 +73,12 @@ html,body{
     border-radius: 2px; 
 }
 
-.ControlBox span{
+.ControlBox i{
   border-bottom: solid 1px #ccc;
   padding: 7px 6px;
   display: block
 }
-.ControlBox span:hover{
+.ControlBox i:hover{
     background-color: rgba(204,204,204,0.5)
 }
 
@@ -84,3 +86,26 @@ html,body{
   padding-left: 5px;
   background-color: #5190C7
 }
+
+.Panel{
+  margin-bottom:1px;
+}
+
+.Panel .panel-heading{
+  cursor:pointer;
+  padding: 3px;
+}
+
+.Panel .panel-body{
+  padding:5px
+}
+.TimeSlider{
+  position: absolute;
+  left:0;
+  bottom:0
+}
+
+.Toggle{
+  cursor: pointer
+}
+

@@ -1,6 +1,6 @@
 import React,{Component,PropTypes} from 'react'
 
-export  class TextArea extends Component {
+export default class TextArea extends Component {
     constructor(props) {
         super(props);
     }

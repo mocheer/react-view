@@ -1,6 +1,6 @@
 import React,{Component,PropTypes} from 'react'
 //TODO
-export class thumbnail extends Component{
+export default class thumbnail extends Component{
     constructor(props) {
          super(props)
          this.state = {

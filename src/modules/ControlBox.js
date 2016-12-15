@@ -13,11 +13,11 @@ export default class ControlBox extends Component {
 
     render() {
         let {props} = this,
-            {mapbox,showZoom,showFullScreen,showModuleExpand} = props,
+            {mapbox, showZoom, showFullScreen, showModuleExpand} = props,
             controls = [];
-        showZoom && controls.push(<ZoomIn mapbox={mapbox}/>,<ZoomOut mapbox={mapbox}/>)
+        showZoom && controls.push(<ZoomIn mapbox={mapbox} />, <ZoomOut mapbox={mapbox} />)
         showFullScreen && controls.push(<FullScreen />)
-        showModuleExpand && controls.push(<ModuleExpand/>)
+        showModuleExpand && controls.push(<ModuleExpand />)
         return (
             <div className='ControlBox'>
                 {controls}
@@ -27,8 +27,8 @@ export default class ControlBox extends Component {
 }
 
 //设置默认属性
-ControlBox.defaultProps ={
-    showZoom:true,
-    showFullScreen:true,
-    showModuleExpand:true,
+ControlBox.defaultProps = {
+    showZoom: true,
+    showFullScreen: true,
+    showModuleExpand: true,
 };
