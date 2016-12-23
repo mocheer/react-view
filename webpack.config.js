@@ -23,7 +23,7 @@ var plugins = [
 
     //维持构建编译代码
     // new webpack.optimize.OccurenceOrderPlugin(),
-    
+
     //热替换,不用刷新页面，可用于生产环境 webpack-dev-server
     // new webpack.HotModuleReplacementPlugin(),
 
@@ -51,19 +51,21 @@ switch (env.task) {
         break;
 }
 
-
 module.exports = {
     entry: {
         // "react-view":'./src/ReactView.js',
+        "mapnav": "./src/apps/MapNav.js",
         "typhoon/typhoon": "./src/apps/Typhoon.js",
         "controlbox": "./src/apps/ControlBox.js",
-        "contextmenu": "./src/apps/ContextMenu.js",
-        "legendbox": "./src/apps/LegendBox.js",
+        "widgets": "./src/apps/Widgets.js",
+        // "tooltip": "./src/apps/ToolTip.js",
+        // "contextmenu": "./src/apps/ContextMenu.js",
+        // "legendbox": "./src/apps/LegendBox.js",
     },
     output: {
         path: dir,
         // filename: 'examples/libs/js/[name].js',
-        filename:'../trunk-map/examples/libs/leaves/[name].js',
+        filename: '../trunk-map/trunk-map-example/libs/leaves/[name].js',
     },
     externals: {
         'react': 'React',
@@ -80,12 +82,12 @@ module.exports = {
                 loader: 'babel-loader'
             }
         ],
-        postLoaders: [
-            {
-                test: /\.js(x)?$/,
-                loaders: ['es3ify-loader']
-            }
-        ]
+        // postLoaders: [
+        //     {
+        //         test: /\.js(x)?$/,
+        //         loaders: ['es3ify-loader']
+        //     }
+        // ]
     },
     plugins: plugins
 }

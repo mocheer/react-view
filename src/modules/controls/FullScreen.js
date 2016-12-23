@@ -9,7 +9,7 @@ export default class Panel extends Component {
         this.state = {
             isFullscreen: false
         }
-        // var container = document.getElementById('trunk');
+        // var container =  T.fork();
         // container.addEventListener('mozfullscreenchange', () => {
         //     console.log('mozfullscreenchange')
         //     this.setState({
@@ -45,7 +45,7 @@ export default class Panel extends Component {
                 document.msExitFullscreen();
             }
         } else {
-            var container = document.getElementById('trunk');
+            var container = T.fork();
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.mozRequestFullScreen) {
@@ -65,7 +65,7 @@ export default class Panel extends Component {
             {isFullscreen} = state,
             className = classNames('fa', isFullscreen ? 'fa-compress' : 'fa-expand');
         return (
-            <i className={className} onClick={onClick.bind(this)} />
+            <i className={className} data-label='全屏' onClick={onClick.bind(this)} />
         )
     }
 }

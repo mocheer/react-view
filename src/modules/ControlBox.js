@@ -11,15 +11,31 @@ export default class ControlBox extends Component {
         super(props);
     }
 
+    onOver(e) {
+        let {target, currentTarget} = e
+        if (target !== currentTarget) {
+            let dataset = target.dataset,
+                label = dataset.label;
+            label && T.emit('tooltip', {
+                label: label,
+                placement: 'left',
+                target: e.target
+            })
+        }
+    }
+    onOut() {
+        T.emit('tooltip', {hide:true})
+    }
+
     render() {
         let {props} = this,
-            {mapbox, showZoom, showFullScreen, showModuleExpand} = props,
+            {showZoom, showFullScreen, showModuleExpand} = props,   
             controls = [];
-        showZoom && controls.push(<ZoomIn mapbox={mapbox} />, <ZoomOut mapbox={mapbox} />)
+        showZoom && controls.push(<ZoomIn />, <ZoomOut />)
         showFullScreen && controls.push(<FullScreen />)
         showModuleExpand && controls.push(<ModuleExpand />)
         return (
-            <div className='ControlBox'>
+            <div className='ControlBox' onMouseOver={this.onOver} onMouseOut={this.onOut}>
                 {controls}
             </div>
         )

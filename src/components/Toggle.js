@@ -29,13 +29,11 @@ export default class Toggle extends Component {
     }
 
     createImg(data,style,onClick) {
-        let className = classNames('Toggle')
-        return <img className={className} style={style}  src={data} onClick={onClick} />
+        return <img role='button' style={style}  src={data} onClick={onClick} />
     }
 
     createI(data,style,onClick) {
-        let className = classNames('Toggle',data)
-        return <i className={className} style={style} onClick={onClick} />
+        return <i role='button' className={data} style={style} onClick={onClick} />
     }
 
     render() {

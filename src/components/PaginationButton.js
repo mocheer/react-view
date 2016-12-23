@@ -10,7 +10,7 @@ export default class PaginationButton extends Component{
         const liClass = classNames({active,disabled})
         return (
             <li className={liClass}>
-                <a href="javascript:void(0)" onClick={onClick} >
+                <a role='button' onClick={onClick} >
                     <span >{label}</span>
                 </a>
             </li>

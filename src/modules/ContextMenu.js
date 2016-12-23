@@ -43,30 +43,18 @@ export default class ContextMenu extends Component {
         }
     }
 
-    onItemOver(e) {
-        for (let i = 0, menuitem; ; i++) {
-            menuitem = this.refs[i]
-            if (!menuitem) {
-                return;
-            }
-            if (e.target === menuitem) {
-                this.setState({ selIndex: i })
-            }
-        }
-    }
-
     onZoomIn(e) {
-        let {mapbox} = this.props;
+        let mapbox = T.get('mapbox');
         mapbox.zoomBy(1)
     }
 
     onZoomOut(e) {
-        let {mapbox} = this.props;
+        let mapbox = T.get('mapbox');
         mapbox.zoomBy(-1)
     }
 
     onPan(e) {
-        let {mapbox} = this.props,
+        let mapbox = T.get('mapbox'),
             {map} = mapbox,
             ScreenPoint = esri.geometry.ScreenPoint,
             point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
@@ -74,29 +62,30 @@ export default class ContextMenu extends Component {
     }
 
     showQRcode() {
-        let {mapbox} = this.props,
-            w = mapbox.box.clientWidth,
-            h = mapbox.box.clientHeight,
+        let mapbox = T.fork('mapbox'),
+            w = mapbox.clientWidth,
+            h = mapbox.clientHeight,
             outter = {
+                zIndex:999, // leaflet需要这样做
                 position: 'fixed',
-                margin:'auto',
+                margin: 'auto',
                 top: 0,
                 left: 0,
-                bottom:0,
-                right:0,
-                backgroundColor:'rgba(119,119,119,0.5)'
+                bottom: 0,
+                right: 0,
+                backgroundColor: 'rgba(119,119,119,0.5)'
             },
             inner = {
                 position: 'absolute',
-                top: h*0.5-128,
-                left: w*0.5-256,
-                width:280,
-                height:280,
-                padding:12,
-                backgroundColor:'#FFF'
+                top: h * 0.5 - 128,
+                left: w * 0.5 - 128,
+                width: 280,
+                height: 280,
+                padding: 12,
+                backgroundColor: '#FFF'
             },
-            onClick = ()=>{
-                this.setState({render:null})
+            onClick = () => {
+                this.setState({ render: null })
             }
         this.setState({
             render: (
@@ -115,13 +104,13 @@ export default class ContextMenu extends Component {
         let itemProps = {},
             children = [],
             label;
-        itemProps.className = classNames('list-group-item',{active:data.active});
+        itemProps.className = classNames('list-group-item', { active: data.active });
         //字形
         data.i && children.push(<i className={data.i} />)
         //文本
-        if(data.link){
-            label = <a href={data.link} target='_blank'> {data.label}</a>
-        }else{
+        if (data.link) {
+            label = <a role="button" href={data.link} target='_blank'> {data.label}</a>
+        } else {
             label = data.label;
             itemProps.onMouseOver = data.onMouseOver;
             itemProps.onClick = data.onMouseonClickOver;
@@ -133,8 +122,8 @@ export default class ContextMenu extends Component {
 
     render() {
         let {state} = this,
-            {render, selIndex, point,dataProvider} = state;
-        if (!point ) {//|| !dataProvider
+            {render, selIndex, point, dataProvider} = state;
+        if (!point) {//|| !dataProvider
             return null;
         }
         if (render) {
@@ -143,45 +132,42 @@ export default class ContextMenu extends Component {
         let styl = {
             position: 'absolute',
             left: point[0] + 12,
-            top: point[1] + 12,
-            width: 200
-        },  content = [],
+            top: point[1] + 12
+        }, content = [],
             {createItem} = this,
-            onItemOver = this.onItemOver.bind(this),
             onZoomIn = this.onZoomIn.bind(this),
             onZoomOut = this.onZoomOut.bind(this),
             onPan = this.onPan.bind(this),
             showQRcode = this.showQRcode.bind(this)
-        //
-        // for(let i=0,l=dataProvider.length,item;i<l;i++){
-            
-        // }
-        //
-        //   <li ref='4' className={"list-group-item" + (4 === selIndex ? ' active' : '')} onMouseOver={onItemOver} onClick={showQRcode}>
-        //             <i className="fa fa-qrcode" /> 二维码</li>
         return (
-            <ul className="list-group ContextMenu" style={styl}>
-                <li ref='0' className={"list-group-item" + (0 === selIndex ? ' active' : '')} onMouseOver={onItemOver} onClick={onZoomIn}>
-                    <i className="fa fa-search-plus" /> 放大</li>
-                <li ref='1' className={"list-group-item" + (1 === selIndex ? ' active' : '')} onMouseOver={onItemOver} onClick={onZoomOut}>
-                    <i className="fa fa-search-minus" /> 缩小</li>
-                <li ref='2' className={"list-group-item" + (2 === selIndex ? ' active' : '')} onMouseOver={onItemOver} onClick={onPan}>
-                    <i className="fa fa-arrows" /> 定位</li>
-                <li ref='3' className={"list-group-item" + (3 === selIndex ? ' active' : '')} onMouseOver={onItemOver}  >
-                    <i className="fa fa-expand" /> 全屏</li>
-              
-                <li ref='4' className={"list-group-item disabled" + (5 === selIndex ? ' active' : '')}  >
-                    <i className="fa fa-volume-up" /> 声音</li>
-                <li ref='5' className={"list-group-item disabled "} onMouseOver={onItemOver}>
-                    <i className="fa fa-info-circle" /> 系统信息
-                    <span className="badge">0</span>
+            <ul className="dropdown-menu ContextMenu" style={styl}>
+                <li onClick={onZoomIn}>
+                    <a role="button"><i className="fa fa-search-plus" /> 放大 </a>
                 </li>
-                <li ref='6' className="list-group-item" onMouseOver={onItemOver}>
-                    <i className="fa fa-copyright" />
-                    <a href='http://www.strongsoft.net/DMenu.aspx' target='_blank'> 福建四创软件</a>
+                <li onClick={onZoomOut}>
+                    <a role="button"><i className="fa fa-search-minus" /> 缩小</a>
                 </li>
-                <li ref='7' className="list-group-item " >
-                    <i className="fa fa-envelope" /> mocheer@foxmail.com
+                <li onClick={onPan}>
+                    <a role="button"><i className="fa fa-arrows" /> 定位</a>
+                </li>
+                <li className="disabled" >
+                    <a role="button"><i className="fa fa-expand" /> 全屏</a>
+                </li>
+                <li className="disabled"  >
+                    <a role="button"><i className="fa fa-volume-up" /> 声音</a>
+                </li>
+                <li role="presentation" className="divider" />
+                <li className="disabled" >
+                    <a role="button"><i className="fa fa-info-circle" /> 系统信息 <span className="badge">0</span></a>
+                </li>
+                <li onClick={showQRcode}>
+                    <a role="button"><i className="fa fa-qrcode" /> 二维码</a>
+                </li>
+                <li>
+                    <a role="button" href='http://www.strongsoft.net/DMenu.aspx' target='_blank'><i className="fa fa-copyright" /> 福建四创软件</a>
+                </li>
+                <li  >
+                    <a role="button"><i className="fa fa-envelope" /> mocheer@foxmail.com</a>
                 </li>
             </ul>
         );

@@ -21,7 +21,7 @@ export default class DataList extends Component{
                 }else{
                     dataLabel = data;
                 }
-                return <a href="javascript:void(0)" className="list-group-item">{dataLabel}</a>
+                return <a role='button' className="list-group-item">{dataLabel}</a>
             });
         }
        return(

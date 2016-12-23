@@ -7,59 +7,42 @@ export default class LegendBox extends Component {
     constructor(props) {
         super(props);
         if (window.T) {
-            T.on('addLegend', this.add)
-            T.on('removeLegend', this.remove)
+            T.on('addLegend', this.add.bind(this))
+            T.on('removeLegend', this.remove.bind(this))
         }
         this.state = {
-            dataProvider: props.dataProvider || [
-                {
-                    title: '台风图例', children: [
-                        { label: '热带低压', color: '#00FF03' },
-                        { label: '热带风暴', color: '#0062FE' },
-                        { label: '强热带风暴', color: '#FAE100' },
-                        { label: '台风', color: '#FDAC03' },
-                        { label: '强台风', color: '#FD72F6' },
-                        { label: '超强台风', color: '#FD0002' }
-                    ]
-                },
-                {
-                    title: '预报机构', children: [
-                        { label: '中国', color: '#FF4050', type: 'dash' },
-                        { label: '韩国', color: '#000', type: 'dash' },
-                        { label: '美国', color: '#4099EE', type: 'dash' },
-                        { label: '中国台湾', color: '#FFA040', type: 'dash' },
-                        { label: '日本', color: '#43FF4B', type: 'dash' },
-                        { label: '中国香港', color: '#FF40F5', type: 'dash' }
-                    ]
-                }
-            ]
+            dataProvider: props.dataProvider
         }
     }
     /**
-     * @param data {title,body}
+     * @param data [{title,body}]
      */
     add(data) {
         let {state} = this,
             {dataProvider} = state
         if (!dataProvider) {
-            dataProvider = [];
+            dataProvider = data;
+        } else {
+            dataProvider = dataProvider.concat(data);
         }
-        dataProvider.push(data);
         this.setState({
             dataProvider: dataProvider
         })
     }
     /**
-     * @param data id || {}
+     * @param data [{}]
      */
     remove(data) {
+        console.log('remvoe')
         let {state} = this,
             {dataProvider} = state
         if (dataProvider) {
-            let index = dataProvider.indexOf(data);
-            if (index != -1) {
-                dataProvider.splice(index, 1);
-            }
+            dataProvider = dataProvider.filter((item,index,array)=>{
+                return data.indexOf(item) ==-1
+            })
+            this.setState({
+                dataProvider: dataProvider
+            })
         }
     }
     /**

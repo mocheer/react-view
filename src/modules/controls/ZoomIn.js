@@ -8,13 +8,13 @@ export default class ZoomIn extends Component {
     }
     
     onClick() {
-        let {mapbox} = this.props;
+        let mapbox = T.get('mapbox')
         mapbox.zoomBy(1)
     }
     render() {
         let {onClick} = this
         return (
-            <i className="fa fa-plus" onClick={onClick.bind(this)} />
+            <i className="fa fa-plus" data-label='放大' onClick={onClick.bind(this)} />
         )
     }
 }

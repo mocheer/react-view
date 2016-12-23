@@ -6,21 +6,21 @@ export default class TimeSlider extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            suspended: false,
+            width: props.width,
             expanded: props.expanded,
             dataProvider: props.dataProvider,
             selItem: props.selItem || (props.dataProvider && props.dataProvider[props.dataProvider.length - 1]),
             scales: {}
         };
+        T.on('changeSliderTime', data => {
+            this.setState(data)
+        })
 
-        T.on('addSliderTime', data => {
-            this.onSliderTimeAdd(data)
+        T.on('moduleexpand', data => {
+            this.setState({ width: T.get('mapbox').clientWidth })
         })
     }
-
-    onSliderTimeAdd(data) {
-        this.setState({ expanded: true, dataProvider: data.dataProvider })
-    }
-
     expand() {
         this.setState({ expanded: true })
     }
@@ -40,16 +40,20 @@ export default class TimeSlider extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         let {state} = this,
-            update = nextState.dataProvider !== state.dataProvider || nextState.expanded !== state.expanded
+            update = nextState.suspended !== state.suspended || nextState.dataProvider !== state.dataProvider || nextState.expanded !== state.expanded || nextState.width !== state.width
         if (!update && state.expanded && state.selItem !== nextState.selItem) {
+            nextState.index = nextState.dataProvider.indexOf(nextState.selItem)
             this.drawTimeTrack(nextState.selItem)
-            T.emit('timechange', nextState.selItem)
         }
+
         if (update) {
-            //重置
-            nextState.selItem = null;
-            nextState.scales = {} 
+            //update===true 重置
+            if (!nextState.selItem || nextState.selItem === state.selItem) {
+                nextState.selItem = null;
+            }
+            nextState.scales = {}
         }
+        T.emit('timechange', nextState)
         return update;
     }
     /**
@@ -126,9 +130,9 @@ export default class TimeSlider extends Component {
         let {state, refs} = this,
             {dataProvider, scales} = state,
             canvas = refs.track
-        if (canvas ) {
+        if (canvas) {
             let {width, height} = canvas,
-                selItem = nextItem || state.selItem || (dataProvider && dataProvider[dataProvider.length-1]),
+                selItem = nextItem || state.selItem || (dataProvider && dataProvider[dataProvider.length - 1]),
                 ctx = canvas.getContext('2d'),
                 img = new Image(),
                 w = 30
@@ -156,32 +160,37 @@ export default class TimeSlider extends Component {
                 ctx.lineTo(w, 13)
                 ctx.fillStyle = "#002343"
                 ctx.fill()
-                ctx.closePath()
-                // 数据时间刻度
-                ctx.lineWidth = 2
-                ctx.strokeStyle = '#FFFFFF'
-                ctx.beginPath();
-                for (let key in scales) {
-                    if (scales.hasOwnProperty(key)) {
-                        key = parseFloat(key)
-                        if (key > w) {
-                            ctx.moveTo(key, 8)
-                            ctx.lineTo(key, 13)
-                        }
-                    }
-                }
-                ctx.stroke()
                 //当前进度
                 ctx.beginPath()
                 ctx.bezierCurveTo(5, 13, 0, 7, 5, 5) //左半圆
                 ctx.lineTo(w - 5, 5)
                 ctx.lineTo(w - 5, 13)
                 ctx.lineTo(5, 13)
-                ctx.fillStyle = "#F7BC2B"
+                //
+                let gradient = ctx.createLinearGradient(0, 5, 0, 13)
+                gradient.addColorStop(0, "#FFD633");
+                gradient.addColorStop(1, "#E57E18");
+                ctx.fillStyle = gradient//"#F7BC2B"
                 ctx.fill()
                 ctx.drawImage(img, w - 8, 2);
+
+                // 数据时间刻度
+                ctx.lineWidth = 3
+                ctx.strokeStyle = '#FFFFFF'
+                ctx.beginPath();
+                for (let key in scales) {
+                    if (scales.hasOwnProperty(key)) {
+                        if (key !== w) {
+                            ctx.moveTo(key, 7)
+                            ctx.lineTo(key, 13)
+                        }
+                    }
+                }
+                ctx.stroke()
+                //
                 ctx.closePath()
             }
+
         }
     }
     /**
@@ -210,6 +219,7 @@ export default class TimeSlider extends Component {
             }
             if (selItem !== nextItem) {
                 this.setState({
+                    index: dataProvider.indexOf(nextItem),
                     selItem: nextItem
                 })
             }
@@ -227,18 +237,22 @@ export default class TimeSlider extends Component {
                 if (flag === 1 && selIndex > dataProvider.length - 1) {
                     selIndex = 0;
                 }
+                let {refs} = this,
+                    { playButton } = refs
                 if (selIndex < dataProvider.length) {
                     this.setState({
+                        index: selIndex,
                         selItem: dataProvider[selIndex]
                     })
                     setTimeout(() => {
-                        let {refs} = this,
-                            { playButton } = refs,
-                            playState = playButton.state
-                        if (playState.selIndex === 1) {
+                        if (playButton.state.selIndex === 1) {
                             this.onPlayClick(-1)
                         }
-                    }, 800)
+                    }, 500)
+                } else {
+                    if (playButton.state.selIndex === 1) {
+                        playButton.onClick()
+                    }
                 }
             }
         }
@@ -256,17 +270,18 @@ export default class TimeSlider extends Component {
 
     render() {
         let {props, state} = this,
-            {width} = props,
-            {tag, expanded} = state;
-        let bottomControl = document.getElementById('bottomControl')
+            {suspended, tag, expanded} = state,
+            width = state.width || 999;
+        let legendbox = T.fork('legendbox');
+        if (suspended) {
+            legendbox && (legendbox.style.bottom = '25px')
+            return null;
+        }
         if (!expanded) {
-            bottomControl && (bottomControl.style.bottom = '75px')
+            legendbox && (legendbox.style.bottom = '75px')
             return <img className="TimeSlider" style={{ cursor: 'pointer', left: 5, bottom: 20 }} src="libs/assets/timeslider/collpase.png" onClick={this.expand.bind(this)} />
         }
-        bottomControl && (bottomControl.style.bottom = '105px')
-        width = width || 1000;
-        //<Toggle ref="playButton" tag='i' style={{fontSize:55,color:'#002343'}} dataProvider={['fa fa-play-circle-o', 'fa fa-pause-circle-o']} onClick={this.onPlayClick.bind(this)} />
-        //<Toggle ref="playButton" dataProvider={['libs/assets/timeslider/play.png', 'libs/assets/timeslider/pause.png']} onClick={this.onPlayClick.bind(this)} />
+        legendbox && (legendbox.style.bottom = '105px')
         return (
             <div className="TimeSlider" >
                 <div onClick={this.collpase.bind(this)}>

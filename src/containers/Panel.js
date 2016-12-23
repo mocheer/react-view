@@ -7,23 +7,25 @@ export default class Panel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            collopse:false
+            collopse: false
         }
     }
 
-    onTitleClick(){
+    onTitleClick() {
         let {state} = this,
             {collopse} = state;
         this.setState({
-            collopse:!collopse
+            collopse: !collopse
         })
     }
 
-    createTitle(title) {
-        let {onTitleClick} = this; 
-        return <div className="panel-heading" onClick={onTitleClick.bind(this)}>{title}</div>
+    createTitle(title, collopse) {
+        let cart
+        if (!collopse) {
+            cart = <span className='caret' style={{ position: 'absolute', right: 0, marginRight: 8, marginTop: 6 }} />
+        }
+        return <div className="panel-heading" onClick={this.onTitleClick.bind(this)}>{title}{cart}</div>
     }
-    
 
     createBody(body) {
         return <div className="panel-body">{body}</div>
@@ -34,12 +36,13 @@ export default class Panel extends Component {
     }
 
     render() {
-        let {props, state} = this,  
+        let {props, state} = this,
             {title, body, footer, children, className} = props,
             {collopse} = state,
             content = [],
-            panelClass = classNames('panel Panel',className || 'panel-primary');//panel-default
-        title && content.push(this.createTitle(title))
+            panelClass = classNames('panel Panel', className || 'panel-primary');//panel-default
+
+        title && content.push(this.createTitle(title, collopse))
         if (!collopse) {
             body && content.push(this.createBody(body))
             children && content.push(children)

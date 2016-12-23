@@ -12,8 +12,6 @@ export default class AdvancedDataTable extends Component {
         this.state = {
             dataProvider: props.dataProvider,
             columns: props.columns,
-            // selItems: [],
-            // selIndex:-1,
         };
     }
     componentDidMount() {
@@ -30,6 +28,11 @@ export default class AdvancedDataTable extends Component {
     }
     componentDidUpdate() {
         this.setHeaderWidth();
+        let {refs} = this,
+            {tablebody,seltr} = refs;
+        if(seltr && (tablebody.scrollTop>seltr.offsetTop || tablebody.scrollTop+tablebody.clientHeight<seltr.offsetTop)){
+            tablebody.scrollTop = seltr.offsetTop;
+        }
     }
     /**
      * colSpan 合并列
@@ -104,7 +107,6 @@ export default class AdvancedDataTable extends Component {
         headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         return headerRows;
     }
-
     /**
      * 创建数据行
      */
@@ -141,7 +143,7 @@ export default class AdvancedDataTable extends Component {
                     }
                 }),
                     trProps = { key: rowid }
-                selIndex === rowid && (trProps.className = 'info')
+                selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 return <tr {...trProps} >{dataColumns}</tr>
             });
         }
@@ -153,9 +155,9 @@ export default class AdvancedDataTable extends Component {
             {state} = this,
             {dataProvider} = state,
             selItems = []
-        for(let i=0,l=dataProvider.length,item;i<l;i++){
-           item = dataProvider[i];
-           item!==data && item.checked && selItems.push(item)
+        for (let i = 0, l = dataProvider.length, item; i < l; i++) {
+            item = dataProvider[i];
+            item !== data && item.checked && selItems.push(item)
         }
         checked && selItems.push(data)
         column.onChange(data, column, selItems)
@@ -170,7 +172,7 @@ export default class AdvancedDataTable extends Component {
             td = event.target,
             columnid = td.cellIndex, //
             rowid = td.parentElement.rowIndex;//td.parentElement = tr
-        if(!dataProvider){
+        if (!dataProvider) {
             return {}
         }
         info.target = td;
@@ -186,7 +188,9 @@ export default class AdvancedDataTable extends Component {
         var info = this.getEventInfo(event),
             {onItemClick} = this.props
         onItemClick && onItemClick(info)
-        this.setState({ selIndex: info.index })
+        this.setState({
+            selIndex: info.index
+        })
     }
 
     onTableOver(event) {
@@ -194,7 +198,6 @@ export default class AdvancedDataTable extends Component {
             {onItemOver} = this.props
         onItemOver && onItemOver(info)
     }
-
     /**
     * 格式化
     */
@@ -231,13 +234,13 @@ export default class AdvancedDataTable extends Component {
     render() {
         var {props, state, onTableClick, onTableOver} = this,
             {columns, dataProvider, selIndex} = state,
-            {height,reverse} = props;
-        if (!columns ) {
+            {height, reverse, onTableOut} = props;
+        if (!columns) {
             return null;
         }
         var headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex),
-            tableClass = classNames("table", {"table-hover": true },{"table-condensed":true},{ "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
+            tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
             bodyStyle.height = height - 33 * headerRows.length;//减去头部高度
@@ -250,7 +253,7 @@ export default class AdvancedDataTable extends Component {
                         <thead ref="header">{headerRows}</thead>
                     </table>
                 </div>
-                <div className="tablebody" onClick={onTableClick.bind(this)} onMouseOver={onTableOver.bind(this)} style={bodyStyle}>
+                <div ref='tablebody' className="tablebody" onClick={onTableClick.bind(this)} onMouseOver={onTableOver.bind(this)} style={bodyStyle} onMouseOut={onTableOut}>
                     <table className={tableClass} >
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>

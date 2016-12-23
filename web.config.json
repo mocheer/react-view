@@ -1,8 +1,0 @@
-{
-    "start": "http://localhost:8576",
-    "port": "8576",
-    "fileServer": {
-        "./examples": "/"
-    },
-    "urlServer": "/u/"
-}

@@ -38,9 +38,9 @@ export default class Pagination extends Component{
             for (var i=0;i < count;i++){
                 var li;
                 if(i===selectedIndex){
-                     li = <li className="active" key={i}><a href="javascript:void(0)">{i}</a></li>
+                     li = <li className="active" key={i}><a role='button'>{i}</a></li>
                 }else{
-                     li = <li key={i} ><a href="javascript:void(0)" onClick={handleClick.bind(this)}>{i}</a></li>
+                     li = <li key={i} ><a role='button' onClick={handleClick.bind(this)}>{i}</a></li>
                 }
                 pageIndexs.push(li)
             }
@@ -51,9 +51,9 @@ export default class Pagination extends Component{
         return (
            <nav>
                 <ul className={ulClass}>
-                    <li><a href="javascript:void(0)" onClick={handleBack.bind(this)}><span>&laquo;</span></a></li>
+                    <li><a role='button' onClick={handleBack.bind(this)}><span>&laquo;</span></a></li>
                     {pageIndexs}
-                    <li><a href="javascript:void(0)" onClick={handleForward.bind(this)}><span>&raquo;</span></a></li>
+                    <li><a role='button' onClick={handleForward.bind(this)}><span>&raquo;</span></a></li>
                 </ul>
            </nav>
         );

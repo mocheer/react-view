@@ -26,7 +26,7 @@ export default class ZoomIn extends Component {
             {epxanded} = state,
             cls = 'fa  fa-border ' + (epxanded?'fa-chevron-left':'fa-chevron-right')
         return (
-            <i className={cls} onClick={onClick.bind(this)} />
+            <i className={cls}  onClick={onClick.bind(this)} />
         )
     }
 }
