@@ -309,7 +309,7 @@ export default class TyphoonPlayer extends Component {
             <div className="TimeSlider" >
                 <div onClick={this.collpase.bind(this)}>
                     <img src="libs/assets/timeslider/title-bg.png" />
-                    <img style={{ width: width - 117 - 5, height: 34 }} src="libs/assets/timeslider/bar-top.png" />
+                    <img style={{ width: width - 125, height: 34 }} src="libs/assets/timeslider/bar-top.png" />
                     <span style={{ cursor: 'pointer', position: "absolute", left: 35, top: 10, color: '#FFFFFF' }}   >台风播放</span>
                 </div>
                 <div>

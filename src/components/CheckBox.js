@@ -4,6 +4,9 @@ import classNames from 'classnames'
 export default class CheckBox extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            selected:props.selected
+        }
     }
 
     onChange(){
