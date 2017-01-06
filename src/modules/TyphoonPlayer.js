@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import Toggle from '../components/Toggle'
+import CheckBox from '../components/CheckBox'
 import classNames from 'classnames'
 //时间滑块=>基于台风数据进行解析
-export default class TimeSlider extends Component {
+export default class TyphoonPlayer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -11,12 +12,10 @@ export default class TimeSlider extends Component {
             expanded: props.expanded,
             dataProvider: props.dataProvider,
             selItem: props.selItem || (props.dataProvider && props.dataProvider[props.dataProvider.length - 1]),
-            scales: {}
+            scales: {},
+            cloud: false,
+            radar: false,
         };
-        T.on('changeSliderTime', data => {
-            this.setState(data)
-        })
-
         T.on('moduleexpand', data => {
             this.setState({ width: T.get('mapbox').clientWidth })
         })
@@ -35,7 +34,6 @@ export default class TimeSlider extends Component {
 
     componentDidUpdate() {
         this.drawScale()
-
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -45,7 +43,6 @@ export default class TimeSlider extends Component {
             nextState.index = nextState.dataProvider.indexOf(nextState.selItem)
             this.drawTimeTrack(nextState.selItem)
         }
-
         if (update) {
             //update===true 重置
             if (!nextState.selItem || nextState.selItem === state.selItem) {
@@ -72,18 +69,16 @@ export default class TimeSlider extends Component {
                 let {getTime} = this,
                     start = dataProvider[0] && getTime(dataProvider[0].time),
                     end = dataProvider[1] && getTime(dataProvider[dataProvider.length - 1].time),
-                    duration = (end.getTime() - start.getTime()),
-                    maxNum = width / 100,
-                    num = maxNum,
+                    duration = (end.getTime() - start.getTime()), //台风总时长
+                    maxNum = width * 0.01,
+                    num = maxNum, //刻度数量
                     w = width - 60,//左边 30 padding，右边 30 padding
-                    x = 10,
-                    step = 3600000 //60*60*1000=3600000
+                    step = 3600000 //60*60*1000=3600000 1小时时长 每个刻度
                 if (duration < maxNum * step) {
                     num = parseInt(duration / step);
                 } else {
                     step = (parseInt(duration / maxNum / step) + 1) * step
                 }
-
                 //drawing scale
                 let mx = w / num,
                     cs = 30,
@@ -96,6 +91,7 @@ export default class TimeSlider extends Component {
                 if (num < maxNum) {
                     num++
                 }
+                //
                 for (let i = 0; i < num; i++) {
                     //
                     ctx.strokeStyle = '#FFFFFF'
@@ -112,6 +108,8 @@ export default class TimeSlider extends Component {
                     cx += mx;
                 }
                 //save time scale
+                //
+                duration = step * num;
                 for (let i = 0, l = dataProvider.length, item; i < l; i++) {
                     item = dataProvider[i];
                     ct = getTime(item.time)
@@ -132,10 +130,12 @@ export default class TimeSlider extends Component {
             canvas = refs.track
         if (canvas) {
             let {width, height} = canvas,
-                selItem = nextItem || state.selItem || (dataProvider && dataProvider[dataProvider.length - 1]),
+                selItem = state.selItem = nextItem || state.selItem || (dataProvider && dataProvider[dataProvider.length - 1]),
                 ctx = canvas.getContext('2d'),
                 img = new Image(),
                 w = 30
+            this.onCloudChange();
+            this.onRadarChange();
             img.src = "libs/assets/timeslider/pointer.png"
             img.onload = () => {
                 ctx.clearRect(0, 0, width, height)
@@ -258,8 +258,27 @@ export default class TimeSlider extends Component {
         }
     }
 
+    onCloudChange(data) {
+        let {props, state} = this,
+            {selItem} = state;
+        if (data && data.selected !== state.cloud) {
+            state.cloud = data.selected
+        }
+        props.onCloudChange && props.onCloudChange(state.cloud,selItem)
+
+    }
+
+    onRadarChange(data) {
+        let {props, state} = this,
+            {selItem} = state;
+        if (data && data.selected !== state.radar) {
+            state.radar = data.selected
+        }
+        props.onRadarChange && props.onRadarChange(state.radar,selItem)
+    }
+
     /**
-     * 弃用
+     * 
      */
     getTime(t) {
         let ps = t.split(" "),
@@ -271,12 +290,16 @@ export default class TimeSlider extends Component {
     render() {
         let {props, state} = this,
             {suspended, tag, expanded} = state,
-            width = state.width || 999;
-        let legendbox = T.fork('legendbox');
+            width = state.width || 999,
+            legendbox = T.get('legendbox');
         if (suspended) {
             legendbox && (legendbox.style.bottom = '25px')
             return null;
         }
+        let box = []
+        props.onCloudChange && box.push(<CheckBox label='卫星云图' selected={state.cloud} style={{ color: '#FFFFFF' }} onChange={this.onCloudChange.bind(this)} />)
+        props.onRadarChange && box.push(<CheckBox label='气象雷达' selected={state.radar}  style={{ color: '#FFFFFF' }} onChange={this.onRadarChange.bind(this)} />)
+
         if (!expanded) {
             legendbox && (legendbox.style.bottom = '75px')
             return <img className="TimeSlider" style={{ cursor: 'pointer', left: 5, bottom: 20 }} src="libs/assets/timeslider/collpase.png" onClick={this.expand.bind(this)} />
@@ -298,6 +321,10 @@ export default class TimeSlider extends Component {
                     <Toggle ref="playButton" dataProvider={['libs/assets/timeslider/play.png', 'libs/assets/timeslider/pause.png']} onClick={this.onPlayClick.bind(this)} />
                     <canvas ref="scale" style={{ position: "absolute", left: 56, top: 0 }} width={width - 70} height={60} />
                     <canvas ref="track" onClick={this.onTrackClick.bind(this)} style={{ cursor: 'pointer', position: "absolute", left: 56, top: 20 }} width={width - 70} height={16} />
+                </div>
+
+                <div style={{ position: 'absolute', padding: '5px 0px', right: -4, top: 0, backgroundColor: '#16385B', borderBottomLeftRadius: 2, borderBottomRightRadius: 2, borderTopLeftRadius: 2, borderTopRightRadius: 2 }} >
+                    {box}
                 </div>
             </div>
         )

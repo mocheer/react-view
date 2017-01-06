@@ -4,19 +4,26 @@ import classNames from 'classnames'
 export default class CheckBox extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            selected: props.selected,
-            label: props.label,
-            data: props.data,
-        }
+    }
+
+    onChange(){
+         let {props} = this,
+            {onChange} = props,
+            selected = this.refs.button.checked;
+        onChange({selected:selected})
+        this.setState({
+            selected:selected
+        })
     }
 
     render() {
-        var label = this.props.label
+        let {props,state} = this,
+            {selected} = state,
+            {label,style} = props;
         return (
-            <div className="checkbox">
-                <label>
-                    <input type="checkbox" />{label}
+            <div className="checkbox CheckBox" style={style} onClick={this.onChange.bind(this)} >
+                <label >
+                    <input ref='button' type="checkbox" checked={selected} />{label}
                 </label>
             </div>
         )

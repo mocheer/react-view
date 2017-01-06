@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 // const autoprefixer = require('autoprefixer');//css-自动检测兼容性给各个浏览器加个内核前缀的插件
-const version = require('./version.js')
+const version = require('./node_modules/shell/nodejs/version.js')
 const dir = __dirname //webpack执行路径
 const env = process.env //webpack执行环境
 var plugins = [

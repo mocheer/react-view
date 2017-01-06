@@ -29,8 +29,8 @@ export default class AdvancedDataTable extends Component {
     componentDidUpdate() {
         this.setHeaderWidth();
         let {refs} = this,
-            {tablebody,seltr} = refs;
-        if(seltr && (tablebody.scrollTop>seltr.offsetTop || tablebody.scrollTop+tablebody.clientHeight<seltr.offsetTop)){
+            {tablebody, seltr} = refs;
+        if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
         }
     }
@@ -232,20 +232,42 @@ export default class AdvancedDataTable extends Component {
         return label;
     }
     render() {
-        var {props, state, onTableClick, onTableOver} = this,
+        let {props, state} = this,
             {columns, dataProvider, selIndex} = state,
-            {height, reverse, onTableOut} = props;
-        if (!columns) {
-            return null;
-        }
-        var headerRows = this.createHeader(columns, props),
+            {height, reverse, onTableOut,showNoData} = props
+        if (!columns) return null;
+        if(!dataProvider && showNoData)
+            return (
+                <div style={{
+                    height: height,
+                    backgroundColor: '#FFFFFF',
+                    paddingTop: height * 0.4,
+                    paddingLeft: '35%'
+                }}>
+                    <div style={{
+                        width: 120,
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        border: 'solid red',
+                        color: 'red',
+                        transform: 'rotate(20deg)'
+                    }}>
+                        暂无数据
+                </div>
+                </div>)
+        //
+        let headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex),
             tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
-            bodyStyle.height = height - 33 * headerRows.length;//减去头部高度
+            bodyStyle.height = height - 33 * (headerRows.length-1);//减去头部高度
         }
         reverse && dataRows && dataRows.reverse()
+        //
+        let onTableClick = this.onTableClick.bind(this),
+            onTableOver = this.onTableOver.bind(this)
         return (
             <div className="table-responsive DataTable">
                 <div className="tableheader" >
@@ -253,7 +275,7 @@ export default class AdvancedDataTable extends Component {
                         <thead ref="header">{headerRows}</thead>
                     </table>
                 </div>
-                <div ref='tablebody' className="tablebody" onClick={onTableClick.bind(this)} onMouseOver={onTableOver.bind(this)} style={bodyStyle} onMouseOut={onTableOut}>
+                <div ref='tablebody' className="tablebody" onClick={onTableClick} onMouseOver={onTableOver} style={bodyStyle} onMouseOut={onTableOut}>
                     <table className={tableClass} >
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>

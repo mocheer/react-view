@@ -7,12 +7,15 @@ import ComboBox from '../components/ComboBox'
 export default class MapNav extends Component {
     constructor(props) {
         super(props);
+        this.state ={
+            title:T.data('mapbox')
+        }
     }
     /**
      * 
      */
     onProviderClick(data) {
-        T.get('mapbox').setProvider(data.value);
+        T.leaf('mapbox').setProvider(data.value);
         T.emit('providerchange', data)
     }
 
@@ -35,12 +38,12 @@ export default class MapNav extends Component {
     onMoustOut(){
          T.emit('tooltip', { hide:true })
     }
-    
     /**
      * 
      */
     render() {
-        let {onProviderClick} = this,
+        let {onProviderClick,props,state} = this,
+            title = state.title,
             providers = [
                 { label: '谷歌地图', value: 'GoogleMap.Normal', i: 'fa fa-rocket' },
                 { label: '谷歌影像图', value: 'GoogleMap.Hybrid', i: "fa fa-map-o" },
@@ -57,7 +60,7 @@ export default class MapNav extends Component {
         return (
             <Navbar >
                 <ul className="nav navbar-nav ">
-                    <li><a href='http://www.strongsoft.net/DMenu.aspx' target='_blank'>Strongsfot</a></li>
+                    <li><a role='button'>{title}</a></li>
                     <ComboBox onClick={onProviderClick} dataProvider={providers} />
                 </ul>
                 <form className="navbar-form navbar-left">
@@ -89,7 +92,7 @@ export default class MapNav extends Component {
                         </a>
                     </div>
 
-                    <div className="btn-group" onMouseOver={this.onOver} >
+                    <div className="btn-group" onMouseOver={this.onOver} onMouseOut={this.onMoustOut} >
                         <a className="btn btn-default" data-label='声音' role="button">
                             <i className="fa fa-volume-up" ></i>
                         </a>

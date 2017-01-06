@@ -23,7 +23,7 @@ export default class NavTab extends Component {
         children.length || (children = [children])
         for (let i = 0, l = children.length, item, li, label; i < l; i++) {
             item = children[i]
-            label = <a href="#">{ (l===1 && state.label ) || item.props.label}</a>
+            label = <a>{ (l===1 && state.label ) || item.props.label}</a>
             if (i === selIndex) {
                 selItem = item;
                 li = <li key={i} className="active" >{label}</li>

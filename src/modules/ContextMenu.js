@@ -44,17 +44,17 @@ export default class ContextMenu extends Component {
     }
 
     onZoomIn(e) {
-        let mapbox = T.get('mapbox');
+        let mapbox = T.leaf('mapbox');
         mapbox.zoomBy(1)
     }
 
     onZoomOut(e) {
-        let mapbox = T.get('mapbox');
+        let mapbox = T.leaf('mapbox');
         mapbox.zoomBy(-1)
     }
 
     onPan(e) {
-        let mapbox = T.get('mapbox'),
+        let mapbox = T.leaf('mapbox'),
             {map} = mapbox,
             ScreenPoint = esri.geometry.ScreenPoint,
             point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
@@ -62,7 +62,7 @@ export default class ContextMenu extends Component {
     }
 
     showQRcode() {
-        let mapbox = T.fork('mapbox'),
+        let mapbox = T.get('mapbox'),
             w = mapbox.clientWidth,
             h = mapbox.clientHeight,
             outter = {

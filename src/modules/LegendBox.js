@@ -33,7 +33,6 @@ export default class LegendBox extends Component {
      * @param data [{}]
      */
     remove(data) {
-        console.log('remvoe')
         let {state} = this,
             {dataProvider} = state
         if (dataProvider) {

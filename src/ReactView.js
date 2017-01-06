@@ -10,8 +10,6 @@ import Panel from './containers/Panel';
 //
 import { actions } from './ReactActions';
 import { stores } from './ReactStores';
-//
-import { setGlobal } from './utilities/Global';
 
 let views = {
     advanceddatatable: AdvancedDataTable,
@@ -27,8 +25,6 @@ let views = {
         createElement: createElement,
         render: render
     }
-
-setGlobal({ ReactView: ReactView });
 
 function createElement(type, target, props) {
     // get the props config

@@ -9,26 +9,6 @@ export default class Panel extends Component {
         this.state = {
             isFullscreen: false
         }
-        // var container =  T.fork();
-        // container.addEventListener('mozfullscreenchange', () => {
-        //     console.log('mozfullscreenchange')
-        //     this.setState({
-        //         isFullscreen: isFullscreen
-        //     })
-        // });
-        // container.addEventListener('webkitfullscreenchange',  () => {
-        //     console.log('webkitfullscreenchange')
-        //     this.setState({
-        //         isFullscreen: isFullscreen
-        //     })
-        // });
-        // container.addEventListener('fullscreenchange',  () => {
-        //       console.log('fullscreenchange')
-        //     this.setState({
-        //         isFullscreen: isFullscreen
-        //     })
-        // });
-
     }
 
     onClick() {
@@ -45,7 +25,7 @@ export default class Panel extends Component {
                 document.msExitFullscreen();
             }
         } else {
-            var container = T.fork();
+            var container = T.get();
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.mozRequestFullScreen) {

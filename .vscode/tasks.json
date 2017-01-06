@@ -7,20 +7,7 @@
     "showOutput": "always",
     "suppressTaskName": true,
     "tasks": [
-         {
-            "taskName": "run&start",
-            "args": [
-                "run",
-                "run-start"
-            ]
-        },
-        {
-            "taskName": "start",
-            "args": [
-                "run",
-                "start"
-            ]
-        },
+        
         {
             "taskName": "dev",
             "args": [
