@@ -1,6 +1,6 @@
 export const LOADED = 'loaded';
 export const LOADING = 'loading';
-
+// redux flux
 export function loadingAction(url,store){
     $.getJSON(url,function(result){
         var newState;

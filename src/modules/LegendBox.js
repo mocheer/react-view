@@ -6,13 +6,11 @@ import Panel from '../containers/Panel'
 export default class LegendBox extends Component {
     constructor(props) {
         super(props);
-        if (window.T) {
-            T.on('addLegend', this.add.bind(this))
-            T.on('removeLegend', this.remove.bind(this))
-        }
         this.state = {
             dataProvider: props.dataProvider
         }
+        T.on('addLegend', this.add.bind(this))
+        T.on('removeLegend', this.remove.bind(this))
     }
     /**
      * @param data [{title,body}]
@@ -22,7 +20,7 @@ export default class LegendBox extends Component {
             {dataProvider} = state
         if (!dataProvider) {
             dataProvider = data;
-        } else {
+        } else if (dataProvider.indexOf(data) === -1) {
             dataProvider = dataProvider.concat(data);
         }
         this.setState({
@@ -36,8 +34,8 @@ export default class LegendBox extends Component {
         let {state} = this,
             {dataProvider} = state
         if (dataProvider) {
-            dataProvider = dataProvider.filter((item,index,array)=>{
-                return data.indexOf(item) ==-1
+            dataProvider = dataProvider.filter((item, index, array) => {
+                return data.indexOf(item) == -1
             })
             this.setState({
                 dataProvider: dataProvider
@@ -45,7 +43,7 @@ export default class LegendBox extends Component {
         }
     }
     /**
-     * 
+     * 删除所有图例
      */
     removeAll() {
         this.setState({
@@ -105,10 +103,11 @@ export default class LegendBox extends Component {
             "-webkit-border-radius": 5,
             "border-radius": 5
         }
-        return (<div style={{ display: 'inline-block', width: w }}>
-            <div style={style} />
-            <span >{data.label}</span>
-        </div>)
+        return (
+            <div style={{ display: 'inline-block', width: w }}>
+                <div style={style} />
+                <span >{data.label}</span>
+            </div>)
     }
     /**
      * 
@@ -122,10 +121,11 @@ export default class LegendBox extends Component {
             height: 6,
             borderTop: '2px dashed ' + data.color
         }
-        return (<div style={{ display: 'inline-block', width: w }}>
-            <div style={style} />
-            <span >{data.label}</span>
-        </div>)
+        return (
+            <div style={{ display: 'inline-block', width: w }}>
+                <div style={style} />
+                <span >{data.label}</span>
+            </div>)
     }
     /**
      * 

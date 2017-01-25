@@ -11,7 +11,7 @@ export default class HawkeyeMap extends Component{
             {map} = props;
         
         return (
-            <div  >
+            <div>
 
             </div>
         )

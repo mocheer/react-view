@@ -25,7 +25,7 @@ export default class Panel extends Component {
                 document.msExitFullscreen();
             }
         } else {
-            var container = T.get();
+            var container = T.root;
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.mozRequestFullScreen) {

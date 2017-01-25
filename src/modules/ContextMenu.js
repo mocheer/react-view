@@ -42,31 +42,41 @@ export default class ContextMenu extends Component {
             })
         }
     }
-
+    /**
+     * 
+     */
     onZoomIn(e) {
-        let mapbox = T.leaf('mapbox');
-        mapbox.zoomBy(1)
+        T.map.zoomBy(1)
     }
-
+    /**
+     * 
+     */
     onZoomOut(e) {
-        let mapbox = T.leaf('mapbox');
-        mapbox.zoomBy(-1)
+        T.map.zoomBy(-1)
     }
-
+    /**
+     * 
+     */
     onPan(e) {
-        let mapbox = T.leaf('mapbox'),
-            {map} = mapbox,
-            ScreenPoint = esri.geometry.ScreenPoint,
-            point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
-        map.centerAt(point)
-    }
+        if (esri) {
+            let mapbox = T.map,
+                {map} = mapbox,
+                ScreenPoint = esri.geometry.ScreenPoint,
+                point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
+            map.centerAt(point)
+        }else{
 
+        }
+    }
+    /**
+     * 二维码
+     */
     showQRcode() {
-        let mapbox = T.get('mapbox'),
+        let mapbox = T('mapbox'),
             w = mapbox.clientWidth,
             h = mapbox.clientHeight,
             outter = {
-                zIndex:999, // leaflet需要这样做
+                zIndex: 999, // leaflet需要这样做
                 position: 'fixed',
                 margin: 'auto',
                 top: 0,
@@ -99,6 +109,7 @@ export default class ContextMenu extends Component {
     }
     /**
      * @param data{i,label,onMouseOver,onClick,link,badge,active}
+     * 
      */
     createItem(data) {
         let itemProps = {},
@@ -119,7 +130,11 @@ export default class ContextMenu extends Component {
         //
         return <li {...itemProps} >{children}</li>
     }
-
+    /**
+     * <li>
+          <a role="button"><i className="fa fa-envelope" /> mocheer@foxmail.com</a>
+       </li>
+     */
     render() {
         let {state} = this,
             {render, selIndex, point, dataProvider} = state;
@@ -166,9 +181,7 @@ export default class ContextMenu extends Component {
                 <li>
                     <a role="button" href='http://www.strongsoft.net/DMenu.aspx' target='_blank'><i className="fa fa-copyright" /> 福建四创软件</a>
                 </li>
-                <li  >
-                    <a role="button"><i className="fa fa-envelope" /> mocheer@foxmail.com</a>
-                </li>
+
             </ul>
         );
     }

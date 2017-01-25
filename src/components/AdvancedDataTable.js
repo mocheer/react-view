@@ -104,7 +104,9 @@ export default class AdvancedDataTable extends Component {
                 return <th {...thProps} >{headerText}</th>;
             });
         headerRows[0] = <tr key={0} >{headerColumns}</tr>;
-        headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
+        if(headerRows[1] ){
+            headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
+        }
         return headerRows;
     }
     /**
@@ -262,7 +264,7 @@ export default class AdvancedDataTable extends Component {
             tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
-            bodyStyle.height = height - 33 * (headerRows.length-1);//减去头部高度
+            bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
         reverse && dataRows && dataRows.reverse()
         //

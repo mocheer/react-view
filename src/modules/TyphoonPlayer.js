@@ -17,7 +17,7 @@ export default class TyphoonPlayer extends Component {
             radar: false,
         };
         T.on('moduleexpand', data => {
-            this.setState({ width: T.get('mapbox').clientWidth })
+            this.setState({ width: T('mapbox').clientWidth })
         })
     }
     expand() {
@@ -248,7 +248,7 @@ export default class TyphoonPlayer extends Component {
                         if (playButton.state.selIndex === 1) {
                             this.onPlayClick(-1)
                         }
-                    }, 500)
+                    }, 400)
                 } else {
                     if (playButton.state.selIndex === 1) {
                         playButton.onClick()
@@ -291,7 +291,7 @@ export default class TyphoonPlayer extends Component {
         let {props, state} = this,
             {suspended, tag, expanded} = state,
             width = state.width || 999,
-            legendbox = T.get('legendbox');
+            legendbox = T('legendbox');
         if (suspended) {
             legendbox && (legendbox.style.bottom = '25px')
             return null;
@@ -309,12 +309,12 @@ export default class TyphoonPlayer extends Component {
             <div className="TimeSlider" >
                 <div onClick={this.collpase.bind(this)}>
                     <img src="libs/assets/timeslider/title-bg.png" />
-                    <img style={{ width: width - 125, height: 34 }} src="libs/assets/timeslider/bar-top.png" />
+                    <img style={{ width: width - 122, height: 34 }} src="libs/assets/timeslider/bar-top.png" />
                     <span style={{ cursor: 'pointer', position: "absolute", left: 35, top: 10, color: '#FFFFFF' }}   >台风播放</span>
                 </div>
                 <div>
                     <img style={{ width: width - 5, height: 75 }} src="libs/assets/timeslider/bar-middle.png" />
-                    <img style={{ position: "absolute", width: 5, height: 104, top: 5 }} src="libs/assets/timeslider/bar-right.png" />
+                    <img style={{ position: "absolute", width: 5, height: 104, top: 6 }} src="libs/assets/timeslider/bar-right.png" />
                 </div>
 
                 <div style={{ position: "absolute", left: 5, top: 42 }}>

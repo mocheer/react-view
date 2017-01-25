@@ -55,12 +55,9 @@ module.exports = {
     entry: {
         // "react-view":'./src/ReactView.js',
         "mapnav": "./src/apps/MapNav.js",
-        "typhoon/typhoon": "./src/apps/Typhoon.js",
+        "typhoon/typhoon": "./src/apps/typhoon/Typhoon.js",
         "controlbox": "./src/apps/ControlBox.js",
-        "widgets": "./src/apps/Widgets.js",
-        // "tooltip": "./src/apps/ToolTip.js",
-        // "contextmenu": "./src/apps/ContextMenu.js",
-        // "legendbox": "./src/apps/LegendBox.js",
+        "widgets": "./src/apps/widgets/Widgets.js",
     },
     output: {
         path: dir,

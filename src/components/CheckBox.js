@@ -10,9 +10,9 @@ export default class CheckBox extends Component {
     }
 
     onChange(){
-         let {props} = this,
+         let {props,state} = this,
             {onChange} = props,
-            selected = this.refs.button.checked;
+            selected = !state.selected;
         onChange({selected:selected})
         this.setState({
             selected:selected
@@ -26,7 +26,7 @@ export default class CheckBox extends Component {
         return (
             <div className="checkbox CheckBox" style={style} onClick={this.onChange.bind(this)} >
                 <label >
-                    <input ref='button' type="checkbox" checked={selected} />{label}
+                    <input  type="checkbox" checked={selected} />{label}
                 </label>
             </div>
         )
