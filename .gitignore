@@ -1,6 +1,4 @@
 # Build and Release Folders
 node_modules/
 examples/libs/data/
-apps/
 typings/
-*.exe

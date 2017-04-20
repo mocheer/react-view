@@ -1,6 +1,11 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.4.11
+ */
 import React, { Component, PropTypes } from 'react'
-import Toggle from '../components/Toggle'
-import CheckBox from '../components/CheckBox'
+import Toggle from '../../components/Toggle'
+import CheckBox from '../../components/CheckBox'
 import classNames from 'classnames'
 //时间滑块=>基于台风数据进行解析
 export default class TyphoonPlayer extends Component {
@@ -20,22 +25,35 @@ export default class TyphoonPlayer extends Component {
             this.setState({ width: T('mapbox').clientWidth })
         })
     }
+    /**
+     * 
+     */
     expand() {
         this.setState({ expanded: true })
     }
-
+    /**
+     * 
+     */
     collpase() {
         this.setState({ expanded: false })
     }
-
+    /**
+     * 
+     */
     componentDidMount() {
         this.drawScale()
     }
-
+    /**
+     * 
+     */
     componentDidUpdate() {
         this.drawScale()
     }
-
+    /**
+     * 
+     * @param {*} nextProps 
+     * @param {*} nextState 
+     */
     shouldComponentUpdate(nextProps, nextState) {
         let {state} = this,
             update = nextState.suspended !== state.suspended || nextState.dataProvider !== state.dataProvider || nextState.expanded !== state.expanded || nextState.width !== state.width
@@ -50,7 +68,7 @@ export default class TyphoonPlayer extends Component {
             }
             nextState.scales = {}
         }
-        T.emit('timechange', nextState)
+        T.do('timechange', nextState)
         return update;
     }
     /**
@@ -84,20 +102,16 @@ export default class TyphoonPlayer extends Component {
                     cs = 30,
                     cx = cs,
                     ct = new Date(start.getTime())
-                //
-                ctx.lineWidth = 0.5;
-                ctx.textAlign = 'center'
-                ctx.beginPath();
                 if (num < maxNum) {
                     num++
                 }
                 //
+                ctx.textAlign = 'center'
+                ctx.fillStyle = '#FFFFFF'
+                ctx.beginPath();
                 for (let i = 0; i < num; i++) {
-                    //
-                    ctx.strokeStyle = '#FFFFFF'
-                    ctx.strokeText(ct.getHours() + "时", cx, 10);
-                    ctx.strokeText(ct.getMonth() + 1 + "月" + ct.getDate() + "日", cx, 55);
-                    ctx.strokeStyle = '#000000'
+                    ctx.fillText(ct.getHours() + "时", cx, 10);//strokeText
+                    ctx.fillText(ct.getMonth() + 1 + "月" + ct.getDate() + "日", cx, 55);
                     ctx.moveTo(cx, 15)
                     ctx.lineTo(cx, 24)
                     ctx.moveTo(cx, 35)
@@ -136,7 +150,7 @@ export default class TyphoonPlayer extends Component {
                 w = 30
             this.onCloudChange();
             this.onRadarChange();
-            img.src = "libs/assets/timeslider/pointer.png"
+            img.src = "tree/assets/timeslider/pointer.png"
             img.onload = () => {
                 ctx.clearRect(0, 0, width, height)
                 if (selItem) {
@@ -173,7 +187,6 @@ export default class TyphoonPlayer extends Component {
                 ctx.fillStyle = gradient//"#F7BC2B"
                 ctx.fill()
                 ctx.drawImage(img, w - 8, 2);
-
                 // 数据时间刻度
                 ctx.lineWidth = 3
                 ctx.strokeStyle = '#FFFFFF'
@@ -257,7 +270,10 @@ export default class TyphoonPlayer extends Component {
             }
         }
     }
-
+    /**
+     * 
+     * @param {*} data 
+     */
     onCloudChange(data) {
         let {props, state} = this,
             {selItem} = state;
@@ -267,7 +283,10 @@ export default class TyphoonPlayer extends Component {
         props.onCloudChange && props.onCloudChange(state.cloud,selItem)
 
     }
-
+    /**
+     * 
+     * @param {*} data 
+     */
     onRadarChange(data) {
         let {props, state} = this,
             {selItem} = state;
@@ -286,7 +305,9 @@ export default class TyphoonPlayer extends Component {
             pt = ps.length > 1 ? ps[1].split(":") : [0, 0, 0];
         return new Date(pd[0], pd[1] - 1, pd[2], pt[0], pt[1], pt[2]);
     }
-
+    /**
+     * 
+     */
     render() {
         let {props, state} = this,
             {suspended, tag, expanded} = state,
@@ -302,27 +323,37 @@ export default class TyphoonPlayer extends Component {
 
         if (!expanded) {
             legendbox && (legendbox.style.bottom = '75px')
-            return <img className="TimeSlider" style={{ cursor: 'pointer', left: 5, bottom: 20 }} src="libs/assets/timeslider/collpase.png" onClick={this.expand.bind(this)} />
+            return <img className="TimeSlider" style={{ cursor: 'pointer', left: 5, bottom: 20 }} src="tree/assets/timeslider/collpase.png" onClick={this.expand.bind(this)} />
         }
         legendbox && (legendbox.style.bottom = '105px')
+
+        //canvas
+        let scaleProps = {
+            style:{ 
+                width:(width - 70),
+                height:60,
+                position: "absolute", left: 56, top: 0
+            } ,
+            width:(width - 70),
+            height:60
+        }
+
         return (
             <div className="TimeSlider" >
                 <div onClick={this.collpase.bind(this)}>
-                    <img src="libs/assets/timeslider/title-bg.png" />
-                    <img style={{ width: width - 122, height: 34 }} src="libs/assets/timeslider/bar-top.png" />
+                    <img src="tree/assets/timeslider/title-bg.png" />
+                    <img style={{ width: width - 122, height: 34 }} src="tree/assets/timeslider/bar-top.png" />
                     <span style={{ cursor: 'pointer', position: "absolute", left: 35, top: 10, color: '#FFFFFF' }}   >台风播放</span>
                 </div>
                 <div>
-                    <img style={{ width: width - 5, height: 75 }} src="libs/assets/timeslider/bar-middle.png" />
-                    <img style={{ position: "absolute", width: 5, height: 104, top: 6 }} src="libs/assets/timeslider/bar-right.png" />
+                    <img style={{ width: width - 5, height: 75 }} src="tree/assets/timeslider/bar-middle.png" />
+                    <img style={{ position: "absolute", width: 5, height: 104, top: 6 }} src="tree/assets/timeslider/bar-right.png" />
                 </div>
-
                 <div style={{ position: "absolute", left: 5, top: 42 }}>
-                    <Toggle ref="playButton" dataProvider={['libs/assets/timeslider/play.png', 'libs/assets/timeslider/pause.png']} onClick={this.onPlayClick.bind(this)} />
-                    <canvas ref="scale" style={{ position: "absolute", left: 56, top: 0 }} width={width - 70} height={60} />
+                    <Toggle ref="playButton" dataProvider={['tree/assets/timeslider/play.png', 'tree/assets/timeslider/pause.png']} onClick={this.onPlayClick.bind(this)} />
+                    <canvas ref="scale" {...scaleProps} />
                     <canvas ref="track" onClick={this.onTrackClick.bind(this)} style={{ cursor: 'pointer', position: "absolute", left: 56, top: 20 }} width={width - 70} height={16} />
                 </div>
-
                 <div style={{ position: 'absolute', padding: '5px 0px', right: -4, top: 0, backgroundColor: '#16385B', borderBottomLeftRadius: 2, borderBottomRightRadius: 2, borderTopLeftRadius: 2, borderTopRightRadius: 2 }} >
                     {box}
                 </div>

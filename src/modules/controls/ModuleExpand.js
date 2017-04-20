@@ -18,7 +18,7 @@ export default class ZoomIn extends Component {
         this.setState({
             epxanded:to
         })
-        window.T && T.emit('moduleexpand',to)
+        window.T && T.do('moduleexpand',to)
     }
 
     render() {

@@ -3,6 +3,8 @@ import ZoomIn from './controls/ZoomIn'
 import ZoomOut from './controls/ZoomOut'
 import FullScreen from './controls/FullScreen'
 import ModuleExpand from './controls/ModuleExpand'
+import DistanceMeature from './controls/DistanceMeature'
+import Clear from './controls/Clear'
 /**
  * 
  */
@@ -16,7 +18,7 @@ export default class ControlBox extends Component {
         if (target !== currentTarget) {
             let dataset = target.dataset,
                 label = dataset.label;
-            label && T.emit('tooltip', {
+            label && T.do('tooltip', {
                 label: label,
                 placement: 'left',
                 target: e.target
@@ -24,15 +26,16 @@ export default class ControlBox extends Component {
         }
     }
     onOut() {
-        T.emit('tooltip', {hide:true})
+        T.do('tooltip', {hide:true})
     }
 
     render() {
         let {props} = this,
-            {showZoom, showFullScreen, showModuleExpand} = props,   
+            {showZoom, showFullScreen, showModuleExpand,showDistanceMeature} = props,   
             controls = [];
         showZoom && controls.push(<ZoomIn />, <ZoomOut />)
         showFullScreen && controls.push(<FullScreen />)
+        showDistanceMeature && controls.push(<DistanceMeature />)  && controls.push(<Clear />)
         showModuleExpand && controls.push(<ModuleExpand />)
         return (
             <div className='ControlBox' onMouseOver={this.onOver} onMouseOut={this.onOut}>
@@ -47,4 +50,5 @@ ControlBox.defaultProps = {
     showZoom: true,
     showFullScreen: true,
     showModuleExpand: true,
+    showDistanceMeature:true
 };

@@ -1,39 +1,38 @@
+/**
+ * @author gyb(mocheer)
+ * @email mocheer@foxmail.com  
+ * @param date 2017.4.10
+ */
 const webpack = require('webpack');
+const assistant = require('assistant-webpack')
 // const autoprefixer = require('autoprefixer');//css-自动检测兼容性给各个浏览器加个内核前缀的插件
-const version = require('./node_modules/shell/nodejs/version.js')
-const dir = __dirname //webpack执行路径
-const env = process.env //webpack执行环境
+const dir = __dirname
+const env = process.env
+const packageJSON = assistant.PackageJSON;
+// plugins
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
+const BannerPlugin = webpack.BannerPlugin
+const NoErrorsPlugin = webpack.NoErrorsPlugin
+const DefinePlugin = webpack.DefinePlugin
+const ProvidePlugin = webpack.ProvidePlugin
+// const HotModuleReplacementPlugin = webpack.HotModuleReplacementPlugin //热替换,不用刷新页面，可用于生产环境 webpack-dev-server
+// const OccurenceOrderPlugin = webpack.optimize.OccurenceOrderPlugin    //维持构建编译代码
+// const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin        //拆分插件
+//
 var plugins = [
-    new webpack.BannerPlugin(version),
-    //保证编译后的代码永远是对的
-    new webpack.NoErrorsPlugin(),
-
-    // //相当于webpack -p
-    // new webpack.optimize.UglifyJsPlugin({
-    //     compress: {
-    //         warnings: false
-    //     }
-    // }),
-
-    //html生成插件
-    // new HtmlWebpackPlugin({}),
-
-    //拆分插件
-    // new webpack.optimize.CommonsChunkPlugin({}), 
-
-    //维持构建编译代码
-    // new webpack.optimize.OccurenceOrderPlugin(),
-
-    //热替换,不用刷新页面，可用于生产环境 webpack-dev-server
-    // new webpack.HotModuleReplacementPlugin(),
-
-    // ProvidePlugin的作用就是在开发代码内不需要require('react')或import ... from ... 也能使用React
-    // new webpack.ProvidePlugin({
+    new BannerPlugin(packageJSON.toBanner()),
+    new NoErrorsPlugin(),
+    // new ProvidePlugin({
     //     React: 'react',
     //     ReactDOM: 'react-dom'
     // }),
+    new DefinePlugin({
+        'process.env': {
+            'NODE_ENV': '"production"'
+        }
+    })
 ]
-
+//
 switch (env.task) {
     //开发环境
     case 'dev':
@@ -41,8 +40,7 @@ switch (env.task) {
     //生产环境
     case 'build':
         plugins.push(
-            //相当于webpack -p
-            new webpack.optimize.UglifyJsPlugin({
+            new UglifyJsPlugin({
                 compress: {
                     warnings: false
                 }
@@ -53,20 +51,19 @@ switch (env.task) {
 
 module.exports = {
     entry: {
-        // "react-view":'./src/ReactView.js',
-        "mapnav": "./src/apps/MapNav.js",
-        "typhoon/typhoon": "./src/apps/typhoon/Typhoon.js",
-        "controlbox": "./src/apps/ControlBox.js",
-        "widgets": "./src/apps/widgets/Widgets.js",
+        "mapnav": "./src/modules/MapNav.js",
+        "typhoon/typhoon": "./src/modules/typhoon/Typhoon.js",
+        "controlbox": "./src/modules/ControlBox.js",
+        "widgets": "./src/modules/Widgets.js",
     },
     output: {
         path: dir,
-        // filename: 'examples/libs/js/[name].js',
-        filename: '../trunk-map/trunk-map-example/libs/leaves/[name].js',
+        filename: '../tree-example/tree/modules/[name].js',
+        libraryTarget: "amd"
     },
     externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
+        'react': 'react',
+        'react-dom': 'react-dom',
     },
     resolve: {
         extensions: ['', '.js', '.jsx']

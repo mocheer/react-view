@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QRCode from 'qrcode.react';
 import classNames from 'classnames'
+
 /**
  * 右键菜单，插件方式，独立加载
  */

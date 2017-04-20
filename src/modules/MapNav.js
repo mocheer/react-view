@@ -23,7 +23,7 @@ export default class MapNav extends Component {
      */
     onProviderClick(data) {
         T.map.setProvider(data.value);
-        T.emit('providerchange', data)
+        T.do('providerchange', data)
     }
 
     onMouseOver(e) {
@@ -34,7 +34,7 @@ export default class MapNav extends Component {
             }
             let dataset = target.dataset,
                 {label} = dataset;
-            label && T.emit('tooltip', {
+            label && T.do('tooltip', {
                 label: label,
                 placement: 'bottom',
                 target: target,
@@ -50,14 +50,14 @@ export default class MapNav extends Component {
             }
             let dataset = target.dataset,
                 {value} = dataset;
-            value && T.map.emit('mapdraw', {
+            value && T.map.do('tmap-draw', {
                 tool: value
             })
 
         }
     }
     onMoustOut() {
-        T.emit('tooltip', { hide: true })
+        T.do('tooltip', { hide: true })
     }
     /**
      * 
@@ -98,7 +98,7 @@ export default class MapNav extends Component {
                             <i className="fa fa-mouse-pointer" ></i>
                         </a>
 
-                         <a className="btn btn-default" data-label='绘制直线' data-value='polyline' role="button">
+                         <a className="btn btn-default" data-label='绘制折线(测距)' data-value='polyline' role="button">
                             <i className="fa fa-pencil" ></i>
                         </a>
 

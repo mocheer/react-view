@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2016.3.24
+ */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 /**
@@ -10,7 +15,9 @@ export default class Panel extends Component {
             collopse: false
         }
     }
-
+    /**
+     * 标题点击
+     */
     onTitleClick() {
         let {state} = this,
             {collopse} = state;
@@ -18,7 +25,9 @@ export default class Panel extends Component {
             collopse: !collopse
         })
     }
-
+    /**
+     * 创建标题
+     */
     createTitle(title, collopse) {
         let cart
         if (!collopse) {
@@ -26,15 +35,21 @@ export default class Panel extends Component {
         }
         return <div className="panel-heading" onClick={this.onTitleClick.bind(this)}>{title}{cart}</div>
     }
-
+    /**
+     * 创建内容
+     */
     createBody(body) {
         return <div className="panel-body">{body}</div>
     }
-
+    /**
+     * 创建底部
+     */
     createFooter(body) {
         return <div className="panel-footer">{footer}</div>
     }
-
+    /**
+     * 渲染
+     */
     render() {
         let {props, state} = this,
             {title, body, footer, children, className} = props,

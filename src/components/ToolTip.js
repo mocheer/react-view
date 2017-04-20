@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2016.3.24
+ */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 
@@ -8,13 +13,6 @@ export default class ToolTip extends Component {
             placement: props.placement,
             label: props.label
         }
-        T && T.on('tooltip', data => {
-            if (data && data.hide == true) {
-                data.target = data.style = null
-                delete data.hide;
-            }
-            this.setState(data)
-        })
     }
     render() {
         let {state} = this,

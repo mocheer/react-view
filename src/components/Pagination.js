@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2016.3.24
+ */
 import React,{Component,PropTypes} from 'react'
 import classNames from 'classnames'
 //TODO action

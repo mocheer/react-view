@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2016.3.24
+ */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 // import moment from 'moment'
@@ -151,7 +156,9 @@ export default class AdvancedDataTable extends Component {
         }
         return dataRows;
     }
-
+    /**
+     * checkbox 选中
+     */
     onCheck(column, data) {
         let checked = data.checked = !data.checked,
             {state} = this,
@@ -165,7 +172,9 @@ export default class AdvancedDataTable extends Component {
         column.onChange(data, column, selItems)
         this.setState({})
     }
-
+    /**
+     * 事件信息
+     */
     getEventInfo(event) {
         var info = {},
             {props, state} = this,
@@ -185,7 +194,9 @@ export default class AdvancedDataTable extends Component {
         info.data = dataProvider[info.index];
         return info
     }
-
+    /**
+     * 表格点击
+     */
     onTableClick(event) {
         var info = this.getEventInfo(event),
             {onItemClick} = this.props
@@ -194,7 +205,9 @@ export default class AdvancedDataTable extends Component {
             selIndex: info.index
         })
     }
-
+    /**
+     * 
+     */
     onTableOver(event) {
         var info = this.getEventInfo(event),
             {onItemOver} = this.props
@@ -233,6 +246,9 @@ export default class AdvancedDataTable extends Component {
         }
         return label;
     }
+    /**
+     * 渲染
+     */
     render() {
         let {props, state} = this,
             {columns, dataProvider, selIndex} = state,

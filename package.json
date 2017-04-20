@@ -16,12 +16,11 @@
     "font-awesome": "^4.7.0",
     "moment": "^2.14.1",
     "qrcode.react": "^0.6.1",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2"
   },
   "devDependencies": {
+    "assistant-webpack": "git+https://github.com/mocheer/assistant-webpack.git",
     "babel-core": "^6.16.0",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.9.1",
@@ -29,7 +28,8 @@
     "babel-preset-es2015-loose": "^7.0.0",
     "babel-preset-react": "^6.5.0",
     "es3ify-loader": "^0.2.0",
-    "shell": "git://github.com/mocheer/shell.git",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
     "webpack": "^1.13.1"
   },
   "repository": {
