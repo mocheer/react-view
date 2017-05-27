@@ -14,7 +14,7 @@ export default class ZoomIn extends Component {
     render() {
         let {onClick} = this
         return (
-            <i className="fa fa-plus" data-label='放大' onClick={onClick.bind(this)} />
+            <i className="tf tf-plus" data-label='放大' onClick={onClick.bind(this)} />
         )
     }
 }

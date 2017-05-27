@@ -36,16 +36,12 @@ export default class Panel extends Component {
                 container.msRequestFullscreen();
             }
         }
-        this.setState({
-            isFullscreen: !isFullscreen
-        })
     }
     render() {
         let {state, onClick} = this,
-            {isFullscreen} = state,
-            className = classNames('fa', isFullscreen ? 'fa-compress' : 'fa-expand');
+            {isFullscreen} = state
         return (
-            <i className={className} data-label='全屏' onClick={onClick.bind(this)} />
+            <i className='tf tf-screen' data-label='全屏' onClick={onClick.bind(this)} />
         )
     }
 }

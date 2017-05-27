@@ -133,7 +133,7 @@ export default class ContextMenu extends Component {
     }
     /**
      * <li>
-          <a role="button"><i className="fa fa-envelope" /> mocheer@foxmail.com</a>
+          <a role="button"><i className="tf tf-envelope" /> mocheer@foxmail.com</a>
        </li>
      */
     render() {
@@ -158,29 +158,29 @@ export default class ContextMenu extends Component {
         return (
             <ul className="dropdown-menu ContextMenu" style={styl}>
                 <li onClick={onZoomIn}>
-                    <a role="button"><i className="fa fa-search-plus" /> 放大 </a>
+                    <a role="button"><i className="tf tf-search-plus" /> 放大 </a>
                 </li>
                 <li onClick={onZoomOut}>
-                    <a role="button"><i className="fa fa-search-minus" /> 缩小</a>
+                    <a role="button"><i className="tf tf-search-minus" /> 缩小</a>
                 </li>
                 <li onClick={onPan}>
-                    <a role="button"><i className="fa fa-arrows" /> 定位</a>
+                    <a role="button"><i className="tf tf-circle-point" /> 定位</a>
                 </li>
                 <li className="disabled" >
-                    <a role="button"><i className="fa fa-expand" /> 全屏</a>
+                    <a role="button"><i className="tf tf-screen" /> 全屏</a>
                 </li>
                 <li className="disabled"  >
-                    <a role="button"><i className="fa fa-volume-up" /> 声音</a>
+                    <a role="button"><i className="tf tf-voice-fill" /> 声音</a>
                 </li>
                 <li role="presentation" className="divider" />
                 <li className="disabled" >
-                    <a role="button"><i className="fa fa-info-circle" /> 系统信息 <span className="badge">0</span></a>
+                    <a role="button"><i className="tf tf-info-circle" /> 系统信息 <span className="badge">0</span></a>
                 </li>
                 <li onClick={showQRcode}>
-                    <a role="button"><i className="fa fa-qrcode" /> 二维码</a>
+                    <a role="button"><i className="tf tf-qrcode" /> 二维码</a>
                 </li>
                 <li>
-                    <a role="button" href='http://www.strongsoft.net/DMenu.aspx' target='_blank'><i className="fa fa-copyright" /> 福建四创软件</a>
+                    <a role="button" href='http://www.strongsoft.net/DMenu.aspx' target='_blank'><i className="tf tf-dolphin" /> 福建四创软件</a>
                 </li>
 
             </ul>

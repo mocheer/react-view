@@ -1,0 +1,28 @@
+.DataTable{
+   cursor:default; 
+   background-color: #FFFFFF;
+}
+
+.DataTable table{
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom:0px;
+  table-layout:fixed;/*固定*/
+}
+
+.DataTable .tablebody{
+  overflow: auto
+}
+
+.DataTable th{
+  font-weight:bold;
+  white-space: normal;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+.DataTable td {
+  white-space:normal;
+  font-size: 12px;
+  vertical-align: middle !important;
+}

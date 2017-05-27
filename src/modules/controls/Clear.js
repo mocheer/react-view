@@ -18,7 +18,7 @@ export default class Clear extends Component {
     render() {
         let { state, onClick } = this,
             { epxanded } = state,
-            cls = 'fa  fa-recycle'
+            cls = 'tf tf-clear-fill'
         return (
             <i className={cls} data-label='清除'  onClick={onClick.bind(this)} />
         )

@@ -31,7 +31,7 @@ export default class Navbar extends Component {
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <a className="navbar-brand" role="button" >
-                            <i className="fa fa-html5 fa-lg" aria-hidden="true"></i>
+                            <i className="tf tf-dolphin" style={{fontSize:24}} aria-hidden="true"></i>
                         </a>
                     </div>
                     <div className="collapse navbar-collapse">

@@ -11,12 +11,18 @@ export default class ComboBox extends Component {
     constructor(props) {
         super(props);
         let { dataProvider } = props,
-            selIndex = props.selIndex || (dataProvider && dataProvider.length > 0 && 0),
-            selItem = props.selItem || (selIndex >= 0 && dataProvider[selIndex])
+            selIndex = props.selIndex,
+            selItem;
+        if (dataProvider) {
+            if (selIndex == -1) {
+                selIndex = 0;
+            }
+            selItem = dataProvider[selIndex]
+        }
         this.state = {
             dataProvider: dataProvider,
-            selItem: selItem,
             selIndex: selIndex,
+            selItem: selItem,
             opened: props.opened
         }
     }
@@ -26,15 +32,22 @@ export default class ComboBox extends Component {
      * @param {*} nextState 
      */
     shouldComponentUpdate(nextProps, nextState) {
-        let { selItem, selIndex } = nextState;
-        if (selItem !== void 0 || selIndex !== void 0) {
-            if (!selItem === void 0) {
-                nextState.selItem = this.dataProvider[selIndex];
+        let { selItem, selIndex, dataProvider } = nextState;
+        if (selItem !== null || selIndex !== null) {
+            dataProvider = dataProvider || this.state.dataProvider;
+            if (dataProvider) {
+                if (!selItem === void 0) {
+                    nextState.selItem = dataProvider[selIndex];
+                }
+                if (selIndex === void 0) {
+                    nextState.selIndex = dataProvider.indexOf(selItem)
+                }
+                return true
             }
-            if (selIndex === void 0) {
-                nextState.selIndex = this.dataProvider.indexOf(selItem)
-            }
-            return true
+        } else if (dataProvider) {
+            nextState.selIndex = 0;
+            nextState.selItem = dataProvider[0];
+            return true;
         }
     }
     /**
@@ -71,7 +84,7 @@ export default class ComboBox extends Component {
      * @param {*} data 
      */
     createLabel(data) {
-        if (typeof (data) === "object") {
+        if ("object" == typeof data) {
             return data.label;
         } else {
             return data;
@@ -90,11 +103,14 @@ export default class ComboBox extends Component {
      * 渲染
      */
     render() {
-        var { props, state, createLabel, createI, handleClick, handleChange } = this;
-        var { type } = props;
-        var { opened, dataProvider, selIndex, selItem } = state;
-        var label = createLabel(selItem);
-        var dataList;
+        let { props, state, createLabel, createI, handleClick, handleChange } = this,
+            { type } = props,
+            { opened, dataProvider, selIndex, selItem } = state,
+            dataList
+        if (!dataProvider) {
+            return null;
+        }
+        let label = createLabel(selItem);
         handleClick = handleClick.bind(this);
         if (opened) {
             var dataRows = dataProvider.map((data, index) => {
@@ -127,8 +143,7 @@ export default class ComboBox extends Component {
 }
 //设置默认属性
 ComboBox.defaultProps = {
-    selectedIndex: -1,
-    dataProvider: [],
+    selIndex: -1,
     opened: false,
     type: "dropdown"//dropup
 };

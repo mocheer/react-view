@@ -12,9 +12,7 @@ export default class DistanceMeature extends Component {
     }
 
     componentDidMount() {
-        window.require(['map/layer/DrawLayer'], function (Layer) {
-            new Layer().addTo(T.map)
-        })
+        
     }
 
     onClick() {
@@ -23,10 +21,9 @@ export default class DistanceMeature extends Component {
 
     render() {
         let { state, onClick } = this,
-            { epxanded } = state,
-            cls = 'fa  fa-pencil'
+            { epxanded } = state
         return (
-            <i className={cls} data-label='测距'  onClick={onClick.bind(this)} />
+            <i className='tf tf-draw-line-measure' data-label='测距'  onClick={onClick.bind(this)} />
         )
     }
 }

@@ -5,13 +5,15 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-// import moment from 'moment'
 /**
  * column {dataField,headerText,type,width,group}
  * actions:{loadingAction,clickAction}
  * store
+ * showNoData 当dataProvider为空时显示no data
+ * reverse  倒序排列
+ * 
  */
-export default class AdvancedDataTable extends Component {
+export default class DataTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,7 +46,9 @@ export default class AdvancedDataTable extends Component {
      * 统一列表列宽
      */
     setHeaderWidth() {
-        let body = this.refs.body;
+        let {refs} = this,
+            tablebody = refs.tablebody,
+            body = refs.body;
         if (!body) {
             return;
         }
@@ -56,7 +60,8 @@ export default class AdvancedDataTable extends Component {
         if (tds.length <= 1) {
             return;
         }
-        let ths = this.refs.header.querySelectorAll('th'),
+        let header = refs.header,
+            ths = header.querySelectorAll('th'),
             columnCount = tds.length;
         if (ths.length !== columnCount) {
             let nths = [];
@@ -69,9 +74,14 @@ export default class AdvancedDataTable extends Component {
             }
             ths = nths;
         }
-        for (let i = 0; i < columnCount; i++) {
+        if(tablebody.scrollHeight>tablebody.clientHeight||tablebody.offsetHeight>tablebody.clientHeight){
+             columnCount --;
+             ths[columnCount].width = tds[columnCount].offsetWidth+16;
+        }
+         for (let i = 0; i < columnCount; i++) {
             ths[i].width = tds[i].offsetWidth;
         }
+       
     }
     /**
      * 创建列头

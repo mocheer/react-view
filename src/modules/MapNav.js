@@ -13,11 +13,8 @@ export default class MapNav extends Component {
     }
 
     componentDidMount() {
-        window.require(['map/layer/DrawLayer'], function (Layer) {
-            new Layer().addTo(T.map)
-        })
+         
     }
-
     /**
      * 
      */
@@ -62,24 +59,24 @@ export default class MapNav extends Component {
     /**
      * 
         <a className="btn btn-default" data-label='漫游' role="button">
-            <i className="fa fa-hand-paper-o" ></i>
+            <i className="tf tf-hand-paper-o" ></i>
         </a>
      */
     render() {
         let {onProviderClick, props, state} = this,
             title = state.title,
             providers = [
-                { label: '谷歌地图', value: 'GoogleMap.Normal', i: 'fa fa-rocket' },
-                { label: '谷歌影像图', value: 'GoogleMap.Hybrid', i: "fa fa-map-o" },
-                { label: '谷歌地形图', value: 'GoogleMap.Terrain', i: 'fa fa-ambulance' },
-                { label: '谷歌地形图+底图', value: 'GoogleMap.Terrain_R', i: 'fa fa-taxi' },
-                { label: '谷歌卫星图', value: 'GoogleMap.Satellite', i: 'fa fa-car' },
-                { label: '谷歌轮廓图(dark)', value: 'GoogleMap.Skeleton_D', i: 'fa fa-ship' },
-                { label: '谷歌轮廓图(light)', value: 'GoogleMap.Skeleton_H', i: 'fa fa-bus' },
-                { label: '高德影像图', value: 'GaodeMap.Satellite', i: 'fa fa-train' },
-                { label: '高德卫星图', value: 'GaodeMap.Normal', i: 'fa fa-truck' },
-                { label: '天地图(卫星)', value: 'Tianditu.Normal', disabled: true, i: 'fa fa-joomla' },
-                { label: '天地图(地形)', value: 'Tianditu.Terrain', disabled: true, i: 'fa fa-subway' },
+                { label: '谷歌地图', value: 'GoogleMap.Normal', i: 'tf tf-rocket' },
+                { label: '谷歌影像图', value: 'GoogleMap.Hybrid', i: "tf tf-map-o" },
+                { label: '谷歌地形图', value: 'GoogleMap.Terrain', i: 'tf tf-ambulance' },
+                { label: '谷歌地形图+底图', value: 'GoogleMap.Terrain_R', i: 'tf tf-taxi' },
+                { label: '谷歌卫星图', value: 'GoogleMap.Satellite', i: 'tf tf-car' },
+                { label: '谷歌轮廓图(dark)', value: 'GoogleMap.Skeleton_D', i: 'tf tf-ship' },
+                { label: '谷歌轮廓图(light)', value: 'GoogleMap.Skeleton_H', i: 'tf tf-bus' },
+                { label: '高德影像图', value: 'GaodeMap.Satellite', i: 'tf tf-train' },
+                { label: '高德卫星图', value: 'GaodeMap.Normal', i: 'tf tf-truck' },
+                { label: '天地图(卫星)', value: 'Tianditu.Normal', disabled: true, i: 'tf tf-joomla' },
+                { label: '天地图(地形)', value: 'Tianditu.Terrain', disabled: true, i: 'tf tf-subway' },
             ]
         return (
             <Navbar >
@@ -90,44 +87,44 @@ export default class MapNav extends Component {
                 <form className="navbar-form navbar-left">
                     <div className="input-group" style={{ marginRight: 10 }}>
                         <input type="text" className="form-control" placeholder="Search" />
-                        <span className="input-group-addon" role='button' ><i className="fa fa-search"></i></span>
+                        <span className="input-group-addon" role='button' ><i className="tf tf-search"></i></span>
                     </div>
                     <div className="btn-group" style={{ marginRight: 10 }} onMouseOver={this.onMouseOver} onClick={this.onClick} onMouseOut={this.onMoustOut} >
 
                         <a className="btn btn-default" data-label='点选' data-value='pointer' role="button">
-                            <i className="fa fa-mouse-pointer" ></i>
+                            <i className="tf tf-mouse-pointer" ></i>
                         </a>
 
-                         <a className="btn btn-default" data-label='绘制折线(测距)' data-value='polyline' role="button">
-                            <i className="fa fa-pencil" ></i>
+                         <a className="btn btn-default" data-label='绘制线' data-value='polyline' role="button">
+                            <i className="tf tf-draw-line" ></i>
                         </a>
 
                         <a className="btn btn-default" data-label='绘制曲线' data-value='curve' role="button">
-                            <i className="fa fa-pencil" ></i>
+                            <i className="tf tf-draw-curve"  ></i>
                         </a>
                         <a className="btn btn-default" data-label='填充曲线' data-value='curvefill' role="button">
-                            <i className="fa fa-paint-brush" ></i>
+                            <i className="tf tf-draw-curve" ></i>
                         </a>
                         <a className="btn btn-default" data-label='绘制矩形' data-value='rect' role="button">
-                            <i className="fa fa-square-o" ></i>
+                            <i className="tf tf-draw-rect" ></i>
                         </a>
                         <a className="btn btn-default" data-label='绘制圆形' data-value='circle' role="button">
-                            <i className="fa fa-circle-o" ></i>
+                            <i className="tf tf-draw-circle" ></i>
                         </a>
                         <a className="btn btn-default" data-label='绘制多边形' data-value='polygon' role="button">
-                            <i className="fa fa-connectdevelop" ></i>
+                            <i className="tf tf-draw-polygon" ></i>
                         </a>
                         <a className="btn btn-default" data-label='清除回收' data-value='clear' role="button">
-                            <i className="fa fa-recycle" ></i>
+                            <i className="tf tf-clear-fill" ></i>
                         </a>
                     </div>
 
                     <div className="btn-group" onMouseOver={this.onMouseOver} onMouseOut={this.onMoustOut} >
                         <a className="btn btn-default" data-label='声音' role="button">
-                            <i className="fa fa-volume-up" ></i>
+                            <i className="tf tf-voice-fill" ></i>
                         </a>
                         <a className="btn btn-default" data-label='设置' role="button">
-                            <i className="fa fa-cog" ></i>
+                            <i className="tf tf-setting" ></i>
                         </a>
                     </div>
                 </form>

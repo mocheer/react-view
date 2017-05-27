@@ -4,6 +4,6 @@ import {DataTableReducer} from "./reducers/DataTableReducer";
 const DataTableStore = createStore(DataTableReducer);
 
 export var stores = {
-    advanceddatatable:DataTableStore
+    datatable:DataTableStore
 };
 

@@ -30,7 +30,7 @@ var plugins = [
         'process.env': {
             'NODE_ENV': '"production"'
         }
-    })
+    }),
 ]
 //
 switch (env.task) {
@@ -48,13 +48,12 @@ switch (env.task) {
         )
         break;
 }
-
 module.exports = {
     entry: {
-        "mapnav": "./src/modules/MapNav.js",
         "typhoon/typhoon": "./src/modules/typhoon/Typhoon.js",
-        "controlbox": "./src/modules/ControlBox.js",
-        "widgets": "./src/modules/Widgets.js",
+        "extra/mapnav": "./src/modules/MapNav.js",
+        "extra/controlbox": "./src/modules/ControlBox.js",
+        "extra/widgets": "./src/modules/Widgets.js",
     },
     output: {
         path: dir,
@@ -74,14 +73,8 @@ module.exports = {
                 test: /\.js(x)?$/,
                 exclude: /(node_modules|bower_components)/,//npm,bower
                 loader: 'babel-loader'
-            }
-        ],
-        // postLoaders: [
-        //     {
-        //         test: /\.js(x)?$/,
-        //         loaders: ['es3ify-loader']
-        //     }
-        // ]
+            },
+        ]
     },
     plugins: plugins
 }

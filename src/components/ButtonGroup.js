@@ -35,25 +35,25 @@ export default class ButtonGroup extends Component {
         return (
             <div className="btn-group" style={{ marginRight: 10 }} >
                 <a className="btn btn-primary" role="button">
-                    <i className="fa fa-mouse-pointer" ></i>
+                    <i className="tf tf-mouse-pointer" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-hand-paper-o" ></i>
+                    <i className="tf tf-hand-paper-o" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-pencil" ></i>
+                    <i className="tf tf-pencil" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-paint-brush" ></i>
+                    <i className="tf tf-paint-brush" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-square-o" ></i>
+                    <i className="tf tf-square-o" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-circle-o" ></i>
+                    <i className="tf tf-circle-o" ></i>
                 </a>
                 <a className="btn btn-default" role="button">
-                    <i className="fa fa-connectdevelop" ></i>
+                    <i className="tf tf-connectdevelop" ></i>
                 </a>
             </div>
         )

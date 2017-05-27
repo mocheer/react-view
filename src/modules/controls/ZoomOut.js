@@ -14,7 +14,7 @@ export default class ZoomOut extends Component {
     render() {
         let {onClick} = this
         return (
-            <i className="fa fa-minus" data-label='缩小' onClick={onClick.bind(this)} />
+            <i className="tf tf-minus" data-label='缩小' onClick={onClick.bind(this)} />
         )
     }
 }
