@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 /**
  * 
  */
-export default class DistanceMeature extends Component {
+export default class Meature extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,7 @@ export default class DistanceMeature extends Component {
     }
 
     onClick() {
-        T.map.do('tmap-draw', { tool: 'polyline' })
+        T.map.do('tool-change', { tool: 'polyline' })
     }
 
     render() {

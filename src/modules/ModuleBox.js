@@ -1,5 +1,9 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.6.13
+ */
 import React, { Component, PropTypes } from 'react'
-
 /**
  * 
  */

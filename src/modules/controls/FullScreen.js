@@ -6,14 +6,10 @@ import classNames from 'classnames'
 export default class Panel extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isFullscreen: false
-        }
     }
 
     onClick() {
-        let {isFullscreen} = this.state;
-        // let isFullscreen =  window.document.body.clientHeight == window.screen.height
+        let isFullscreen =  document.body.scrollHeight == window.screen.height && document.body.scrollWidth == window.screen.width
         if (isFullscreen) {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
@@ -38,8 +34,7 @@ export default class Panel extends Component {
         }
     }
     render() {
-        let {state, onClick} = this,
-            {isFullscreen} = state
+        let {onClick} = this
         return (
             <i className='tf tf-screen' data-label='全屏' onClick={onClick.bind(this)} />
         )

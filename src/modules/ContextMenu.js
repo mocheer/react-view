@@ -1,7 +1,11 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.6.13
+ */
 import React, { Component, PropTypes } from 'react'
 import QRCode from 'qrcode.react';
 import classNames from 'classnames'
-
 /**
  * 右键菜单，插件方式，独立加载
  */
@@ -16,7 +20,9 @@ export default class ContextMenu extends Component {
         }
         this.init();
     }
-
+    /**
+     * 
+     */
     init() {
         document.oncontextmenu = e => {
             this.onContextMenu(e)
@@ -24,7 +30,10 @@ export default class ContextMenu extends Component {
         }
         document.onclick = e => this.onClick(e)
     }
-
+    /**
+     * 
+     * @param {*} e 
+     */
     onContextMenu(e) {
         let event = e || window.event,
             point = [event.clientX, event.clientY]
@@ -60,8 +69,8 @@ export default class ContextMenu extends Component {
      */
     onPan(e) {
         if (esri) {
-            let mapbox = T.map,
-                {map} = mapbox,
+            let tmap = T.map,
+                {map} = tmap,
                 ScreenPoint = esri.geometry.ScreenPoint,
                 point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
             map.centerAt(point)
@@ -73,9 +82,9 @@ export default class ContextMenu extends Component {
      * 二维码
      */
     showQRcode() {
-        let mapbox = T('mapbox'),
-            w = mapbox.clientWidth,
-            h = mapbox.clientHeight,
+        let tmap = T('tmap'),
+            w = tmap.clientWidth,
+            h = tmap.clientHeight,
             outter = {
                 zIndex: 999, // leaflet需要这样做
                 position: 'fixed',

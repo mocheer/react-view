@@ -1,9 +1,14 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.6.13
+ */
 import React, { Component, PropTypes } from 'react'
 import ZoomIn from './controls/ZoomIn'
 import ZoomOut from './controls/ZoomOut'
 import FullScreen from './controls/FullScreen'
-import ModuleExpand from './controls/ModuleExpand'
-import DistanceMeature from './controls/DistanceMeature'
+import Expand from './controls/Expand'
+import Meature from './controls/Meature'
 import Clear from './controls/Clear'
 /**
  * 
@@ -13,7 +18,7 @@ export default class ControlBox extends Component {
         super(props);
     }
 
-    onOver(e) {
+    onMouseOver(e) {
         let {target, currentTarget} = e
         if (target !== currentTarget) {
             let dataset = target.dataset,
@@ -25,7 +30,7 @@ export default class ControlBox extends Component {
             })
         }
     }
-    onOut() {
+    onMouseOut() {
         T.do('tooltip', {hide:true})
     }
 
@@ -35,10 +40,10 @@ export default class ControlBox extends Component {
             controls = [];
         showZoom && controls.push(<ZoomIn />, <ZoomOut />)
         showFullScreen && controls.push(<FullScreen />)
-        showDistanceMeature && controls.push(<DistanceMeature />)  && controls.push(<Clear />)
-        showModuleExpand && controls.push(<ModuleExpand />)
+        showDistanceMeature && controls.push(<Meature />)  && controls.push(<Clear />)
+        showModuleExpand && controls.push(<Expand />)
         return (
-            <div className='ControlBox' onMouseOver={this.onOver} onMouseOut={this.onOut}>
+            <div className='ControlBox' onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
                 {controls}
             </div>
         )

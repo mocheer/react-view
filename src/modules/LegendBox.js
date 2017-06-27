@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.6.13
+ */
 import React, { Component, PropTypes } from 'react'
 import Panel from '../containers/Panel'
 /**
@@ -9,15 +14,18 @@ export default class LegendBox extends Component {
         this.state = {
             dataProvider: props.dataProvider
         }
-        T.on('addLegend', this.add.bind(this))
-        T.on('removeLegend', this.remove.bind(this))
+        T.on('tmap-addLegend', this.add.bind(this))
+        T.on('tmap-removeLegend', this.remove.bind(this))
     }
     /**
      * @param data [{title,body}]
      */
     add(data) {
-        let {state} = this,
-            {dataProvider} = state
+        if (!data) {
+            return;
+        }
+        let { state } = this,
+            { dataProvider } = state
         if (!dataProvider) {
             dataProvider = data;
         } else if (dataProvider.indexOf(data) === -1) {
@@ -31,8 +39,11 @@ export default class LegendBox extends Component {
      * @param data [{}]
      */
     remove(data) {
-        let {state} = this,
-            {dataProvider} = state
+        if (!data) {
+            return;
+        }
+        let { state } = this,
+            { dataProvider } = state
         if (dataProvider) {
             dataProvider = dataProvider.filter((item, index, array) => {
                 return data.indexOf(item) == -1
@@ -54,7 +65,7 @@ export default class LegendBox extends Component {
      * @param data {title,body}
      */
     createLegend(data) {
-        let {title, body, children, footer} = data,
+        let { title, body, children, footer } = data,
             column = data.column || 2,
             w = data.width || 180,
             iw = w / column,
@@ -131,8 +142,8 @@ export default class LegendBox extends Component {
      * 
      */
     render() {
-        let {props, state, createLegend} = this,
-            {dataProvider} = state
+        let { props, state, createLegend } = this,
+            { dataProvider } = state
         if (!dataProvider) {
             return null;
         }

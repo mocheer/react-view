@@ -15,7 +15,7 @@ export default class TyphoonInfoBox extends Component {
             expanded: false,
             info: null
         }
-        T.on('typhooninfoChange', this.onChange.bind(this))
+        T.on('typhoon-over', this.onChange.bind(this))
     }
 
     onChange(data) {

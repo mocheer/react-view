@@ -8,8 +8,8 @@ export default class ZoomOut extends Component {
     }
 
     onClick() {
-         let mapbox = T.map
-        mapbox.zoomBy(-1)
+         let tmap = T.map
+        tmap.zoomBy(-1)
     }
     render() {
         let {onClick} = this

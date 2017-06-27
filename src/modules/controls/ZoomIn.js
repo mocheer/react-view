@@ -8,8 +8,7 @@ export default class ZoomIn extends Component {
     }
     
     onClick() {
-        let mapbox = T.map
-        mapbox.zoomBy(1)
+        T.map.zoomBy(1)
     }
     render() {
         let {onClick} = this

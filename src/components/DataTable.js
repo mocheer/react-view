@@ -5,13 +5,13 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
+
 /**
  * column {dataField,headerText,type,width,group}
  * actions:{loadingAction,clickAction}
  * store
  * showNoData 当dataProvider为空时显示no data
  * reverse  倒序排列
- * 
  */
 export default class DataTable extends Component {
     constructor(props) {

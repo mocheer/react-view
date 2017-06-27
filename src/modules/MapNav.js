@@ -1,3 +1,8 @@
+/**
+ * @author gyb(mocheer) 
+ * @email mocheer@foxmail.com
+ * @param date 2017.6.13
+ */
 import React, { Component, PropTypes } from 'react'
 import Navbar from '../containers/Navbar'
 import ComboBox from '../components/ComboBox'
@@ -8,10 +13,12 @@ export default class MapNav extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: T.map && T.map.type
+            title: '福建四创软件研发二部项目四组-' + T.Map.platform
         }
     }
-
+    /**
+     * 
+     */
     componentDidMount() {
          
     }
@@ -20,9 +27,11 @@ export default class MapNav extends Component {
      */
     onProviderClick(data) {
         T.map.setProvider(data.value);
-        T.do('providerchange', data)
     }
-
+    /**
+     * 
+     * @param {*} e 
+     */
     onMouseOver(e) {
         let {target, currentTarget} = e
         if (target !== currentTarget) {
@@ -47,7 +56,7 @@ export default class MapNav extends Component {
             }
             let dataset = target.dataset,
                 {value} = dataset;
-            value && T.map.do('tmap-draw', {
+            value && T.map.do('tool-change', {
                 tool: value
             })
 
@@ -75,8 +84,8 @@ export default class MapNav extends Component {
                 { label: '谷歌轮廓图(light)', value: 'GoogleMap.Skeleton_H', i: 'tf tf-bus' },
                 { label: '高德影像图', value: 'GaodeMap.Satellite', i: 'tf tf-train' },
                 { label: '高德卫星图', value: 'GaodeMap.Normal', i: 'tf tf-truck' },
-                { label: '天地图(卫星)', value: 'Tianditu.Normal', disabled: true, i: 'tf tf-joomla' },
-                { label: '天地图(地形)', value: 'Tianditu.Terrain', disabled: true, i: 'tf tf-subway' },
+                { label: '天地图(卫星)', value: 'Tianditu.Normal', disabled: false, i: 'tf tf-joomla' },
+                { label: '天地图(地形)', value: 'Tianditu.Terrain', disabled: false, i: 'tf tf-subway' },
             ]
         return (
             <Navbar >

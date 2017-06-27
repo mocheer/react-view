@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 /**
  * 
  */
-export default class ZoomIn extends Component {
+export default class Expand extends Component {
     constructor(props) {
         super(props);
         this.state = {

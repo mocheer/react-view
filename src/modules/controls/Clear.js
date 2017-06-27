@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react'
 
+import React, { Component, PropTypes } from 'react'
 /**
  * 
  */
@@ -12,7 +12,7 @@ export default class Clear extends Component {
     }
 
     onClick() {
-        T.map.do('tmap-draw', { tool: 'clear' })
+        T.map.do('tool-change', { tool: 'clear' })
     }
 
     render() {

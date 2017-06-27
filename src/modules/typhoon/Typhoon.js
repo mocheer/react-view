@@ -18,6 +18,7 @@ import { actions } from '../../ReactActions';
 import { stores } from '../../ReactStores';
 //
 export default class Typhoon extends Component {
+
     constructor(props) {
         super(props);
         this.store = {
@@ -38,7 +39,7 @@ export default class Typhoon extends Component {
             if (data) {
                 if (typhoonLayer) {
                     var typhoon = typhoonLayer.getTyphoon(data.tfbh)
-                    typhoon && typhoon.setIndex(index)
+                    typhoon && typhoon.setTimeIndex(index)
                     ljtab.setState({ label: data.tfbh + data.name + '路径信息' })
                     ljxx.setState({ selIndex: index, dataProvider: data.points })
                     this.updateCityies(index)
@@ -57,14 +58,23 @@ export default class Typhoon extends Component {
             { conf } = props;
         //
         if (!store.player && !store.infobox) {
-            store.player = T.render('typhoonplayer', <TyphoonPlayer width={T('mapbox').clientWidth} onCloudChange={this.onCloudChange.bind(this)} onRadarChange={this.onRadarChange.bind(this)} />)
-            store.infobox = T.render('mapbox.typhooninfobox', <TyphoonInfoBox />)
-            T.set('mapbox.typhooninfobox', {
+            store.player = T.render('typhoonplayer', <TyphoonPlayer width={T('tmap').clientWidth} onCloudChange={this.onCloudChange.bind(this)} onRadarChange={this.onRadarChange.bind(this)} />)
+            store.infobox = T.render('tmap.typhooninfobox', <TyphoonInfoBox />)
+            T.setStyle(T('tmap.typhooninfobox'), {
                 position: 'absolute',
                 zIndex: 999,
                 left: '0px',
                 top: conf.info.top
             })
+        }
+        let { typhoonLayer } = store;
+        if (!typhoonLayer) {
+            var TyphoonLayer = T.Map.TyphoonLayer;
+            typhoonLayer = store.typhoonLayer = new TyphoonLayer(conf);
+            typhoonLayer.addTo(T.map);
+        }
+        if (store.suspended) {
+            typhoonLayer.suspend()
         }
         //
         this.handleSubmit()
@@ -117,13 +127,19 @@ export default class Typhoon extends Component {
                 layer.suspend()
             }
             result.forEach(item => {
-                item.geometry = [item.mapx, item.mapy]
-                item.label = { name: item.featurename, minZoom: 15 }
+                item.coordinates = [item.mapx, item.mapy]
+                item.tooltip = { text: item.featurename, minZoom: 15 }
             }, this);
             layer.addTo(T.map)
             let { style } = conf,
                 { city } = style;
             if (city) {
+                city.tooltip = {//leaflet
+                    labelFunc: function (marker) {
+                        let data = marker._d;
+                        return (data && data.tooltip.text) || '';
+                    }
+                }
                 layer.addPictures(result, city)
             } else {
                 layer.addPoints(result)
@@ -175,28 +191,28 @@ export default class Typhoon extends Component {
                 if (typhoon) {
                     var data = typhoon.data,
                         points = data.points || [],
-                        geometry,
+                        coordinates,
                         cgeo;
                     if (index === void 0) {
                         index = points.length - 1
                     }
                     if (index >= 0) {
                         var item = points[index]
-                        geometry = [item.lng, item.lat];
+                        coordinates = [item.lng, item.lat];
                     }
                     cityies.forEach(item => {
                         cgeo = [item.mapx, item.mapy];
-                        let distance = T.map.measure(geometry, cgeo) * 0.001,
-                            label = item.label || (item.label = {})
+                        let distance = T.map.distance(coordinates, cgeo) * 0.001,
+                            tooltip = item.tooltip || (item.tooltip = {})
                         item.distance = distance.toFixed(0);
-                        label.name = data.name + '距' + item.featurename + item.distance + '公里'
+                        tooltip.text = data.name + '距' + item.featurename + item.distance + '公里' //arcgis
                     }, this);
                     cscj.setState({ dataProvider: cityies })
                 }
             } else {
                 cityies.forEach(item => {
                     item.distance = '';
-                    item.label.name = item.featurename
+                    item.tooltip.name = item.featurename
                 }, this);
                 cscj.setState({ dataProvider: cityies })
             }
@@ -253,14 +269,6 @@ export default class Typhoon extends Component {
                     this.addSliderTime(tf)
                     ljxx.setState({ dataProvider: points, selIndex: -1 })
                     ljtab.setState({ label: tf.tfbh + tf.name + '路径信息' })
-                    var TyphoonLayer = T.Map.TyphoonLayer;
-                    if (!typhoonLayer) {
-                        typhoonLayer = store.typhoonLayer = new TyphoonLayer(conf);
-                        typhoonLayer.addTo(T.map);
-                    }
-                    if (store.suspended) {
-                        typhoonLayer.suspend()
-                    }
                     typhoonLayer.addTyphoons(result)
                     this.updateCityies()
                 });
@@ -307,7 +315,7 @@ export default class Typhoon extends Component {
             selItem = info.dataProvider[index]
         if (typhoonLayer) {
             var typhoon = typhoonLayer.getTyphoon(store.tfbh)
-            typhoon.setIndex(index)
+            typhoon.setTimeIndex(index)
         }
         player.setState({ selItem: selItem })
     }
@@ -361,12 +369,12 @@ export default class Typhoon extends Component {
             } else {
                 var Layer = T.Map.CommonLayer
                 var layer = store[layerName] || (store[layerName] = new Layer()),
-                    geometry = mapImage.geometry
+                    coordinates = mapImage.geometry
                 if (store.suspended) {
                     layer.suspend()
                 }
                 layer.addTo(T.map)
-                store[markerName] = layer.addImg({ geometry: geometry }, { url: source })
+                store[markerName] = layer.addImg({ coordinates: coordinates }, { url: source })
             }
         } else if (store[markerName]) {
             store[markerName].remove();

@@ -54,6 +54,8 @@ module.exports = {
         "extra/mapnav": "./src/modules/MapNav.js",
         "extra/controlbox": "./src/modules/ControlBox.js",
         "extra/widgets": "./src/modules/Widgets.js",
+        'extra/pancontrol':'./src/modules/PanControl.js',
+        'extra/zoomcontrol':'./src/modules/ZoomControl.js'
     },
     output: {
         path: dir,

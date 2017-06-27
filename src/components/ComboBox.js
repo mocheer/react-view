@@ -110,6 +110,7 @@ export default class ComboBox extends Component {
         if (!dataProvider) {
             return null;
         }
+        selItem = selItem || dataProvider[0]
         let label = createLabel(selItem);
         handleClick = handleClick.bind(this);
         if (opened) {

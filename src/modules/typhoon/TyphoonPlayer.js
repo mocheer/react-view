@@ -22,7 +22,10 @@ export default class TyphoonPlayer extends Component {
             radar: false,
         };
         T.on('moduleexpand', data => {
-            this.setState({ width: T('mapbox').clientWidth })
+            this.setState({ width: T('tmap').clientWidth })
+        })
+        T.on('typhoon-click',data=>{
+            this.setState(Object.assign({expanded: true},data))
         })
     }
     /**
