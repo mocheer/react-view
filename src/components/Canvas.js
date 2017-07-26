@@ -5,7 +5,7 @@
  */
 import React, { Component, PropTypes } from 'react'
 
-export default class CanvasEx extends Component {
+export default class Canvas extends Component {
     constructor(props) {
         super(props)
     }

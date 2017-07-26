@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 /**
  * 
  */
-export default class Meature extends Component {
+export default class Distance extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,18 +12,18 @@ export default class Meature extends Component {
     }
 
     componentDidMount() {
-        
-    }
 
+    }
+    
     onClick() {
-        T.map.do('tool-change', { tool: 'polyline' })
+        T.map.setTool({ tool: 'distance' })
     }
 
     render() {
         let { state, onClick } = this,
             { epxanded } = state
         return (
-            <i className='tf tf-draw-line-measure' data-label='测距'  onClick={onClick.bind(this)} />
+            <i className='tf tf-draw-line-measure' data-label='测距' onClick={onClick.bind(this)} />
         )
     }
 }

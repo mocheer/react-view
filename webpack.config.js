@@ -50,6 +50,7 @@ switch (env.task) {
 }
 module.exports = {
     entry: {
+        "topicbar": "./src/modules/Topicbar.js",
         "typhoon/typhoon": "./src/modules/typhoon/Typhoon.js",
         "extra/mapnav": "./src/modules/MapNav.js",
         "extra/controlbox": "./src/modules/ControlBox.js",

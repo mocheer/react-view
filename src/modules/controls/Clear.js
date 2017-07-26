@@ -12,7 +12,7 @@ export default class Clear extends Component {
     }
 
     onClick() {
-        T.map.do('tool-change', { tool: 'clear' })
+        T.map.setTool({ tool: 'clear' })
     }
 
     render() {

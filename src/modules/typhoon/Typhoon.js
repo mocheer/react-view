@@ -14,9 +14,6 @@ import DataTable from '../../components/DataTable'
 import TyphoonPlayer from './TyphoonPlayer'
 import TyphoonInfoBox from './TyphoonInfoBox'
 //
-import { actions } from '../../ReactActions';
-import { stores } from '../../ReactStores';
-//
 export default class Typhoon extends Component {
 
     constructor(props) {
@@ -33,9 +30,10 @@ export default class Typhoon extends Component {
         }
         //
         T.on('timechange', info => {
-            var { typhoonLayer } = this.store,
+            var { typhoonLayer,suspended } = this.store,
                 { index, data } = info,
                 { ljtab, ljxx } = this.refs;
+            if(suspended)return;
             if (data) {
                 if (typhoonLayer) {
                     var typhoon = typhoonLayer.getTyphoon(data.tfbh)
@@ -79,6 +77,14 @@ export default class Typhoon extends Component {
         //
         this.handleSubmit()
     }
+    /**
+     * 
+     */
+    componentWillUnmount(){
+        this.suspend();
+        return true
+    }
+    
     /**
      * 挂起
      */
@@ -128,14 +134,14 @@ export default class Typhoon extends Component {
             }
             result.forEach(item => {
                 item.coordinates = [item.mapx, item.mapy]
-                item.tooltip = { text: item.featurename, minZoom: 15 }
+                item.tooltip = { text: item.featurename, minZoom: 5 }
             }, this);
             layer.addTo(T.map)
             let { style } = conf,
                 { city } = style;
             if (city) {
                 city.tooltip = {//leaflet
-                    labelFunc: function (marker) {
+                    text: function (marker) {
                         let data = marker._d;
                         return (data && data.tooltip.text) || '';
                     }
@@ -168,11 +174,20 @@ export default class Typhoon extends Component {
         let { conf } = props,
             { urls } = conf,
             sendData = year ? { year: year } : null
-        T.getJSON(urls.typhoon, sendData, (result) => {
+        // 当前年份台风
+        T.getJSON(urls.typhoon, sendData, result => {
             result = result.data
             if (!urls.tfYears && !tfYears.state.dataProvider) {
                 year = result[0].tfbh.slice(0, 4)
                 tfYears.setState({ dataProvider: T.Clock.getYears(1945, year).reverse() });
+            }
+            for (let i = 0, l = result.length, selItems = [], item; i < l; i++) {
+                item = result[i];
+                if (item.is_current === true) {
+                    selItems.push(item)
+                    item.checked = true;
+                    this.onTyphoonItemCheck(item, null, selItems)
+                }
             }
             store.tflist[year] = result;
             tflist.setState({ dataProvider: result })
@@ -212,7 +227,7 @@ export default class Typhoon extends Component {
             } else {
                 cityies.forEach(item => {
                     item.distance = '';
-                    item.tooltip.name = item.featurename
+                    item.tooltip.text = item.featurename
                 }, this);
                 cscj.setState({ dataProvider: cityies })
             }
@@ -386,14 +401,14 @@ export default class Typhoon extends Component {
             { height } = props,
             h = height / 3
         return (
-            <div className='ModuleBox' >
+            <div style={{ paddingLeft: 5, backgroundColor: '#5190E5'}} >
                 <NavTab height={h} >
                     <Group label={'台风列表'}>
                         <div height={23}>
                             <span style={{ margin: 5, lineHeight: 1.6, fontSize: 15 }}>{'年份:'}</span>
                             <Combobox ref="tfYears" onClick={handleTyphoon.bind(this)} />
                         </div>
-                        <DataTable ref='tflist' label={'台风列表'} onItemClick={onTyphoonClick.bind(this)} store={stores.datatable} actions={actions.datatable} columns={[
+                        <DataTable ref='tflist' label={'台风列表'} onItemClick={onTyphoonClick.bind(this)} columns={[
                             { f: "check", style: { width: 36, textAlign: "center" }, onChange: onTyphoonItemCheck.bind(this) },
                             { dataField: "tfbh", headerText: "编号", style: { textAlign: "center" } },
                             { dataField: "name", headerText: "中文名", style: { textAlign: "center" } },
@@ -402,14 +417,14 @@ export default class Typhoon extends Component {
                     </Group>
                 </NavTab>
                 <NavTab ref='ljtab' height={h} >
-                    <DataTable ref='ljxx' reverse={true} showNoData={true} label={'路径信息'} onItemClick={onLsljClick.bind(this)} onTableOut={onLsljOut.bind(this)} onItemOver={onLsljOver.bind(this)} store={stores.datatable} actions={actions.datatable} columns={[
+                    <DataTable ref='ljxx' reverse={true} showNoData={true} label={'路径信息'} onItemClick={onLsljClick.bind(this)} onTableOut={onLsljOut.bind(this)} onItemOver={onLsljOver.bind(this)} columns={[
                         { dataField: "time", headerText: "时间", style: { width: 128 } },
                         { dataField: "power", headerText: "风力(级)", style: { textAlign: "center" } },
                         { dataField: "speed", headerText: "风速(m/s)", style: { textAlign: "center" } },
                     ]} />
                 </NavTab>
                 <NavTab height={h} >
-                    <DataTable ref='cscj' label={'城市测距'} onItemClick={onCityClick.bind(this)} store={stores.datatable} actions={actions.datatable} columns={[
+                    <DataTable ref='cscj' label={'城市测距'} onItemClick={onCityClick.bind(this)} columns={[
                         { dataField: "featurename", headerText: "沿海城市", style: { textAlign: "center" } },
                         { dataField: "distance", headerText: "距离(km)", style: { textAlign: "center" } },
                     ]} />

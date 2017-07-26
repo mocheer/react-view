@@ -4,7 +4,6 @@
  * @param date 2017.6.13
  */
 import React, { Component, PropTypes } from 'react'
-import Panel from '../containers/Panel'
 /**
  * 图例
  */
@@ -61,7 +60,7 @@ export default class LegendBox extends Component {
             dataProvider: null
         })
     }
-   /**
+    /**
      * @param data {title,content,width,column}
      */
     createLegend(data) {
@@ -108,18 +107,39 @@ export default class LegendBox extends Component {
      */
     render() {
         let { props, state, createLegend } = this,
-            { dataProvider } = state
-        if (!dataProvider) {
-            return null;
-        }
-        let content = [];
-        for (let i = 0, l = dataProvider.length, item; i < l; i++) {
-            item = dataProvider[i]
-            content.push(createLegend(item))
+            { dataProvider, show } = state,
+            content;
+        if (dataProvider && show) {
+            content = [];
+            for (let i = 0, l = dataProvider.length, item; i < l; i++) {
+                item = dataProvider[i]
+                content.push(createLegend(item))
+            }
+            content = (
+                <div className='shadow' style={{ backgroundColor: '#fff', padding: 10 }}>
+                    {content}
+                </div>
+            )
         }
         return (
-            <div className='LegendBox'>
+            <div className='LegendBox' style={{}} >
                 {content}
+                <img role='button' src='tree/assets/legend/button.png' onClick={e => { this.setState({ show: !show }) }} />
+            </div>
+        )
+    }
+}
+/**
+ * 
+ */
+class Panel extends Component {
+    render() {
+        let { props } = this,
+            { title, children } = props
+        return (
+            <div style={{ display: 'inline-block' }} >
+                <label>{title}</label>
+                {children}
             </div>
         )
     }

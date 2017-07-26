@@ -24,8 +24,8 @@ export default class TyphoonPlayer extends Component {
         T.on('moduleexpand', data => {
             this.setState({ width: T('tmap').clientWidth })
         })
-        T.on('typhoon-click',data=>{
-            this.setState(Object.assign({expanded: true},data))
+        T.on('typhoon-click', data => {
+            this.setState(Object.assign({ expanded: true }, data))
         })
     }
     /**
@@ -58,7 +58,7 @@ export default class TyphoonPlayer extends Component {
      * @param {*} nextState 
      */
     shouldComponentUpdate(nextProps, nextState) {
-        let {state} = this,
+        let { state } = this,
             update = nextState.suspended !== state.suspended || nextState.dataProvider !== state.dataProvider || nextState.expanded !== state.expanded || nextState.width !== state.width
         if (!update && state.expanded && state.selItem !== nextState.selItem) {
             nextState.index = nextState.dataProvider.indexOf(nextState.selItem)
@@ -78,18 +78,18 @@ export default class TyphoonPlayer extends Component {
      * 绘制刻度
      */
     drawScale() {
-        let {state, refs} = this,
-            {dataProvider, scales} = state,
+        let { state, refs } = this,
+            { dataProvider, scales } = state,
             canvas = refs.scale
         if (canvas) {
-            let {width, height} = canvas,
+            let { width, height } = canvas,
                 ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, width, height)
             //
             if (dataProvider) {
-                let {getTime} = this,
+                let { getTime } = this,
                     start = dataProvider[0] && getTime(dataProvider[0].time),
-                    end = dataProvider[1] && getTime(dataProvider[dataProvider.length - 1].time),
+                    end = dataProvider[1] && getTime(dataProvider[dataProvider.length - 1].time) || start,
                     duration = (end.getTime() - start.getTime()), //台风总时长
                     maxNum = width * 0.01,
                     num = maxNum, //刻度数量
@@ -142,11 +142,11 @@ export default class TyphoonPlayer extends Component {
      * 绘制时间进度
      */
     drawTimeTrack(nextItem) {
-        let {state, refs} = this,
-            {dataProvider, scales} = state,
+        let { state, refs } = this,
+            { dataProvider, scales } = state,
             canvas = refs.track
         if (canvas) {
-            let {width, height} = canvas,
+            let { width, height } = canvas,
                 selItem = state.selItem = nextItem || state.selItem || (dataProvider && dataProvider[dataProvider.length - 1]),
                 ctx = canvas.getContext('2d'),
                 img = new Image(),
@@ -213,8 +213,8 @@ export default class TyphoonPlayer extends Component {
      * 进度点击
      */
     onTrackClick(e) {
-        let {state} = this,
-            {dataProvider, scales, selItem} = state;
+        let { state } = this,
+            { dataProvider, scales, selItem } = state;
         if (dataProvider && scales) {
             let canvas = e.target,
                 width = canvas.width - 60,
@@ -246,14 +246,14 @@ export default class TyphoonPlayer extends Component {
      */
     onPlayClick(flag) {
         if (flag === 1 || flag === -1) {
-            let {state} = this,
-                {dataProvider, selItem} = state,
+            let { state } = this,
+                { dataProvider, selItem } = state,
                 selIndex = dataProvider.indexOf(selItem) + 1
             if (selIndex >= 0) {
                 if (flag === 1 && selIndex > dataProvider.length - 1) {
                     selIndex = 0;
                 }
-                let {refs} = this,
+                let { refs } = this,
                     { playButton } = refs
                 if (selIndex < dataProvider.length) {
                     this.setState({
@@ -278,12 +278,12 @@ export default class TyphoonPlayer extends Component {
      * @param {*} data 
      */
     onCloudChange(data) {
-        let {props, state} = this,
-            {selItem} = state;
+        let { props, state } = this,
+            { selItem } = state;
         if (data && data.selected !== state.cloud) {
             state.cloud = data.selected
         }
-        props.onCloudChange && props.onCloudChange(state.cloud,selItem)
+        props.onCloudChange && props.onCloudChange(state.cloud, selItem)
 
     }
     /**
@@ -291,12 +291,12 @@ export default class TyphoonPlayer extends Component {
      * @param {*} data 
      */
     onRadarChange(data) {
-        let {props, state} = this,
-            {selItem} = state;
+        let { props, state } = this,
+            { selItem } = state;
         if (data && data.selected !== state.radar) {
             state.radar = data.selected
         }
-        props.onRadarChange && props.onRadarChange(state.radar,selItem)
+        props.onRadarChange && props.onRadarChange(state.radar, selItem)
     }
 
     /**
@@ -312,8 +312,8 @@ export default class TyphoonPlayer extends Component {
      * 
      */
     render() {
-        let {props, state} = this,
-            {suspended, tag, expanded} = state,
+        let { props, state } = this,
+            { suspended, tag, expanded } = state,
             width = state.width || 999,
             legendbox = T('legendbox');
         if (suspended) {
@@ -321,8 +321,8 @@ export default class TyphoonPlayer extends Component {
             return null;
         }
         let box = []
-        props.onCloudChange && box.push(<CheckBox label='卫星云图' selected={state.cloud} style={{ color: '#FFFFFF' }} onChange={this.onCloudChange.bind(this)} />)
-        props.onRadarChange && box.push(<CheckBox label='气象雷达' selected={state.radar}  style={{ color: '#FFFFFF' }} onChange={this.onRadarChange.bind(this)} />)
+        props.onCloudChange && box.push(<CheckBox style={{ display: 'inline', margin: 5 }} label='卫星云图' selected={state.cloud} style={{ color: '#FFFFFF' }} onChange={this.onCloudChange.bind(this)} />)
+        props.onRadarChange && box.push(<CheckBox style={{ display: 'inline', margin: 5 }} label='气象雷达' selected={state.radar} style={{ color: '#FFFFFF' }} onChange={this.onRadarChange.bind(this)} />)
 
         if (!expanded) {
             legendbox && (legendbox.style.bottom = '75px')
@@ -332,17 +332,17 @@ export default class TyphoonPlayer extends Component {
 
         //canvas
         let scaleProps = {
-            style:{ 
-                width:(width - 70),
-                height:60,
+            style: {
+                width: (width - 70),
+                height: 60,
                 position: "absolute", left: 56, top: 0
-            } ,
-            width:(width - 70),
-            height:60
+            },
+            width: (width - 70),
+            height: 60
         }
 
         return (
-            <div className="TimeSlider" >
+            <div className="TimeSlider" style={{ zIndex: 999, position: 'absolute', left: 0, bottom: 0 }} >
                 <div onClick={this.collpase.bind(this)}>
                     <img src="tree/assets/timeslider/title-bg.png" />
                     <img style={{ width: width - 122, height: 34 }} src="tree/assets/timeslider/bar-top.png" />

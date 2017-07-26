@@ -5,33 +5,45 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-
+/**
+ * 多选框
+ * {label,icon,checked}
+ */
 export default class CheckBox extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selected:props.selected
+            checked: props.checked
         }
     }
-
-    onChange(){
-         let {props,state} = this,
-            {onChange} = props,
-            selected = !state.selected;
-        onChange({selected:selected})
+    /**
+     * 
+     */
+    onChange(e) {
+        let { props, state } = this,
+            { onChange } = props,
+            checked = !state.checked;
+        onChange()
         this.setState({
-            selected:selected
+            checked: checked
         })
     }
-
+    /**
+     * 渲染
+     */
     render() {
-        let {props,state} = this,
-            {selected} = state,
-            {label,style} = props;
+        let { props, state } = this,
+            { checked } = state,
+            { label, style, icon } = props;
+            if(icon){
+                icon = <img src={icon} style={{width:16,height:16,margin:'0px 5px 0px -4px'}}/>
+            }
         return (
-            <div className="checkbox CheckBox" style={style} onClick={this.onChange.bind(this)} >
+            <div className="checkbox CheckBox" style={style}  >
                 <label >
-                    <input  type="checkbox" checked={selected} />{label}
+                    <input type="checkbox" checked={checked} onClick={this.onChange.bind(this)} />
+                    {icon}
+                    {label}
                 </label>
             </div>
         )

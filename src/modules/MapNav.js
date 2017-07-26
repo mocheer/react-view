@@ -20,7 +20,7 @@ export default class MapNav extends Component {
      * 
      */
     componentDidMount() {
-         
+
     }
     /**
      * 
@@ -33,13 +33,13 @@ export default class MapNav extends Component {
      * @param {*} e 
      */
     onMouseOver(e) {
-        let {target, currentTarget} = e
+        let { target, currentTarget } = e
         if (target !== currentTarget) {
             while (target.parentNode !== currentTarget) {
                 target = target.parentNode;
             }
             let dataset = target.dataset,
-                {label} = dataset;
+                { label } = dataset;
             label && T.do('tooltip', {
                 label: label,
                 placement: 'bottom',
@@ -49,17 +49,14 @@ export default class MapNav extends Component {
         }
     }
     onClick(e) {
-        let {target, currentTarget} = e
+        let { target, currentTarget } = e
         if (target !== currentTarget) {
             while (target.parentNode !== currentTarget) {
                 target = target.parentNode;
             }
             let dataset = target.dataset,
-                {value} = dataset;
-            value && T.map.do('tool-change', {
-                tool: value
-            })
-
+                { value } = dataset;
+            value && T.map.setTool({ tool: value})
         }
     }
     onMoustOut() {
@@ -72,7 +69,7 @@ export default class MapNav extends Component {
         </a>
      */
     render() {
-        let {onProviderClick, props, state} = this,
+        let { onProviderClick, props, state } = this,
             title = state.title,
             providers = [
                 { label: '谷歌地图', value: 'GoogleMap.Normal', i: 'tf tf-rocket' },
@@ -104,7 +101,11 @@ export default class MapNav extends Component {
                             <i className="tf tf-mouse-pointer" ></i>
                         </a>
 
-                         <a className="btn btn-default" data-label='绘制线' data-value='polyline' role="button">
+                        <a className="btn btn-default" data-label='图元' data-value='point' role="button">
+                            <i className="tf tf-mouse-pointer" ></i>
+                        </a>
+
+                        <a className="btn btn-default" data-label='绘制线' data-value='polyline' role="button">
                             <i className="tf tf-draw-line" ></i>
                         </a>
 
@@ -123,6 +124,11 @@ export default class MapNav extends Component {
                         <a className="btn btn-default" data-label='绘制多边形' data-value='polygon' role="button">
                             <i className="tf tf-draw-polygon" ></i>
                         </a>
+
+                        <a className="btn btn-default" data-label='贝塞尔曲线' data-value='bezier' role="button">
+                            <i className="tf tf-draw-line" ></i>
+                        </a>
+
                         <a className="btn btn-default" data-label='清除回收' data-value='clear' role="button">
                             <i className="tf tf-clear-fill" ></i>
                         </a>

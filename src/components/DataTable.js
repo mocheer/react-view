@@ -8,8 +8,6 @@ import classNames from 'classnames'
 
 /**
  * column {dataField,headerText,type,width,group}
- * actions:{loadingAction,clickAction}
- * store
  * showNoData 当dataProvider为空时显示no data
  * reverse  倒序排列
  */
@@ -21,22 +19,19 @@ export default class DataTable extends Component {
             columns: props.columns,
         };
     }
+    /**
+     * 设置列头宽度
+     */
     componentDidMount() {
         this.setHeaderWidth();
-        var {store, source, actions} = this.props;
-        if (store) {
-            store.subscribe(
-                () => this.setState(store.getState())
-            );
-            if (source && actions) {
-                actions.loadingAction(source, store);
-            }
-        }
     }
+    /**
+     * 
+     */
     componentDidUpdate() {
         this.setHeaderWidth();
-        let {refs} = this,
-            {tablebody, seltr} = refs;
+        let { refs } = this,
+            { tablebody, seltr } = refs;
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
         }
@@ -46,7 +41,7 @@ export default class DataTable extends Component {
      * 统一列表列宽
      */
     setHeaderWidth() {
-        let {refs} = this,
+        let { refs } = this,
             tablebody = refs.tablebody,
             body = refs.body;
         if (!body) {
@@ -74,14 +69,14 @@ export default class DataTable extends Component {
             }
             ths = nths;
         }
-        if(tablebody.scrollHeight>tablebody.clientHeight||tablebody.offsetHeight>tablebody.clientHeight){
-             columnCount --;
-             ths[columnCount].width = tds[columnCount].offsetWidth+16;
+        if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
+            columnCount--;
+            ths[columnCount].width = tds[columnCount].offsetWidth + 16;
         }
-         for (let i = 0; i < columnCount; i++) {
+        for (let i = 0; i < columnCount; i++) {
             ths[i].width = tds[i].offsetWidth;
         }
-       
+
     }
     /**
      * 创建列头
@@ -89,12 +84,12 @@ export default class DataTable extends Component {
     createHeader(columns, props) {
         var headerRows = [],
             columnCount = columns.length,
-            {headerRowCount} = props,
+            { headerRowCount } = props,
             headerColumns = columns.map((column, columnid) => {
                 let thProps = {
                     key: columnid,
                 }
-                let {headerText, group, style} = column;
+                let { headerText, group, style } = column;
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
                 } else if (group) {
@@ -119,7 +114,7 @@ export default class DataTable extends Component {
                 return <th {...thProps} >{headerText}</th>;
             });
         headerRows[0] = <tr key={0} >{headerColumns}</tr>;
-        if(headerRows[1] ){
+        if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
         return headerRows;
@@ -133,7 +128,7 @@ export default class DataTable extends Component {
         if (dataProvider) {
             dataRows = dataProvider.map((data, rowid) => {
                 let dataColumns = columns.map((column, columnid) => {
-                    let {type, dataField, style} = column,
+                    let { type, dataField, style } = column,
                         label = labelFunc(data, rowid, column, dataField),
                         tdProps = { key: columnid };
                     if (style) {
@@ -169,10 +164,10 @@ export default class DataTable extends Component {
     /**
      * checkbox 选中
      */
-    onCheck(column, data) {
+    onCheck(data, column) {
         let checked = data.checked = !data.checked,
-            {state} = this,
-            {dataProvider} = state,
+            { state } = this,
+            { dataProvider } = state,
             selItems = []
         for (let i = 0, l = dataProvider.length, item; i < l; i++) {
             item = dataProvider[i];
@@ -187,9 +182,9 @@ export default class DataTable extends Component {
      */
     getEventInfo(event) {
         var info = {},
-            {props, state} = this,
-            {dataProvider} = state,
-            {reverse} = props,
+            { props, state } = this,
+            { dataProvider } = state,
+            { reverse } = props,
             td = event.target,
             columnid = td.cellIndex, //
             rowid = td.parentElement.rowIndex;//td.parentElement = tr
@@ -209,18 +204,18 @@ export default class DataTable extends Component {
      */
     onTableClick(event) {
         var info = this.getEventInfo(event),
-            {onItemClick} = this.props
+            { onItemClick } = this.props
         onItemClick && onItemClick(info)
         this.setState({
             selIndex: info.index
         })
     }
     /**
-     * 
+     * 列表项移入效果
      */
     onTableOver(event) {
         var info = this.getEventInfo(event),
-            {onItemOver} = this.props
+            { onItemOver } = this.props
         onItemOver && onItemOver(info)
     }
     /**
@@ -230,7 +225,7 @@ export default class DataTable extends Component {
         var label;
         switch (column.f) {
             case "check":
-                label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, column, data)} />
+                label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
                 break;
             case "toFixed":
                 label = data[dataField] && label.toFixed(column.format)
@@ -260,11 +255,11 @@ export default class DataTable extends Component {
      * 渲染
      */
     render() {
-        let {props, state} = this,
-            {columns, dataProvider, selIndex} = state,
-            {height, reverse, onTableOut,showNoData} = props
+        let { props, state } = this,
+            { columns, dataProvider, selIndex } = state,
+            { height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
-        if(!dataProvider && showNoData)
+        if (!dataProvider && showNoData)
             return (
                 <div style={{
                     height: height,

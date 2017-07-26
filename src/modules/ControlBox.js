@@ -8,7 +8,7 @@ import ZoomIn from './controls/ZoomIn'
 import ZoomOut from './controls/ZoomOut'
 import FullScreen from './controls/FullScreen'
 import Expand from './controls/Expand'
-import Meature from './controls/Meature'
+import Meature from './controls/Distance'
 import Clear from './controls/Clear'
 /**
  * 
