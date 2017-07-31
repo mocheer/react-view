@@ -5,7 +5,7 @@
  */
 import React, { Component, PropTypes } from 'react'
 import Navbar from '../containers/Navbar'
-import ComboBox from '../components/ComboBox'
+import Dropdown from '../components/Dropdown'
 /**
  * 
  */
@@ -56,7 +56,7 @@ export default class MapNav extends Component {
             }
             let dataset = target.dataset,
                 { value } = dataset;
-            value && T.map.setTool({ tool: value})
+            value && T.map.setTool({ tool: value })
         }
     }
     onMoustOut() {
@@ -88,7 +88,7 @@ export default class MapNav extends Component {
             <Navbar >
                 <ul className="nav navbar-nav ">
                     <li><a role='button'>{title}</a></li>
-                    <ComboBox onClick={onProviderClick} dataProvider={providers} />
+                    <Dropdown onClick={onProviderClick} dataProvider={providers} />
                 </ul>
                 <form className="navbar-form navbar-left">
                     <div className="input-group" style={{ marginRight: 10 }}>

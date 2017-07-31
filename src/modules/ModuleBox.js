@@ -38,7 +38,7 @@ class Module extends TComponent {
         super(props);
         let { data } = props;
         this.state = {
-            Content:data._leaf
+            Content: data._leaf
         }
     }
     /**
@@ -55,13 +55,13 @@ class Module extends TComponent {
         let { loaded, props, state } = this,
             { data } = props,
             { label } = data,
-            {Content} = state;
+            { Content } = state;
         if (!Content) {
             T.require(['leaf/typhoon/typhoon', 'leaf/typhoon/config.' + T.Map.platform], (Content, config) => {
                 Content = Content.default
-                Content =  data._leaf = <Content height="500" conf={config} />
+                Content = data._leaf = <Content height="500" conf={config} />
                 Content.conf = config;
-                this.setState({ Content: Content})
+                this.setState({ Content: Content })
             })
             return null;
         }
@@ -70,9 +70,16 @@ class Module extends TComponent {
             <div className='shadow' style={{ width: 300, margin: 5 }}  >
                 <div onMouseDown={this.toDrag.bind(this)} style={{ height: 33, background: '#1c7be8', borderTop: '4px solid #509ff7', color: '#fff' }} >
                     <label style={{ margin: 3 }}>{label}</label>
+                    <div style={{ position: 'absolute', right: 10, padding: 2, display: 'inline-block' }}>
+                        <img role='button' src='tree/assets/common/btn-expand.png' style={{ margin: 2 }} />
+                        <img role='button' src='tree/assets/common/btn-plus.png' width='15' style={{ margin: 2 }} />
+                        {/*<i className='tf tf-plus' role='button' style={{ padding: 5, fontSize: 16 }} />*/}
+                        <img role='button' src='tree/assets/common/btn-close.png' style={{ margin: 2 }} />
+                    </div>
+
                 </div>
                 <div style={{ backgroundColor: '#fff' }} >
-                   {Content}
+                    {Content}
                 </div>
             </div>
         )

@@ -144,7 +144,6 @@ class Panel extends Component {
         )
     }
 }
-
 /**
   * 
   */

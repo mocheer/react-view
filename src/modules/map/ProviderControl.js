@@ -5,40 +5,40 @@
  */
 import React, { Component, PropTypes } from 'react'
 //
-export default class MapProviderBox extends Component{
-    constructor(props){
+export default class ProviderControl extends Component {
+    constructor(props) {
         super(props)
         this.state = {
-            expanded:false,
-            dataProvider:props.dataProvider,
+            expanded: false,
+            dataProvider: props.dataProvider,
             // selItem:null,
         }
     }
-    expand(){
+    expand() {
         this.setState({
-            expanded:true
+            expanded: true
         })
     }
 
-    onMouseOver(){
+    onMouseOver() {
         this.expand();
     }
 
-    onClick(){
+    onClick() {
 
     }
 
-    createMap(){
+    createMap() {
 
     }
 
-    render(){
-        let {props,state} = this,
-            {expanded,dataProvider} = state,
-            boxProps = {className:'MapProviderBox'},
-        if(expanded){
+    render() {
+        let { props, state } = this,
+            { expanded, dataProvider } = state,
+            boxProps = { className: 'MapProviderBox' },
+        if (expanded) {
             boxProps.onClick = this.onClick.bind(this)
-        }else{
+        } else {
             boxProps.onMouseOver = this.onMouseOver.bind(this)
         }
         return (

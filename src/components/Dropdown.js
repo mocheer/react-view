@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 //TODO action
 //divider 分割
-export default class ComboBox extends Component {
+export default class Dropdown extends Component {
     constructor(props) {
         super(props);
         let { dataProvider } = props,
@@ -84,7 +84,7 @@ export default class ComboBox extends Component {
      * @param {*} data 
      */
     createLabel(data) {
-        if ("object" == typeof data) {
+        if (typeof data == 'object') {
             return data.label;
         } else {
             return data;
@@ -123,19 +123,19 @@ export default class ComboBox extends Component {
                 })
                 return (
                     <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
-                        <a role="button"> {i} {dataLabel}</a>
+                        <a role='button'> {i} {dataLabel}</a>
                     </li>)
             });
-            dataList = <ul className="dropdown-menu" style={{ "min-width": 70, "max-height": 320, "overflow-y": "scroll" }} >{dataRows}</ul>;//160
+            dataList = <ul className='dropdown-menu' style={{ 'min-width': 70, 'max-height': 320, 'overflow-y': 'scroll' }} >{dataRows}</ul>;//160
         }
-        var dropClass = classNames(type, { open: opened }, "ComboBox");
-        //var btnClass = classNames("btn","btn-default","dropdown-toggle");
-        var btnClass = classNames("dropdown-toggle");
+        var dropClass = classNames(type, { open: opened }, 'Dropdown');
+        //var btnClass = classNames('btn','btn-default','dropdown-toggle');
+        var btnClass = classNames('dropdown-toggle');
         //为了适应 nav ,这里不用div+button的方式
         return (
             <li className={dropClass}>
                 <a className={btnClass} role='button' onClick={handleClick} >
-                    {label} <span className="caret"></span>
+                    {label} <span className='caret'></span>
                 </a>
                 {dataList}
             </li>
@@ -143,8 +143,8 @@ export default class ComboBox extends Component {
     }
 }
 //设置默认属性
-ComboBox.defaultProps = {
+Dropdown.defaultProps = {
     selIndex: -1,
     opened: false,
-    type: "dropdown"//dropup
+    type: 'dropdown'//dropup
 };

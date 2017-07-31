@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom'
 //
 import NavTab from '../../containers/NavTab'
 import Group from '../../containers/Group'
-import Combobox from '../../components/Combobox'
+import Dropdown from '../../components/Dropdown'
 import DataTable from '../../components/DataTable'
 //
 import TyphoonPlayer from './TyphoonPlayer'
@@ -30,10 +30,10 @@ export default class Typhoon extends Component {
         }
         //
         T.on('timechange', info => {
-            var { typhoonLayer,suspended } = this.store,
+            var { typhoonLayer, suspended } = this.store,
                 { index, data } = info,
                 { ljtab, ljxx } = this.refs;
-            if(suspended)return;
+            if (suspended) return;
             if (data) {
                 if (typhoonLayer) {
                     var typhoon = typhoonLayer.getTyphoon(data.tfbh)
@@ -80,11 +80,11 @@ export default class Typhoon extends Component {
     /**
      * 
      */
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.suspend();
         return true
     }
-    
+
     /**
      * 挂起
      */
@@ -371,7 +371,7 @@ export default class Typhoon extends Component {
     onImgChange(type, selected, data) {
         let { store, props } = this,
             { conf } = props,
-            { mapImage } = conf,
+            mapImage = conf[type] || conf.mapImage,
             layerName = type + 'Layer',
             markerName = type + 'Marker'
         if (selected && data) {
@@ -401,12 +401,12 @@ export default class Typhoon extends Component {
             { height } = props,
             h = height / 3
         return (
-            <div style={{ paddingLeft: 5, backgroundColor: '#5190E5'}} >
+            <div style={{ paddingLeft: 5, backgroundColor: '#5190E5' }} >
                 <NavTab height={h} >
                     <Group label={'台风列表'}>
                         <div height={23}>
                             <span style={{ margin: 5, lineHeight: 1.6, fontSize: 15 }}>{'年份:'}</span>
-                            <Combobox ref="tfYears" onClick={handleTyphoon.bind(this)} />
+                            <Dropdown ref="tfYears" onClick={handleTyphoon.bind(this)} />
                         </div>
                         <DataTable ref='tflist' label={'台风列表'} onItemClick={onTyphoonClick.bind(this)} columns={[
                             { f: "check", style: { width: 36, textAlign: "center" }, onChange: onTyphoonItemCheck.bind(this) },

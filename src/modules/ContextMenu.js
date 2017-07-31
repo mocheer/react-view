@@ -44,8 +44,8 @@ export default class ContextMenu extends Component {
     }
 
     onClick(event) {
-        let {state} = this,
-            {render} = state;
+        let { state } = this,
+            { render } = state;
         if (!render) {
             this.setState({
                 point: null
@@ -70,11 +70,11 @@ export default class ContextMenu extends Component {
     onPan(e) {
         if (esri) {
             let tmap = T.map,
-                {map} = tmap,
+                { map } = tmap,
                 ScreenPoint = esri.geometry.ScreenPoint,
                 point = map.toMap(new ScreenPoint(e.clientX, e.clientY))
             map.centerAt(point)
-        }else{
+        } else {
 
         }
     }
@@ -146,8 +146,8 @@ export default class ContextMenu extends Component {
        </li>
      */
     render() {
-        let {state} = this,
-            {render, selIndex, point, dataProvider} = state;
+        let { state } = this,
+            { render, selIndex, point, dataProvider } = state;
         if (!point) {//|| !dataProvider
             return null;
         }
@@ -159,7 +159,7 @@ export default class ContextMenu extends Component {
             left: point[0] + 12,
             top: point[1] + 12
         }, content = [],
-            {createItem} = this,
+            { createItem } = this,
             onZoomIn = this.onZoomIn.bind(this),
             onZoomOut = this.onZoomOut.bind(this),
             onPan = this.onPan.bind(this),

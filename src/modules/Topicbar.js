@@ -77,25 +77,25 @@ export default class Topicbar extends Component {
             data.checked && selItems.push(data);
         } else {
             !data.checked && selItems.splice(index, 1)
-            
+
         }
         this.setState({})
     }
     /**
      * 
      */
-    onItemClick(){
+    onItemClick() {
         this.setState({})
     }
     /**
      * 渲染
      */
     render() {
-        let { state, toggleMenu, onMenuChecked,onItemClick } = this,
+        let { state, toggleMenu, onMenuChecked, onItemClick } = this,
             { dataProvider, selItems, showMenu } = state;
         return (
             <div className='Topicbar' style={{ position: 'absolute', top: 0, left: 100, backgroundColor: '#fff', zIndex: 999 }}>
-                <Menu dataProvider={selItems} on={{ addClick: toggleMenu.bind(this),itemClick:onItemClick.bind(this) }} />
+                <Menu dataProvider={selItems} on={{ addClick: toggleMenu.bind(this), itemClick: onItemClick.bind(this) }} />
                 <DataMenu dataProvider={dataProvider} show={showMenu} on={{ change: onMenuChecked.bind(this) }} />
                 <ModuleBox dataProvider={selItems} />
             </div>
@@ -129,7 +129,7 @@ class Menu extends TComponent {
         if (dataProvider) {
             return dataProvider.map(item => {
                 let { icon, label } = item,
-                    style = {padding:2}
+                    style = { padding: 2 }
                 if (!item.suspend) {
                     style.backgroundColor = '#1c7be8'
                 }
@@ -152,7 +152,7 @@ class Menu extends TComponent {
         let that = this,
             { onAddClick } = that,
             menus = that.createMenu();
-            // chrome 的 fontSize 最小值为12px
+        // chrome 的 fontSize 最小值为12px
         return (
             <div className='MenuBox' style={{ position: 'relative', backgroundColor: '#1c7be8', color: '#fff' }} >
                 <div role="button" onClick={onAddClick.bind(that)} style={{ width: 55, height: 55, textAlign: 'center' }}>
@@ -195,7 +195,7 @@ class DataMenu extends TComponent {
             );
         })
         return (
-            <div className='DataMenu' style={{ position: 'absolute', top: 0, left: 55, width: 480, backgroundColor: '#1c7be8',zIndex:9}}  >
+            <div className='DataMenu' style={{ position: 'absolute', top: 0, left: 55, width: 480, backgroundColor: '#1c7be8', zIndex: 9 }}  >
                 {menus}
             </div>
         )

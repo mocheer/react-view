@@ -52,11 +52,12 @@ module.exports = {
     entry: {
         "topicbar": "./src/modules/Topicbar.js",
         "typhoon/typhoon": "./src/modules/typhoon/Typhoon.js",
+        "extra/areacontrol": "./src/modules/map/AreaControl.js",
         "extra/mapnav": "./src/modules/MapNav.js",
-        "extra/controlbox": "./src/modules/ControlBox.js",
+        "extra/controlbox": "./src/modules/map/ControlBox.js",
         "extra/widgets": "./src/modules/Widgets.js",
-        'extra/pancontrol':'./src/modules/PanControl.js',
-        'extra/zoomcontrol':'./src/modules/ZoomControl.js'
+        'extra/pancontrol': './src/modules/map/PanControl.js',
+        'extra/zoomcontrol': './src/modules/map/ZoomControl.js'
     },
     output: {
         path: dir,

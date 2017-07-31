@@ -14,7 +14,7 @@ export default class Distance extends Component {
     componentDidMount() {
 
     }
-    
+
     onClick() {
         T.map.setTool({ tool: 'distance' })
     }

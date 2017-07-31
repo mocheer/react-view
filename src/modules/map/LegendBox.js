@@ -4,7 +4,7 @@
  * @param date 2017.6.13
  */
 import React, { Component, PropTypes } from 'react'
-import Panel from '../containers/Panel'
+import Panel from '../../containers/Panel'
 /**
  * 图例
  */
@@ -61,9 +61,9 @@ export default class LegendBox extends Component {
             dataProvider: null
         })
     }
-   /**
-     * @param data {title,content,width,column}
-     */
+    /**
+      * @param data {title,content,width,column}
+      */
     createLegend(data) {
         let { title, content } = data;
         if (content) {
