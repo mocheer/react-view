@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "set task=dev&&webpack --progress --colors --watch",
-    "build-css": "lessc -x ./style/react-view.less>react-view.min.css",
+    "build-css": "lessc -x ./style/react-view.less>dist/react-view.min.css",
     "build": "set task=build&&webpack",
     "buildwatch": "set task=build&&webpack --progress --colors --watch"
   },
