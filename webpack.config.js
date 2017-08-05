@@ -50,24 +50,11 @@ switch (env.task) {
 }
 module.exports = {
     entry: {
-        'eventcontrol': './src/modules/EventControl',
-        // 'water/chart': './src/modules/water/WaterChart',
-        "topicbar": "./src/modules/Topicbar.js",
-        "typhoon/typhoon": "./src/modules/typhoon/Typhoon.js",
-        // "typhoon/typhooninfobox": "./src/modules/typhoon/TyphoonInfoBox.js",
-        // "typhoon/typhoonplayer": "./src/modules/typhoon/TyphoonPlayer.js",
-        "extra/areacontrol": "./src/modules/map/AreaControl.js",
-        "extra/mapnav": "./src/modules/MapNav.js",
-        "extra/controlbox": "./src/modules/map/ControlBox.js",
-        "extra/widgets": "./src/modules/Widgets.js",
-        'extra/pancontrol': './src/modules/map/PanControl.js',
-        'extra/zoomcontrol': './src/modules/map/ZoomControl.js'
-
+        'react-view': './index.js'
     },
     output: {
         path: dir,
-        filename: '../tree-example/tree/modules/[name].js',
-        libraryTarget: "amd"
+        filename: 'dist/[name].js'
     },
     externals: {
         'react': 'react',

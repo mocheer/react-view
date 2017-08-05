@@ -13,9 +13,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
-    "echarts-for-react": "^1.4.4",
-    "font-awesome": "^4.7.0",
-    "qrcode.react": "^0.6.1"
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "assistant-webpack": "git+https://github.com/mocheer/assistant-webpack.git",
