@@ -5,13 +5,32 @@
  */
 import React, { Component, PropTypes } from 'react'
 /**
- * 专题菜单
+ * 
  */
 export default class TComponent extends Component {
     // _action
     constructor(props) {
         super(props)
         props.on && this.on(props.on)
+    }
+    /**
+     * 
+     */
+    suspend() {
+        this.do('suspend');
+    }
+    /**
+     * 
+     */
+    resume() {
+        this.do('resume');
+    }
+    /**
+     * 
+     */
+    componentWillUnmount() {
+        this.suspend();
+        return true
     }
     /**
      * 

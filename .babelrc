@@ -1,3 +1,9 @@
 {
-  "presets": ["es2015-loose","react"]
+  "presets": [
+    "es2015-loose",
+    "react"
+  ],
+  "plugins": [
+    "transform-remove-strict-mode"
+  ]
 }

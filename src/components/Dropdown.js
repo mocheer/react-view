@@ -104,7 +104,7 @@ export default class Dropdown extends Component {
      */
     render() {
         let { props, state, createLabel, createI, handleClick, handleChange } = this,
-            { type } = props,
+            { type, mode, style, width } = props,
             { opened, dataProvider, selIndex, selItem } = state,
             dataList
         if (!dataProvider) {
@@ -114,7 +114,7 @@ export default class Dropdown extends Component {
         let label = createLabel(selItem);
         handleClick = handleClick.bind(this);
         if (opened) {
-            var dataRows = dataProvider.map((data, index) => {
+            let dataRows = dataProvider.map((data, index) => {
                 var i = createI(data)
                 var dataLabel = createLabel(data);
                 var liClass = classNames({
@@ -126,17 +126,29 @@ export default class Dropdown extends Component {
                         <a role='button'> {i} {dataLabel}</a>
                     </li>)
             });
-            dataList = <ul className='dropdown-menu' style={{ 'min-width': 70, 'max-height': 320, 'overflow-y': 'scroll' }} >{dataRows}</ul>;//160
+            dataList = <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: 'scroll' }} >{dataRows}</ul>;//160
         }
-        var dropClass = classNames(type, { open: opened }, 'Dropdown');
-        //var btnClass = classNames('btn','btn-default','dropdown-toggle');
-        var btnClass = classNames('dropdown-toggle');
-        //为了适应 nav ,这里不用div+button的方式
-        return (
-            <li className={dropClass}>
-                <a className={btnClass} role='button' onClick={handleClick} >
-                    {label} <span className='caret'></span>
+        let caret = <span className='caret'></span>,
+            dropClass = classNames(mode, { open: opened }, 'Dropdown'),
+            btnClass = classNames('dropdown-toggle', { 'btn btn-default': type === 'button' }),
+            btn
+        //
+        switch (type) {
+            case 'button':
+                let style = width ? { width: width } : null;
+                btn = <button className={btnClass} type="button" onClick={handleClick} style={style} >
+                    {label} {caret}
+                </button>
+                break;
+            default:
+                btn = <a className={btnClass} role='button' onClick={handleClick} >
+                    {label} {caret}
                 </a>
+                break;
+        }
+        return (
+            <li className={dropClass} style={style}>
+                {btn}
                 {dataList}
             </li>
         );
@@ -145,6 +157,8 @@ export default class Dropdown extends Component {
 //设置默认属性
 Dropdown.defaultProps = {
     selIndex: -1,
-    opened: false,
-    type: 'dropdown'//dropup
+    opened: false,  //是否展开
+    // btn: 'text',    // button
+    mode: 'dropdown'//dropup 向上/上下展开
+
 };

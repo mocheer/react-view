@@ -10,9 +10,18 @@ import React, { Component, PropTypes } from 'react'
 export default class ZoomControl extends Component {
     constructor(props) {
         super(props);
-        T.map.map.on('zoomend', (e) => {
-            this.setState({})
-        })
+        if (!T.map) {
+            T.on('tmap-load', e => {
+                T.map.map.on('zoomend', (e) => {
+                    this.setState({})
+                })
+            })
+        } else {
+            T.map.map.on('zoomend', (e) => {
+                this.setState({})
+            })
+        }
+
     }
     /**
      * 获取当前scale
@@ -128,7 +137,7 @@ export default class ZoomControl extends Component {
 
                 ctx.fill();
                 ctx.stroke();
-                
+
                 ctx.beginPath();
                 ctx.fillStyle = '#FFF'
                 ctx.fillText(text, r + 2, y + 5);
@@ -184,10 +193,10 @@ export default class ZoomControl extends Component {
         return (
             <div className='ZoomControl' role='button' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOver.bind(this)} >
                 <i className='tf tf-plus' onClick={this.zoomOut.bind(this)} />
-                <canvas ref='zoomScale' width='20' height='100' onClick={this.onSliderClick.bind(this)}  />
+                <canvas ref='zoomScale' width='20' height='100' onClick={this.onSliderClick.bind(this)} />
                 <i className='tf tf-minus' onClick={this.zoomIn.bind(this)} />
                 <i ref='zoomSlider' className='tf tf-minus' style={{ padding: '0px 3px', position: 'absolute', top: pos, left: 0 }} />
-                <canvas ref='zoomText'  width='32' height='100' onClick={this.onTextClick.bind(this)} style={{ position: 'absolute', top: 30, left: 20 }} />
+                <canvas ref='zoomText' width='32' height='100' onClick={this.onTextClick.bind(this)} style={{ position: 'absolute', top: 30, left: 20 }} />
             </div>
         )
     }

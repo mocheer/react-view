@@ -63,7 +63,7 @@ export default class LegendBox extends Component {
     /**
      * @param data {title,content,width,column}
      */
-    createLegend(data) {
+    createLegend(data, i, dataProvider) {
         let { title, content } = data;
         if (content) {
             if (typeof content === 'string') {
@@ -98,7 +98,7 @@ export default class LegendBox extends Component {
                 content = children;
             }
         }
-        return (<Panel title={title}  >
+        return (<Panel title={title} hasSplitLine={i !== dataProvider.length - 1} >
             {content}
         </Panel>)
     }
@@ -113,16 +113,16 @@ export default class LegendBox extends Component {
             content = [];
             for (let i = 0, l = dataProvider.length, item; i < l; i++) {
                 item = dataProvider[i]
-                content.push(createLegend(item))
+                content.push(createLegend(item, i, dataProvider))
             }
             content = (
-                <div className='shadow' style={{ backgroundColor: '#fff', padding: 10 }}>
+                <div className='shadow' style={{ backgroundColor: '#fff' }}>
                     {content}
                 </div>
             )
         }
         return (
-            <div className='LegendBox' style={{}} >
+            <div className='LegendBox'  >
                 {content}
                 <img role='button' src='tree/assets/legend/button.png' onClick={e => { this.setState({ show: !show }) }} />
             </div>
@@ -133,11 +133,14 @@ export default class LegendBox extends Component {
  * 
  */
 class Panel extends Component {
+
     render() {
         let { props } = this,
-            { title, children } = props
+            { title, children, hasSplitLine } = props,
+            style = { display: 'inline-block', margin: 10 }
+        if (hasSplitLine) style.borderRight = '1px solid #509ff7'
         return (
-            <div style={{ display: 'inline-block' }} >
+            <div style={style} >
                 <label>{title}</label>
                 {children}
             </div>

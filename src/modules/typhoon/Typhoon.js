@@ -13,14 +13,15 @@ import DataTable from '../../components/DataTable'
 //
 import TyphoonPlayer from './TyphoonPlayer'
 import TyphoonInfoBox from './TyphoonInfoBox'
-//
+/**
+ * 
+ */
 export default class Typhoon extends Component {
 
     constructor(props) {
         super(props);
         this.store = {
             suspended: false,
-            map: null,
             commonLayer: null,
             typhoonLayer: null,
             cityies: null,
@@ -52,8 +53,7 @@ export default class Typhoon extends Component {
      * 挂载
      */
     componentDidMount() {
-        let { props, store, } = this,
-            { conf } = props;
+        let { props, store, conf } = this
         //
         if (!store.player && !store.infobox) {
             store.player = T.render('typhoonplayer', <TyphoonPlayer width={T('tmap').clientWidth} onCloudChange={this.onCloudChange.bind(this)} onRadarChange={this.onRadarChange.bind(this)} />)
@@ -84,7 +84,6 @@ export default class Typhoon extends Component {
         this.suspend();
         return true
     }
-
     /**
      * 挂起
      */
@@ -119,8 +118,7 @@ export default class Typhoon extends Component {
      * @param {*} params 
      */
     handleSubmit(event, params) {
-        let { refs, store, props } = this,
-            { conf } = props,
+        let { refs, store, props, conf } = this,
             { urls } = conf,
             { tflist, cscj, tfYears } = refs;
 
@@ -161,7 +159,7 @@ export default class Typhoon extends Component {
     }
     //台风列表
     handleTyphoon(data) {
-        let { refs, props, store } = this,
+        let { refs, props, store, conf } = this,
             { tflist, tfYears } = refs,
             year = data;
         if (year) {
@@ -171,8 +169,7 @@ export default class Typhoon extends Component {
                 return;
             }
         }
-        let { conf } = props,
-            { urls } = conf,
+        let { urls } = conf,
             sendData = year ? { year: year } : null
         // 当前年份台风
         T.getJSON(urls.typhoon, sendData, result => {
@@ -252,8 +249,7 @@ export default class Typhoon extends Component {
      * @param {*} selItems 
      */
     onTyphoonItemCheck(data, column, selItems) {
-        let { refs, store, props } = this,
-            { conf } = props,
+        let { refs, store, props, conf } = this,
             { ljtab, ljxx } = refs,
             tf = selItems[selItems.length - 1] || null, //当前要显示的台风
             { typhoonLayer } = store,
@@ -359,18 +355,30 @@ export default class Typhoon extends Component {
         var { data } = info
         T.map.setView([data.mapx, data.mapy], 9)
     }
-
+    /**
+     * 云图
+     * @param {*} selected 
+     * @param {*} data 
+     */
     onCloudChange(selected, data) {
         this.onImgChange('cloud', selected, data)
     }
-
+    /**
+     * 雷达图
+     * @param {*} selected 
+     * @param {*} data 
+     */
     onRadarChange(selected, data) {
         this.onImgChange('radar', selected, data)
     }
-
+    /**
+     * 云图雷达图
+     * @param {*} type 
+     * @param {*} selected 
+     * @param {*} data 
+     */
     onImgChange(type, selected, data) {
-        let { store, props } = this,
-            { conf } = props,
+        let { store, props, conf } = this,
             mapImage = conf[type] || conf.mapImage,
             layerName = type + 'Layer',
             markerName = type + 'Marker'
@@ -395,8 +403,11 @@ export default class Typhoon extends Component {
             store[markerName].remove();
         }
     }
-
+    /**
+     * 渲染
+     */
     render() {
+
         var { props, onTyphoonItemCheck, onLsljClick, onTyphoonClick, onLsljOver, onCityClick, onLsljOut, handleTyphoon } = this,
             { height } = props,
             h = height / 3

@@ -52,16 +52,18 @@ class Module extends TComponent {
      * 
      */
     render() {
-        let { loaded, props, state } = this,
+        let that = this,
+            { loaded, props, state } = that,
             { data } = props,
             { label } = data,
-            { Content } = state;
-        if (!Content) {
-            T.require(['leaf/typhoon/typhoon', 'leaf/typhoon/config.' + T.Map.platform], (Content, config) => {
-                Content = Content.default
-                Content = data._leaf = <Content height="500" conf={config} />
-                Content.conf = config;
-                this.setState({ Content: Content })
+            { component } = state;
+        if (!component) {
+            let options = {
+                props: { height: 500 },
+                deps: ['leaf/typhoon/typhoon', 'leaf/typhoon/config.' + T.Map.platform]
+            }
+            let branch = T.add(options, () => {
+                this.setState({ component: branch._leaf })
             })
             return null;
         }
@@ -76,10 +78,9 @@ class Module extends TComponent {
                         {/*<i className='tf tf-plus' role='button' style={{ padding: 5, fontSize: 16 }} />*/}
                         <img role='button' src='tree/assets/common/btn-close.png' style={{ margin: 2 }} />
                     </div>
-
                 </div>
                 <div style={{ backgroundColor: '#fff' }} >
-                    {Content}
+                    {component}
                 </div>
             </div>
         )

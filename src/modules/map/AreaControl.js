@@ -9,13 +9,15 @@ import NavTab from '../../containers/NavTab'
 export default class AreaControl extends Component {
     constructor(props) {
         super(props)
-
+        this.load();
     }
     /**
      * 
      */
     load() {
-        T.ajax({})
+        // let { url } = props;
+
+        // T.ajax({})
     }
     /**
      * 
@@ -29,11 +31,11 @@ export default class AreaControl extends Component {
     render() {
         let columnStyle = { display: 'inline-block ', cursor: 'pointer', paddingRight: 10 }
         return (
-            <div className='shadow' style={{ zIndex: 999, position: 'absolute', right: 50, top: 10, backgroundColor: '#fff', width: 280, height: 300 }} >
+            <div className='shadow' style={{ zIndex: 999, position: 'absolute', right: 50, top: 10, backgroundColor: '#fff', width: 280, height: 130 }} >
                 <NavTab height='30' >
-                    <div label='福州市' style={{ padding: 5 }}  >
+                    <div label='区域' style={{ padding: 5 }}   >
                         <span style={{ padding: 5 }}>当前：福州市</span>
-                        <div style={{ padding: 5, lineHeight: 2 }}>
+                        <div style={{ padding: 5, lineHeight: 2 }}>.
                             <span style={columnStyle}>鼓楼区</span>
                             <span style={columnStyle}>鼓楼区</span>
                             <span style={columnStyle}>鼓楼区</span>

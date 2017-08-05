@@ -22,7 +22,7 @@ export default class Topicbar extends Component {
             {
                 label: '实时监测', children: [
                     { label: '实时水情', icon: 'tree/assets/menu/rain.png', deps: [], props: {} },
-                    { label: '实时雨情', icon: 'tree/assets/menu/rain.png', checked: true, deps: [] },
+                    { label: '实时雨情', icon: 'tree/assets/menu/rain.png', checked: false, deps: [] },
                     { label: '实时风情', icon: 'tree/assets/menu/rain.png' }
                 ]
             },
@@ -47,8 +47,15 @@ export default class Topicbar extends Component {
                 ]
             }
         ]
+        let selItems = [];//[dataProvider[0].children[1]]
+        dataProvider.forEach(item => {
+            item.children && item.children.forEach(item => {
+                item.checked && selItems.push(selItems);
+            })
+        });
+
         this.state = {
-            selItems: [dataProvider[0].children[1]],
+            selItems: selItems,//
             showMenu: false,
             dataProvider: dataProvider
         }
@@ -94,7 +101,7 @@ export default class Topicbar extends Component {
         let { state, toggleMenu, onMenuChecked, onItemClick } = this,
             { dataProvider, selItems, showMenu } = state;
         return (
-            <div className='Topicbar' style={{ position: 'absolute', top: 0, left: 100, backgroundColor: '#fff', zIndex: 999 }}>
+            <div className='Topicbar' style={{ position: 'absolute', top: 0, left: 0, backgroundColor: '#fff', zIndex: 999 }}>
                 <Menu dataProvider={selItems} on={{ addClick: toggleMenu.bind(this), itemClick: onItemClick.bind(this) }} />
                 <DataMenu dataProvider={dataProvider} show={showMenu} on={{ change: onMenuChecked.bind(this) }} />
                 <ModuleBox dataProvider={selItems} />
@@ -178,7 +185,7 @@ class DataMenu extends TComponent {
             { dataProvider, show } = props,
             menus;
         if (!dataProvider || !show) return null;
-        menus = dataProvider.map(data => {
+        menus = dataProvider.map((data, index) => {
             let { label, children } = data;
             if (!children) return null;
             let dataRows = children.map(data => {
@@ -188,8 +195,8 @@ class DataMenu extends TComponent {
                 }} />
             })
             return (
-                <div style={{ display: 'inline-block', margin: 0, verticalAlign: 'top', color: '#fff' }}>
-                    <label style={{ paddingLeft: 20, paddingTop: 15, fontSize: 14, fontWeight: 'normal' }}>{label}</label>
+                <div style={{ display: 'inline-block', marginBottom: 5, textAlign: 'center', marginTop: 15, verticalAlign: 'top', color: '#fff', borderRight: '1px solid #509ff7' }}>
+                    <label style={{ fontSize: 14, fontWeight: 'normal' }}>{label}</label>
                     {dataRows}
                 </div>
             );

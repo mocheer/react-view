@@ -321,15 +321,14 @@ export default class TyphoonPlayer extends Component {
             return null;
         }
         let box = []
-        props.onCloudChange && box.push(<CheckBox style={{ display: 'inline', margin: 5 }} label='卫星云图' selected={state.cloud} style={{ color: '#FFFFFF' }} onChange={this.onCloudChange.bind(this)} />)
-        props.onRadarChange && box.push(<CheckBox style={{ display: 'inline', margin: 5 }} label='气象雷达' selected={state.radar} style={{ color: '#FFFFFF' }} onChange={this.onRadarChange.bind(this)} />)
+        props.onCloudChange && box.push(<CheckBox style={{ display: 'inline', margin: 5, color: '#FFF' }} label='卫星云图' selected={state.cloud} onChange={this.onCloudChange.bind(this)} />)
+        props.onRadarChange && box.push(<CheckBox style={{ display: 'inline', margin: 5, color: '#FFF' }} label='气象雷达' selected={state.radar} onChange={this.onRadarChange.bind(this)} />)
 
         if (!expanded) {
             legendbox && (legendbox.style.bottom = '75px')
             return <img className="TimeSlider" style={{ cursor: 'pointer', left: 5, bottom: 20 }} src="tree/assets/timeslider/collpase.png" onClick={this.expand.bind(this)} />
         }
         legendbox && (legendbox.style.bottom = '105px')
-
         //canvas
         let scaleProps = {
             style: {
