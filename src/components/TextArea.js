@@ -3,19 +3,21 @@
  * @email mocheer@foxmail.com
  * @param date 2016.3.24
  */
-import React,{Component,PropTypes} from 'react'
-
+import React, { Component, PropTypes } from 'react'
+/**
+ * 
+ */
 export default class TextArea extends Component {
     constructor(props) {
         super(props);
     }
-    render(){
+    render() {
         return (
             <textarea className="form-control" rows={this.props.rows}></textarea>
         );
     }
 }
-TextArea.defaultProps ={
-    rows:3
+TextArea.defaultProps = {
+    rows: 3
 };//设置默认属性
 

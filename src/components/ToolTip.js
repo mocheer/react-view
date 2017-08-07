@@ -5,7 +5,9 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-
+/**
+ * 气泡框
+ */
 export default class ToolTip extends Component {
     constructor(props) {
         super(props);
@@ -15,8 +17,8 @@ export default class ToolTip extends Component {
         }
     }
     render() {
-        let {state} = this,
-            {target, label} = state;
+        let { state } = this,
+            { target, label } = state;
         if (!label || !target) {
             return null;
         }

@@ -19,8 +19,8 @@ export default class Panel extends Component {
      * 标题点击
      */
     onTitleClick() {
-        let {state} = this,
-            {collopse} = state;
+        let { state } = this,
+            { collopse } = state;
         this.setState({
             collopse: !collopse
         })
@@ -51,9 +51,9 @@ export default class Panel extends Component {
      * 渲染
      */
     render() {
-        let {props, state} = this,
-            {title, body, footer, children, className} = props,
-            {collopse} = state,
+        let { props, state } = this,
+            { title, body, footer, children, className } = props,
+            { collopse } = state,
             content = [],
             panelClass = classNames('panel Panel', className || 'panel-primary');//panel-default
 

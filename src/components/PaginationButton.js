@@ -3,16 +3,18 @@
  * @email mocheer@foxmail.com
  * @param date 2016.3.24
  */
-import React,{Component,PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-//
-export default class PaginationButton extends Component{
+/**
+ * 
+ */
+export default class PaginationButton extends Component {
     constructor(props) {
-         super(props)
+        super(props)
     }
-    render(){
-        const {onClick,label,active,disabled} = this.props;
-        const liClass = classNames({active,disabled})
+    render() {
+        const { onClick, label, active, disabled } = this.props;
+        const liClass = classNames({ active, disabled })
         return (
             <li className={liClass}>
                 <a role='button' onClick={onClick} >
@@ -23,7 +25,7 @@ export default class PaginationButton extends Component{
     }
 }
 //设置默认属性
-PaginationButton.defaultProps ={
+PaginationButton.defaultProps = {
     active: false,
     disabled: false
 };

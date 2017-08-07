@@ -10,13 +10,13 @@ export default class Canvas extends Component {
         super(props)
     }
     render() {
-        let { props,state } = this,
+        let { props, state } = this,
             { width, height } = props,
-            newProps = Object.assign({},props,{
+            newProps = Object.assign({}, props, {
                 width: width * 2,
                 height: height * 2
             });
-            newProps.style = Object.assign(newProps.style,{width:width,height:height})
+        newProps.style = Object.assign(newProps.style, { width: width, height: height })
         return (
             <canvas {...newProps} />
         )

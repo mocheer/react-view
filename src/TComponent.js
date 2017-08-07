@@ -36,9 +36,9 @@ export default class TComponent extends Component {
      * 
      * @param {*} types 
      */
-    on(types) {
+    on(types, fn) {
         let action = this._action = this._action || new T.Action();
-        action.on(types)
+        action.on(types, fn)
     }
     /**
      * 

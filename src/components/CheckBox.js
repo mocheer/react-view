@@ -6,7 +6,7 @@
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 /**
- * 多选框
+ * 多选框/复选框
  * {label,icon,checked}
  */
 export default class CheckBox extends Component {

@@ -20,18 +20,18 @@ export default class Navbar extends Component {
     }
 
     createRight() {
-    
+
     }
 
     render() {
-        let {props, state} = this,
-            {height, children} = props
+        let { props, state } = this,
+            { height, children } = props
         return (
             <nav className="navbar navbar-inverse Navbar" role="navigation">
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <a className="navbar-brand" role="button" >
-                            <i className="tf tf-dolphin" style={{fontSize:24}} aria-hidden="true"></i>
+                            <i className="tf tf-dolphin" style={{ fontSize: 24 }} aria-hidden="true"></i>
                         </a>
                     </div>
                     <div className="collapse navbar-collapse">
