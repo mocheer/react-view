@@ -16,6 +16,18 @@ export default class TComponent extends Component {
     /**
      * 
      */
+    get style() {
+        return this.props.style;
+    }
+    /**
+     * 
+     */
+    get className() {
+        return this.props.className;
+    }
+    /**
+     * 
+     */
     suspend() {
         this.do('suspend');
     }
@@ -30,7 +42,6 @@ export default class TComponent extends Component {
      */
     componentWillUnmount() {
         this.suspend();
-        return true
     }
     /**
      * 

@@ -129,7 +129,7 @@ export default class Dropdown extends Component {
                         <a role='button'> {i} {dataLabel}</a>
                     </li>)
             });
-            dataList = <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 8 : 0 }} >{dataRows}</ul>;//160
+            dataList = <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
         }
         let caret = <span className='caret'></span>,
             dropClass = classNames(mode, { open: opened }, 'Dropdown'),
@@ -163,5 +163,4 @@ Dropdown.defaultProps = {
     opened: false,  //是否展开
     // type: 'text',    // button
     mode: 'dropdown'//dropup 向上/上下展开
-
 };

@@ -9,6 +9,9 @@ import classNames from 'classnames'
  * 
  */
 export default class Alert extends Component {
+    static show(options) {
+        let { title, label, type } = options;
+    }
     /**
      * 渲染
      */

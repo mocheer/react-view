@@ -228,7 +228,9 @@ export default class DataTable extends Component {
                 label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
                 break;
             case "toFixed":
-                label = data[dataField] && label.toFixed(column.format)
+                if (label = data[dataField]) {
+                    label.toFixed(column.format)
+                }
                 break;
             case "date":
                 label = data[dataField];
@@ -276,8 +278,8 @@ export default class DataTable extends Component {
                         color: 'red',
                         transform: 'rotate(20deg)'
                     }}>
-                        暂无数据
-                </div>
+                        {typeof showNoData === 'string' ? showNoData : '暂无数据'}
+                    </div>
                 </div>)
         //
         let headerRows = this.createHeader(columns, props),
