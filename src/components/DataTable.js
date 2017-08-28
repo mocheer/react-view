@@ -5,18 +5,33 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-
 /**
- * column {dataField,headerText,type,width,group}
- * showNoData 当dataProvider为空时显示no data
- * reverse  倒序排列
+ * 
+ * *****************
+ * props
+ * *****************
+ * columns 
+ * {
+ *      field      //
+ *      label      //表头文本
+ *      itemGroup  //按顺序合并同组数据行
+ *      itemIcon   //图标
+ *      group      //合并表头
+ *      fmt        //{type,val}|string
+ * }
+ * group      分组
+ * showNoData 当dataProvider为空时显示no data提示框
+ * reverse    倒序排列，比如说台风路径信息
  */
 export default class DataTable extends Component {
+    /**
+     * 
+     * @param {*} props 
+     */
     constructor(props) {
         super(props);
         this.state = {
-            dataProvider: props.dataProvider,
-            columns: props.columns,
+            selIndex: -1
         };
     }
     /**
@@ -42,8 +57,7 @@ export default class DataTable extends Component {
      */
     setHeaderWidth() {
         let { refs } = this,
-            tablebody = refs.tablebody,
-            body = refs.body;
+            { tablebody, body } = refs
         if (!body) {
             return;
         }
@@ -76,7 +90,6 @@ export default class DataTable extends Component {
         for (let i = 0; i < columnCount; i++) {
             ths[i].width = tds[i].offsetWidth;
         }
-
     }
     /**
      * 创建列头
@@ -89,7 +102,7 @@ export default class DataTable extends Component {
                 let thProps = {
                     key: columnid,
                 }
-                let { headerText, group, style } = column;
+                let { label, group, style } = column;
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
                 } else if (group) {
@@ -105,13 +118,13 @@ export default class DataTable extends Component {
                         if (!headerRows[1]) {
                             headerRows[1] = [];
                         }
-                        headerRows[1].push(<th {...thProps} >{headerText}</th>);
+                        headerRows[1].push(<th {...thProps} >{label}</th>);
                         return <th {...thProps} colSpan={colSpan} >{group}</th>;
                     }
-                    headerRows[1].push(<th {...thProps} >{headerText}</th>)
+                    headerRows[1].push(<th {...thProps} >{label}</th>)
                     return null;
                 }
-                return <th {...thProps} >{headerText}</th>;
+                return <th {...thProps} >{label}</th>;
             });
         headerRows[0] = <tr key={0} >{headerColumns}</tr>;
         if (headerRows[1]) {
@@ -122,41 +135,61 @@ export default class DataTable extends Component {
     /**
      * 创建数据行
      */
-    createRows(columns, dataProvider, selIndex) {
-        let dataRows,
-            labelFunc = this.labelFunc.bind(this)
+    createRows(columns, dataProvider, selIndex, group) {
+        let dataRows = [],
+            cellFunc = this.cellFunc.bind(this)
         if (dataProvider) {
-            dataRows = dataProvider.map((data, rowid) => {
+            let rowFunc = (data, rowid) => {
+
                 let dataColumns = columns.map((column, columnid) => {
-                    let { type, dataField, style } = column,
-                        label = labelFunc(data, rowid, column, dataField),
+                    let { itemGroup, field, style } = column,
+                        label = cellFunc(data, rowid, column, field),
                         tdProps = { key: columnid };
                     if (style) {
                         tdProps.style = style;
                     }
-                    switch (type) {
-                        case "group"://将同一组的数据合并成一行（前提是已经按序排列）
-                            if (rowid === 0 || dataProvider[rowid - 1][dataField] !== label) {
-                                var rowSpan = 1;
-                                var rowCount = dataProvider.length;
-                                for (var row = rowid + 1; row < rowCount; row++) {
-                                    if (dataProvider[row][dataField] === label) {
-                                        rowSpan++;
-                                    } else {
-                                        break;
-                                    }
+                    //将同一组的数据合并成一行（前提是已经按序排列）
+                    if (itemGroup) {
+                        if (rowid === 0 || dataProvider[rowid - 1][field] !== label) {
+                            var rowSpan = 1;
+                            var rowCount = dataProvider.length;
+                            for (var row = rowid + 1; row < rowCount; row++) {
+                                if (dataProvider[row][field] === label) {
+                                    rowSpan++;
+                                } else {
+                                    break;
                                 }
-                                tdProps.rowSpan = rowSpan;
-                                return <td {...tdProps} >{label}</td>;
                             }
-                            return null;
-                        default:
-                            return <td {...tdProps} >{label}</td>
+                            tdProps.rowSpan = rowSpan;
+                            return <td {...tdProps} >{label}</td>;
+                        }
+                        return null;
                     }
+                    return <td {...tdProps} >{label}</td>
                 }),
                     trProps = { key: rowid }
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 return <tr {...trProps} >{dataColumns}</tr>
+            }, rowid = 0;
+
+            dataProvider.forEach((item, index) => {
+                if (item.isGroup) {
+                    dataRows.push(
+                        <tr onClick={e => {
+                            item.expanded = !item.expanded;
+                            this.forceUpdate();
+                        }} role='button'><td colSpan={columns.length}><span className="caret" style={{ marginRight: 5 }} />{item.label}</td></tr>
+                    )
+                    if (item.expanded && item.children) {
+                        item.children.forEach((item, itemIndex) => {
+                            dataRows.push(rowFunc(item, index * 10 + itemIndex));//key 一样的话展不开
+                        })
+                    }
+
+                } else {
+                    dataRows.push(rowFunc(item, index));//key 一样的话展不开
+                }
+
             });
         }
         return dataRows;
@@ -166,8 +199,7 @@ export default class DataTable extends Component {
      */
     onCheck(data, column) {
         let checked = data.checked = !data.checked,
-            { state } = this,
-            { dataProvider } = state,
+            { props, dataProvider } = this,
             selItems = []
         for (let i = 0, l = dataProvider.length, item; i < l; i++) {
             item = dataProvider[i];
@@ -175,15 +207,14 @@ export default class DataTable extends Component {
         }
         checked && selItems.push(data)
         column.onChange(data, column, selItems)
-        this.setState({})
+        this.forceUpdate()
     }
     /**
      * 事件信息
      */
     getEventInfo(event) {
         var info = {},
-            { props, state } = this,
-            { dataProvider } = state,
+            { props, dataProvider } = this,
             { reverse } = props,
             td = event.target,
             columnid = td.cellIndex, //
@@ -221,46 +252,56 @@ export default class DataTable extends Component {
     /**
     * 格式化
     */
-    labelFunc(data, rowid, column, dataField) {
-        var label;
-        switch (column.f) {
-            case "check":
+    cellFunc(data, rowid, column, field) {
+        let { fmt } = column,
+            label, type = fmt, val;
+        if (typeof fmt == 'object') {
+            type = fmt.type;
+            val = fmt.val;
+        }
+        switch (type) {
+            case "check"://复选框
                 label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
                 break;
-            case "toFixed":
-                if (label = data[dataField]) {
-                    label.toFixed(column.format)
+            case "toFixed"://数字
+                if (label = data[field]) {
+                    label.toFixed(val)
                 }
                 break;
-            case "date":
-                label = data[dataField];
-                //format string[] ["YYYY-MM-D HH:mm:ss","HH:mm"]
-                var m = moment(label, column.format[0]);
-                if (m.isValid()) {
-                    label = m.format(column.format[1]);
-                }
+            case "date"://时间
+                label = T.clock(data[field]).fmt(val)
                 break;
-            case "rowid":
+            case "rowid"://序号
                 label = rowid;
                 break;
-            case "link":
-                var linkUrl = data["link-" + dataField]
-                label = linkUrl && (<a href={linkUrl} target="view_window" >{data[dataField]}</a>) || data[dataField]
+            case "link"://超链接
+                var linkUrl = data["link-" + field]
+                label = linkUrl && (<a href={linkUrl} target="view_window" >{data[field]}</a>) || data[field]
                 break;
             default:
-                label = data[dataField];
+                label = data[field];
                 break;
         }
         return label;
+    }
+
+    /**
+     * 
+     */
+    get dataProvider() {
+        let { props, state } = this;
+        return state.dataProvider || props.dataProvider;
     }
     /**
      * 渲染
      */
     render() {
-        let { props, state } = this,
-            { columns, dataProvider, selIndex } = state,
-            { height, reverse, onTableOut, showNoData } = props
+        let { props, state, dataProvider } = this,
+            { columns } = props,
+            { selIndex } = state,
+            { group, sort, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
+        // 无数据
         if (!dataProvider && showNoData)
             return (
                 <div style={{
@@ -280,15 +321,47 @@ export default class DataTable extends Component {
                     }}>
                         {typeof showNoData === 'string' ? showNoData : '暂无数据'}
                     </div>
-                </div>)
+                </div>
+            )
+        // 分组
+        if (group) {
+            if (!this.gc || this.gc.group !== group || this.gc._children !== dataProvider) {
+                let len = group.length,
+                    result = this.gc = { group: group, children: dataProvider, _children: dataProvider },
+                    fn = (index, result) => {
+                        let temp = {},
+                            { field } = group[index],
+                            { children } = result;
+                        for (let j = 0, len = children.length; j < len; j++) {
+                            let item = children[j],
+                                val = item[field],
+                                itemChildren = temp[val] = temp[val] || [];
+                            itemChildren.push(item);
+                        }
+                        children = result.children = []
+                        for (let label in temp) {
+                            let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: false };
+                            if (index + 1 < len) {
+                                fn(index + 1, item)
+                            }
+                            children.push(item)
+                        }
+
+                    }
+                fn(0, result)
+            }
+            dataProvider = this.gc.children;
+        }
         //
-        let headerRows = this.createHeader(columns, props),
-            dataRows = this.createRows(columns, dataProvider, selIndex),
-            tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": true }, { "table-condensed": true }),
+        let { border } = props,
+            headerRows = this.createHeader(columns, props),
+            dataRows = this.createRows(columns, dataProvider, selIndex, group),
+            tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": border }, { "table-condensed": true }),
             bodyStyle = {};
         if (height) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
+        //倒序排序
         reverse && dataRows && dataRows.reverse()
         //
         let onTableClick = this.onTableClick.bind(this),
@@ -296,16 +369,22 @@ export default class DataTable extends Component {
         return (
             <div className="table-responsive DataTable">
                 <div className="tableheader" >
-                    <table className={tableClass} >
+                    <table className={tableClass} style={{ borderBottom: 0 }} >
                         <thead ref="header">{headerRows}</thead>
                     </table>
                 </div>
                 <div ref='tablebody' className="tablebody" onClick={onTableClick} onMouseOver={onTableOver} style={bodyStyle} onMouseOut={onTableOut}>
-                    <table className={tableClass} >
+                    <table className={tableClass} style={{ borderTop: 0 }} >
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>
                 </div>
             </div>
         )
     }
+}
+/**
+ * 初始化属性
+ */
+DataTable.defaultProps = {
+    border: true //边框
 }

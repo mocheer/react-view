@@ -1,0 +1,65 @@
+
+@font-face {font-family: "tf";
+  src: url('iconfont.eot?t=1498631331269'); /* IE9*/
+  src: url('iconfont.eot?t=1498631331269#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1498631331269') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1498631331269') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1498631331269#tf') format('svg'); /* iOS 4.1- */
+}
+
+.tf {
+  font-family:"tf" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tf-search-plus:before { content: "\e699"; }
+
+.tf-qrcode:before { content: "\e601"; }
+
+.tf-voice-fill:before { content: "\e66a"; }
+
+.tf-draw-line-measure:before { content: "\e630"; }
+
+.tf-search-minus:before { content: "\e63d"; }
+
+.tf-clear-fill:before { content: "\e6a6"; }
+
+.tf-voice-forbid-fill:before { content: "\e6db"; }
+
+.tf-draw-pencil:before { content: "\e70a"; }
+
+.tf-minus:before { content: "\e60b"; }
+
+.tf-map-point:before { content: "\e7b9"; }
+
+.tf-dolphin:before { content: "\e603"; }
+
+.tf-info-circle:before { content: "\e629"; }
+
+.tf-draw-rect:before { content: "\e604"; }
+
+.tf-draw-circle:before { content: "\e606"; }
+
+.tf-draw-polygon:before { content: "\e607"; }
+
+.tf-mouse-pointer:before { content: "\e65c"; }
+
+.tf-search:before { content: "\e65f"; }
+
+.tf-setting:before { content: "\e602"; }
+
+.tf-move-lr:before { content: "\e631"; }
+
+.tf-circle-point:before { content: "\e61c"; }
+
+.tf-draw-line:before { content: "\e61d"; }
+
+.tf-screen:before { content: "\e6f5"; }
+
+.tf-draw-curve:before { content: "\e625"; }
+
+.tf-plus:before { content: "\e7d3"; }
+
