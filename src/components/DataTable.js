@@ -140,7 +140,6 @@ export default class DataTable extends Component {
             cellFunc = this.cellFunc.bind(this)
         if (dataProvider) {
             let rowFunc = (data, rowid) => {
-
                 let dataColumns = columns.map((column, columnid) => {
                     let { itemGroup, field, style } = column,
                         label = cellFunc(data, rowid, column, field),
@@ -180,9 +179,10 @@ export default class DataTable extends Component {
                             this.forceUpdate();
                         }} role='button'><td colSpan={columns.length}><span className="caret" style={{ marginRight: 5 }} />{item.label}</td></tr>
                     )
+                    rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((item, itemIndex) => {
-                            dataRows.push(rowFunc(item, index * 10 + itemIndex));//key 一样的话展不开
+                            dataRows.push(rowFunc(item, rowid++));//key 一样的话展不开index * 10 + itemIndex
                         })
                     }
 
@@ -235,8 +235,12 @@ export default class DataTable extends Component {
      */
     onTableClick(event) {
         var info = this.getEventInfo(event),
-            { onItemClick } = this.props
+            { onItemClick } = this.props,
+            { data } = info;
         onItemClick && onItemClick(info)
+        if (data && data.children) {
+            return;
+        }
         this.setState({
             selIndex: info.index
         })
@@ -323,35 +327,59 @@ export default class DataTable extends Component {
                     </div>
                 </div>
             )
-        // 分组
-        if (group) {
-            if (!this.gc || this.gc.group !== group || this.gc._children !== dataProvider) {
-                let len = group.length,
-                    result = this.gc = { group: group, children: dataProvider, _children: dataProvider },
-                    fn = (index, result) => {
-                        let temp = {},
-                            { field } = group[index],
-                            { children } = result;
-                        for (let j = 0, len = children.length; j < len; j++) {
-                            let item = children[j],
-                                val = item[field],
-                                itemChildren = temp[val] = temp[val] || [];
-                            itemChildren.push(item);
-                        }
-                        children = result.children = []
-                        for (let label in temp) {
-                            let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: false };
-                            if (index + 1 < len) {
-                                fn(index + 1, item)
+        if (dataProvider) {
+            // 分组
+            if (group) {
+                if (!this.gc || this.gc.group !== group || this.gc._children !== dataProvider) {
+                    let len = group.length,
+                        result = this.gc = { group: group, children: dataProvider, _children: dataProvider },
+                        fn = (index, result) => {
+                            let temp = {},
+                                { field } = group[index],
+                                { children } = result;
+                            for (let j = 0, len = children.length; j < len; j++) {
+                                let item = children[j],
+                                    val = item[field],
+                                    itemChildren = temp[val] = temp[val] || [];
+                                itemChildren.push(item);
                             }
-                            children.push(item)
+                            children = result.children = []
+                            for (let label in temp) {
+                                let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: false };
+                                if (index + 1 < len) {
+                                    fn(index + 1, item)
+                                }
+                                children.push(item)
+                            }
                         }
-
-                    }
-                fn(0, result)
+                    fn(0, result)
+                }
+                dataProvider = this.gc.children;
             }
-            dataProvider = this.gc.children;
+            // 排序
+            if (sort) {
+                sortOn = (arr, fields, options) => {
+                    let { desc } = options,
+                        field, len = fields.length,
+                        sort = (a, b, c = 0) => {
+                            field = fields[c];
+                            if (a[field] < b[field]) {
+                                return desc * -1;
+                            }
+                            if (a[field] > b[field]) {
+                                return desc;
+                            }
+                            if (++c < len) {
+                                return sort(a, b, c)
+                            }
+                            return 0;
+                        }
+                    return arr.sort(sort)
+                }
+                dataProvider = sortOn(dataProvider.concat(), sort)
+            }
         }
+
         //
         let { border } = props,
             headerRows = this.createHeader(columns, props),
@@ -361,7 +389,7 @@ export default class DataTable extends Component {
         if (height) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
-        //倒序排序
+        // 倒序排序
         reverse && dataRows && dataRows.reverse()
         //
         let onTableClick = this.onTableClick.bind(this),
