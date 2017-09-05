@@ -10,10 +10,26 @@ import '../../style/components/Input.css'
  * 
  */
 export default class Input extends Component {
+    /**
+     * 
+     * @param {*} props 
+     */
+    constructor(props) {
+        super(props)
+    }
+    /**
+     * 渲染
+     */
     render() {
         let { props } = this,
-            { placeholder, className } = props;
-        className = className || 'form-control';//UnderlineInput
-        return <input type="text" className={className} placeholder={placeholder} />
+            { placeholder, className, readOnly, maxLength, style, value } = props;
+        className = className || 'form-control';
+        return <input type="text" className={className} placeholder={placeholder} value={value} />
     }
+}
+/**
+ * 
+ */
+Input.defaultProps = {
+    autoSize: false //是否根据文字内容自动改变输入框大小，常用于word编辑
 }

@@ -25,29 +25,29 @@ export default class ToolTip extends Component {
         let placement = state.placement || 'left',
             className = classNames('tooltip', 'fade', placement, 'in'),
             rect = target.getBoundingClientRect(),
-            styl = {};
+            style = {};
 
         switch (placement) {
             case "top":
-                styl.left = rect.left
-                styl.top = rect.top
+                style.left = rect.left
+                style.top = rect.top
                 break
             case "bottom":
-                styl.left = rect.left
-                styl.top = rect.top + rect.height
+                style.left = rect.left
+                style.top = rect.top + rect.height
                 break
             case "right":
-                styl.left = rect.left + width
-                styl.top = rect.top
+                style.left = rect.left + width
+                style.top = rect.top
                 break
             case "left":
-                styl.right = document.body.clientWidth - rect.left
-                styl.top = rect.top
+                style.right = document.body.clientWidth - rect.left
+                style.top = rect.top
                 break;
         }
-        Object.assign(styl, state.style)
+        Object.assign(style, state.style)
         return (
-            <div className={className} style={styl} role="tooltip">
+            <div className={className} style={style} role="tooltip">
                 <div className="tooltip-arrow"></div>
                 <div className="tooltip-inner">{label}</div>
             </div>

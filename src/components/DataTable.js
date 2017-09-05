@@ -177,9 +177,9 @@ export default class DataTable extends Component {
                         <tr onClick={e => {
                             item.expanded = !item.expanded;
                             this.forceUpdate();
-                        }} role='button'><td colSpan={columns.length}><span className="caret" style={{ marginRight: 5 }} />{item.label}</td></tr>
+                        }} role='button' ><td colSpan={columns.length}><span className="caret" style={{ marginRight: 5 }} />{item.label}</td></tr>
                     )
-                    rowid++
+                    // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((item, itemIndex) => {
                             dataRows.push(rowFunc(item, rowid++));//key 一样的话展不开index * 10 + itemIndex
@@ -217,17 +217,17 @@ export default class DataTable extends Component {
             { props, dataProvider } = this,
             { reverse } = props,
             td = event.target,
-            columnid = td.cellIndex, //
-            rowid = td.parentElement.rowIndex;//td.parentElement = tr
-        if (!dataProvider) {
-            return {}
+            { cellIndex: columnid, parentElement } = td,
+            rowid = parentElement.rowIndex;//td.parentElement = tr
+        console.log(parentElement)
+        if (dataProvider) {
+            info.target = td;
+            info.columnid = columnid;
+            info.rowid = rowid;
+            info.dataProvider = dataProvider;
+            info.index = reverse ? dataProvider.length - 1 - rowid : rowid;
+            info.data = dataProvider[info.index];
         }
-        info.target = td;
-        info.columnid = columnid;
-        info.rowid = rowid;
-        info.dataProvider = dataProvider;
-        info.index = reverse ? dataProvider.length - 1 - rowid : rowid;
-        info.data = dataProvider[info.index];
         return info
     }
     /**
@@ -276,7 +276,7 @@ export default class DataTable extends Component {
                 label = T.clock(data[field]).fmt(val)
                 break;
             case "rowid"://序号
-                label = rowid;
+                label = rowid + 1;
                 break;
             case "link"://超链接
                 var linkUrl = data["link-" + field]
