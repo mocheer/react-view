@@ -18,7 +18,7 @@ export default class Draggable extends Component {
             { children } = props,
             drag = component => {
                 component.ref = node => {
-                    draggable(node)
+                    node && draggable(node)
                 }
             }
         Array.isArray(children) ? children.forEach(drag) : drag(children)

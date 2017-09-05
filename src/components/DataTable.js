@@ -167,7 +167,6 @@ export default class DataTable extends Component {
                     return <td {...tdProps} >{label}</td>
                 }),
                     trProps = { key: rowid }
-                console.log(selIndex, rowid)
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 return <tr {...trProps} data-rowIndex={rowid} >{dataColumns}</tr>
             }, rowid = 0;
@@ -328,6 +327,14 @@ export default class DataTable extends Component {
                 </div>
             )
         if (dataProvider) {
+            // 排序
+            if (sort) {
+                if (!this.sc || this.sc._children !== dataProvider) {
+                    this.sc = { _children: dataProvider };
+                    this.sc.children = T.helper.sortOn(dataProvider.concat(), sort)
+                }
+                dataProvider = this.sc.children;
+            }
             // 分组
             if (group) {
                 if (!this.gc || this.gc.group !== group || this.gc._children !== dataProvider) {
@@ -356,28 +363,7 @@ export default class DataTable extends Component {
                 }
                 dataProvider = this.gc.children;
             }
-            // 排序
-            if (sort) {
-                sortOn = (arr, fields, options) => {
-                    let { desc } = options,
-                        field, len = fields.length,
-                        sort = (a, b, c = 0) => {
-                            field = fields[c];
-                            if (a[field] < b[field]) {
-                                return desc * -1;
-                            }
-                            if (a[field] > b[field]) {
-                                return desc;
-                            }
-                            if (++c < len) {
-                                return sort(a, b, c)
-                            }
-                            return 0;
-                        }
-                    return arr.sort(sort)
-                }
-                dataProvider = sortOn(dataProvider.concat(), sort)
-            }
+
         }
 
         //
