@@ -167,8 +167,9 @@ export default class DataTable extends Component {
                     return <td {...tdProps} >{label}</td>
                 }),
                     trProps = { key: rowid }
+                console.log(selIndex, rowid)
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
-                return <tr {...trProps} >{dataColumns}</tr>
+                return <tr {...trProps} data-rowIndex={rowid} >{dataColumns}</tr>
             }, rowid = 0;
 
             dataProvider.forEach((item, index) => {
@@ -218,9 +219,8 @@ export default class DataTable extends Component {
             { reverse } = props,
             td = event.target,
             { cellIndex: columnid, parentElement } = td,
-            rowid = parentElement.rowIndex;//td.parentElement = tr
-        console.log(parentElement)
-        if (dataProvider) {
+            rowid = +parentElement.dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
+        if (dataProvider && rowid !== void 0) {
             info.target = td;
             info.columnid = columnid;
             info.rowid = rowid;
@@ -290,7 +290,7 @@ export default class DataTable extends Component {
     }
 
     /**
-     * 
+     * 获取数据源
      */
     get dataProvider() {
         let { props, state } = this;
@@ -381,19 +381,19 @@ export default class DataTable extends Component {
         }
 
         //
-        let { border } = props,
+        let { border, hover, condensed, striped } = props,
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
-            tableClass = classNames("table", { "table-hover": true }, { "table-condensed": true }, { "table-striped": true }, { "table-bordered": border }, { "table-condensed": true }),
+            tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = {};
         if (height) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
         // 倒序排序
-        reverse && dataRows && dataRows.reverse()
+        reverse && dataRows && dataRows.reverse();
         //
         let onTableClick = this.onTableClick.bind(this),
-            onTableOver = this.onTableOver.bind(this)
+            onTableOver = this.onTableOver.bind(this);
         return (
             <div className="table-responsive DataTable">
                 <div className="tableheader" >
@@ -414,5 +414,8 @@ export default class DataTable extends Component {
  * 初始化属性
  */
 DataTable.defaultProps = {
+    striped: true,
+    condensed: true,
+    hover: true,
     border: true //边框
 }
