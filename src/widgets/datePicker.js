@@ -8,6 +8,8 @@ let $dp, l = {
         { name: "zh-cn", charset: "gb2312" },
     ],
     $skinList: [ // 皮肤包配置
+        { name: "default", charset: "gb2312" },
+        { name: "blue", charset: "gb2312" },
         { name: "whyGreen", charset: "gb2312" }
     ],
     $wdate: true,//是否自动引入Wdate类 设置为true时,可直接在引入WdatePicker.js的页面里使用 class="Wdate" Wdate可在skin目录下的WdatePicker.css文件中定义
@@ -21,7 +23,7 @@ let $dp, l = {
     weekMethod: "MSExcel", //
     position: {},   //日期选择框显示位置,注意:坐标单位是px,是相对当前框架坐标(不受滚动条影响),默认情况下系统根据页面大小自动选择
     lang: "auto",   //当值为'auto'时 自动根据客户端浏览器的语言自动选择语言,当值为其他时,从langList中选择对应的语言 
-    skin: "whyGreen",//皮肤
+    skin: "default",//皮肤
     dateFmt: "yyyy-MM-dd",//格式化
     realDateFmt: "yyyy-MM-dd",//计算机可识别的,真正的日期格式
     realTimeFmt: "HH:mm:ss",  //计算机可识别的,真正的日期格式
@@ -30,7 +32,7 @@ let $dp, l = {
     maxDate: "9999-12-31 23:59:59",
     minTime: "00:00:00",
     maxTime: "23:59:59",
-    startDate: "",
+    startDate: "", //启动日期
     alwaysUseStartDate: false,//
     yearOffset: 1911,
     firstDayOfWeek: 0,

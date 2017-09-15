@@ -35,7 +35,7 @@ export default class CheckBox extends Component {
         let { props, state } = this,
             { checked } = state,
             { label, style, icon } = props;
-        if (icon) {
+        if (typeof icon === 'string') {//可以
             icon = <img src={icon} style={{ width: 16, height: 16, margin: '0px 5px 0px -4px' }} />
         }
         return (

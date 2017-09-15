@@ -6,11 +6,7 @@
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 /**
- * 
- * *****************
- * props
- * *****************
- * columns 
+ * @param columns 
  * {
  *      field      //
  *      label      //表头文本
@@ -19,9 +15,9 @@ import classNames from 'classnames'
  *      group      //合并表头
  *      fmt        //{type,val}|string
  * }
- * group      分组
- * showNoData 当dataProvider为空时显示no data提示框
- * reverse    倒序排列，比如说台风路径信息
+ * @param group      分组
+ * @param showNoData 当dataProvider为空时显示no data提示框
+ * @param reverse    倒序排列，比如说台风路径信息
  */
 export default class DataTable extends Component {
     /**
@@ -61,22 +57,32 @@ export default class DataTable extends Component {
         if (!body) {
             return;
         }
-        let tr = body.querySelector('tr');
-        if (!tr) {
+        let trs = body.children,
+            len = trs.length,
+            i = 0;
+        if (len <= 0) {
             return;
         }
-        let tds = tr.querySelectorAll('td');
+        while (i < len) {
+            tr = trs[i]
+            if (tr.dataset.rowindex !== void 0) {
+                break;
+            }
+            i++;
+        }
+        let tds = tr.children;
         if (tds.length <= 1) {
             return;
         }
         let header = refs.header,
             ths = header.querySelectorAll('th'),
             columnCount = tds.length;
+        //
         if (ths.length !== columnCount) {
             let nths = [];
             for (let i = 0, l = columnCount, count = ths.length; i < count; i++) {
                 if (ths[i].colSpan > 1) {
-                    nths.push();
+
                 } else {
                     nths.push(ths[i]);
                 }
@@ -87,6 +93,7 @@ export default class DataTable extends Component {
             columnCount--;
             ths[columnCount].width = tds[columnCount].offsetWidth + 16;
         }
+
         for (let i = 0; i < columnCount; i++) {
             ths[i].width = tds[i].offsetWidth;
         }
@@ -97,15 +104,15 @@ export default class DataTable extends Component {
     createHeader(columns, props) {
         var headerRows = [],
             columnCount = columns.length,
-            { headerRowCount } = props,
+            { headerRowCount } = props,//列表行数
             headerColumns = columns.map((column, columnid) => {
                 let thProps = {
                     key: columnid,
                 }
-                let { label, group, style } = column;
+                let { label, group, style, field, fmt } = column;
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
-                } else if (group) {
+                } else if (group) {//列头合并，多表头
                     if (columnid === 0 || columns[columnid - 1].group !== group) {
                         var colSpan = 1;
                         for (var cid = columnid + 1; cid < columnCount; cid++) {
@@ -121,10 +128,41 @@ export default class DataTable extends Component {
                         headerRows[1].push(<th {...thProps} >{label}</th>);
                         return <th {...thProps} colSpan={colSpan} >{group}</th>;
                     }
-                    headerRows[1].push(<th {...thProps} >{label}</th>)
+                    headerRows[1].push(<th {...thProps} >{label} </th>)
                     return null;
                 }
-                return <th {...thProps} >{label}</th>;
+                let sortBtn = (field || fmt === 'rowid' ?
+                    <div style={{ display: 'inline-block', verticalAlign: 'middle', marginBottom: 8 }}  >
+                        <div role='button' style={{ height: 6 }} onClick={e => {
+                            if (field) {
+                                this.sc = null
+                                props.sort = { fields: [field] }
+                            } else {
+                                props.reverse = !props.reverse
+                            }
+                            this.forceUpdate()
+                        }} >
+                            <span className="caret" style={{ marginTop: -6, borderTop: 0, borderBottom: '4px dashed' }} />
+                        </div>
+                        <div role='button' style={{ height: 6 }} onClick={e => {
+                            if (field) {
+                                this.sc = null
+                                props.sort = { fields: [field], desc: -1 }
+                            } else {
+                                props.reverse = !props.reverse
+                            }
+                            this.forceUpdate()
+                        }}>
+                            <span className="caret" style={{ marginTop: -6 }} />
+                        </div>
+                    </div> : null
+                )
+                return (
+                    <th {...thProps} >
+                        {label}
+                        {sortBtn}
+                    </th>
+                )
             });
         headerRows[0] = <tr key={0} >{headerColumns}</tr>;
         if (headerRows[1]) {
@@ -144,7 +182,7 @@ export default class DataTable extends Component {
                     let { itemGroup, field, style } = column,
                         label = cellFunc(data, rowid, column, field),
                         tdProps = { key: columnid };
-                    if (style) {
+                    if (style) {//宽度只需要第一个，但其他样式需要每列都设置
                         tdProps.style = style;
                     }
                     //将同一组的数据合并成一行（前提是已经按序排列）
@@ -168,7 +206,7 @@ export default class DataTable extends Component {
                 }),
                     trProps = { key: rowid }
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
-                return <tr {...trProps} data-rowIndex={rowid} >{dataColumns}</tr>
+                return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index} >{dataColumns}</tr>
             }, rowid = 0;
 
             dataProvider.forEach((item, index) => {
@@ -177,12 +215,18 @@ export default class DataTable extends Component {
                         <tr onClick={e => {
                             item.expanded = !item.expanded;
                             this.forceUpdate();
-                        }} role='button' ><td colSpan={columns.length}><span className="caret" style={{ marginRight: 5 }} />{item.label}</td></tr>
+                        }} role='button' >
+                            <td colSpan={columns.length}>
+                                <span className="caret" style={{ marginRight: 5 }} />
+                                {item.label}
+                            </td>
+                        </tr>
                     )
                     // rowid++
                     if (item.expanded && item.children) {
-                        item.children.forEach((item, itemIndex) => {
-                            dataRows.push(rowFunc(item, rowid++));//key 一样的话展不开index * 10 + itemIndex
+                        item.children.forEach((dataItem, itemIndex) => {
+
+                            dataRows.push(rowFunc(dataItem, rowid++));//key 一样的话展不开index * 10 + itemIndex
                         })
                     }
 
@@ -218,14 +262,15 @@ export default class DataTable extends Component {
             { reverse } = props,
             td = event.target,
             { cellIndex: columnid, parentElement } = td,
-            rowid = +parentElement.dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
+            { dataset } = parentElement,
+            rowid = +dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
         if (dataProvider && rowid !== void 0) {
             info.target = td;
             info.columnid = columnid;
-            info.rowid = rowid;
+            info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
             info.dataProvider = dataProvider;
             info.index = reverse ? dataProvider.length - 1 - rowid : rowid;
-            info.data = dataProvider[info.index];
+            info.data = dataProvider[+dataset.itemindex];//经过了排序，目前这个值是错的
         }
         return info
     }
@@ -241,7 +286,7 @@ export default class DataTable extends Component {
             return;
         }
         this.setState({
-            selIndex: info.index
+            selIndex: info.rowid
         })
     }
     /**
@@ -268,7 +313,7 @@ export default class DataTable extends Component {
                 break;
             case "toFixed"://数字
                 if (label = data[field]) {
-                    label.toFixed(val)
+                    label = label.toFixed(val)
                 }
                 break;
             case "date"://时间
@@ -300,9 +345,9 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns } = props,
+            { columns, expandAll } = props,
             { selIndex } = state,
-            { group, sort, height, reverse, onTableOut, showNoData } = props
+            { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
         // 无数据
         if (!dataProvider && showNoData)
@@ -326,23 +371,39 @@ export default class DataTable extends Component {
                     </div>
                 </div>
             )
+        let colgroup;
+        // 倒序排序，分组时不能倒序
         if (dataProvider) {
             // 排序
             if (sort) {
-                if (!this.sc || this.sc._children !== dataProvider) {
-                    this.sc = { _children: dataProvider };
-                    this.sc.children = T.helper.sortOn(dataProvider.concat(), sort)
+                let { sc } = this;
+                if (!sc) {
+                    this.sc = sc = {};
                 }
-                dataProvider = this.sc.children;
+                let { source } = sc;
+                if (source !== dataProvider) {
+                    sc.source = dataProvider;
+                    let arr = dataProvider.map((item, index) => {
+                        if (item.__index === void 0) {
+                            item.__index = index;
+                        }
+                        return item;
+                    })
+                    sc.children = T.helper.sortOn(arr, sort)//dataProvider.concat()
+
+                }
+                dataProvider = sc.children;
             }
+
             // 分组
-            if (group) {
-                if (!this.gc || this.gc.group !== group || this.gc._children !== dataProvider) {
-                    let len = group.length,
-                        result = this.gc = { group: group, children: dataProvider, _children: dataProvider },
+            if (group && group.fields) {
+                if (!this.gc || this.gc.group !== group || this.gc.source !== dataProvider) {
+                    let { fields } = group,
+                        len = fields.length,
+                        result = this.gc = { group: group, children: dataProvider, source: dataProvider },
                         fn = (index, result) => {
                             let temp = {},
-                                { field } = group[index],
+                                field = fields[index],
                                 { children } = result;
                             for (let j = 0, len = children.length; j < len; j++) {
                                 let item = children[j],
@@ -350,9 +411,10 @@ export default class DataTable extends Component {
                                     itemChildren = temp[val] = temp[val] || [];
                                 itemChildren.push(item);
                             }
+
                             children = result.children = []
                             for (let label in temp) {
-                                let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: false };
+                                let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: expandAll };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
@@ -360,35 +422,49 @@ export default class DataTable extends Component {
                             }
                         }
                     fn(0, result)
+                    let cols = columns.map(item => {
+                        return <col style={item.style} />
+                    })
+                    result.colgroup = <colgroup>{cols}</colgroup>;
                 }
                 dataProvider = this.gc.children;
+                colgroup = this.gc.colgroup;
             }
-
+            //倒序
+            if (reverse) {
+                dataProvider = dataProvider.concat().reverse();
+            }
         }
-
         //
         let { border, hover, condensed, striped } = props,
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = {};
+        // 默认，无限
         if (height) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
-        // 倒序排序
-        reverse && dataRows && dataRows.reverse();
+        let headerStyle;
+        // 默认 div 100%
+        if (width) {
+            bodyStyle.width = width;
+            headerStyle = { width: width }
+        }
+
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
         return (
-            <div className="table-responsive DataTable">
-                <div className="tableheader" >
-                    <table className={tableClass} style={{ borderBottom: 0 }} >
+            <div className="table-responsive DataTable" style={props.style}>
+                <div className="tableheader" style={headerStyle} >
+                    <table className={tableClass}  >
                         <thead ref="header">{headerRows}</thead>
                     </table>
                 </div>
                 <div ref='tablebody' className="tablebody" onClick={onTableClick} onMouseOver={onTableOver} style={bodyStyle} onMouseOut={onTableOut}>
                     <table className={tableClass} style={{ borderTop: 0 }} >
+                        {colgroup}
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>
                 </div>
@@ -400,8 +476,8 @@ export default class DataTable extends Component {
  * 初始化属性
  */
 DataTable.defaultProps = {
-    striped: true,
+    striped: false, //条纹
     condensed: true,
-    hover: true,
+    hover: true, //hover
     border: true //边框
 }

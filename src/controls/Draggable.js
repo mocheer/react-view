@@ -21,7 +21,7 @@ export default class Draggable extends Component {
                     node && draggable(node)
                 }
             }
-        Array.isArray(children) ? children.forEach(drag) : drag(children)
+        T.isArray(children) ? children.forEach(drag) : drag(children)
         return children
     }
 }
