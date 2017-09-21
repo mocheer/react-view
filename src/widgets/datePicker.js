@@ -3,92 +3,98 @@
  * My97 DatePicker 4.8
  * License: http://www.my97.net/license.asp
  */
-let $dp, l = {
-    $langList: [ // 语言包配置
-        { name: "zh-cn", charset: "gb2312" },
-    ],
-    $skinList: [ // 皮肤包配置
-        { name: "default", charset: "gb2312" },
-        { name: "blue", charset: "gb2312" },
-        { name: "whyGreen", charset: "gb2312" }
-    ],
-    $wdate: true,//是否自动引入Wdate类 设置为true时,可直接在引入WdatePicker.js的页面里使用 class="Wdate" Wdate可在skin目录下的WdatePicker.css文件中定义
-    $crossFrame: false, //跨iframe
-    $preLoad: false,    //没有任何用处，因为这里不直接嵌入
-    $dpPath: "tree/plugins/My97DatePicker/",//指定程序包的绝对位置
-    doubleCalendar: false, //是否是双月模式
-    enableKeyboard: true,  //键盘控制开关
-    enableInputMask: true, //文本框输入启用掩码开关
-    autoUpdateOnChanged: null, //在修改年月日时分秒等元素时,自动更新到el,默认是关闭的(即:需要点击确定或点击日期才更新)
-    weekMethod: "MSExcel", //
-    position: {},   //日期选择框显示位置,注意:坐标单位是px,是相对当前框架坐标(不受滚动条影响),默认情况下系统根据页面大小自动选择
-    lang: "auto",   //当值为'auto'时 自动根据客户端浏览器的语言自动选择语言,当值为其他时,从langList中选择对应的语言 
-    skin: "default",//皮肤
-    dateFmt: "yyyy-MM-dd",//格式化
-    realDateFmt: "yyyy-MM-dd",//计算机可识别的,真正的日期格式
-    realTimeFmt: "HH:mm:ss",  //计算机可识别的,真正的日期格式
-    realFullFmt: "%Date %Time",//计算机可识别的,真正的日期格式
-    minDate: "0001-01-01 00:00:00",
-    maxDate: "9999-12-31 23:59:59",
-    minTime: "00:00:00",
-    maxTime: "23:59:59",
-    startDate: "", //启动日期
-    alwaysUseStartDate: false,//
-    yearOffset: 1911,
-    firstDayOfWeek: 0,
-    isShowWeek: false, //是否显示周
-    highLineWeekDay: true,//是否高亮显示 周六 周日
-    isShowClear: true, //是否显示清空按钮
-    isShowToday: true, //是否显示确定按钮
-    isShowOK: true,    //是否显示今天按钮
-    isShowOthers: true,//为true时,第一行空白处显示上月的日期，末行空白处显示下月的日期,否则不显示
-    readOnly: false,   //只读
-    errDealMode: 0,    //纠错模式设置 可设置3种模式 0 - 提示 1 - 自动纠错 2 - 标记 -1 禁用
-    autoPickDate: true,//为true时 即点击日期即可返回日期值，为null时(推荐使用) 如果有时间置为false 否则置为true
-    qsEnabled: true,   //是否启用快速选择功能,当日期格式中没有d这个元素时(如yyyy-MM或HH:mm:ss这样的格式时),该属性永远为true
-    autoShowQS: false, //是否默认显示快速选择
-    hmsMenuCfg: { H: [1, 6], m: [5, 6], s: [15, 4] },
+let $dp,
+    l = {
+        $langList: [ // 语言包配置
+            { name: "zh-cn", charset: "gb2312" },
+        ],
+        $skinList: [ // 皮肤包配置
+            { name: "default", charset: "gb2312" },
+            { name: "blue", charset: "gb2312" },
+            { name: "whyGreen", charset: "gb2312" }
+        ],
+        $wdate: true,//是否自动引入Wdate类 设置为true时,可直接在引入WdatePicker.js的页面里使用 class="Wdate" Wdate可在skin目录下的WdatePicker.css文件中定义
+        $crossFrame: false, //跨iframe
+        $preLoad: false,    //没有任何用处，因为这里不直接嵌入
+        $dpPath: "tree/plugins/My97DatePicker/",//指定程序包的绝对位置
+        doubleCalendar: false, //是否是双月模式
+        enableKeyboard: true,  //键盘控制开关
+        enableInputMask: true, //文本框输入启用掩码开关
+        autoUpdateOnChanged: null, //在修改年月日时分秒等元素时,自动更新到el,默认是关闭的(即:需要点击确定或点击日期才更新)
+        weekMethod: "MSExcel", //
+        position: {},   //日期选择框显示位置,注意:坐标单位是px,是相对当前框架坐标(不受滚动条影响),默认情况下系统根据页面大小自动选择
+        lang: "auto",   //当值为'auto'时 自动根据客户端浏览器的语言自动选择语言,当值为其他时,从langList中选择对应的语言 
+        skin: "default",//皮肤
+        dateFmt: "yyyy-MM-dd",//格式化
+        realDateFmt: "yyyy-MM-dd",//计算机可识别的,真正的日期格式
+        realTimeFmt: "HH:mm:ss",  //计算机可识别的,真正的日期格式
+        realFullFmt: "%Date %Time",//计算机可识别的,真正的日期格式
+        minDate: "0001-01-01 00:00:00",
+        maxDate: "9999-12-31 23:59:59",
+        minTime: "00:00:00",
+        maxTime: "23:59:59",
+        startDate: "", //启动日期
+        alwaysUseStartDate: false,//
+        yearOffset: 1911,
+        firstDayOfWeek: 0,
+        isShowWeek: false, //是否显示周
+        highLineWeekDay: true,//是否高亮显示 周六 周日
+        isShowClear: true, //是否显示清空按钮
+        isShowToday: true, //是否显示确定按钮
+        isShowOK: true,    //是否显示今天按钮
+        isShowOthers: true,//为true时,第一行空白处显示上月的日期，末行空白处显示下月的日期,否则不显示
+        readOnly: false,   //只读
+        errDealMode: 0,    //纠错模式设置 可设置3种模式 0 - 提示 1 - 自动纠错 2 - 标记 -1 禁用
+        autoPickDate: true,//为true时 即点击日期即可返回日期值，为null时(推荐使用) 如果有时间置为false 否则置为true
+        qsEnabled: true,   //是否启用快速选择功能,当日期格式中没有d这个元素时(如yyyy-MM或HH:mm:ss这样的格式时),该属性永远为true
+        autoShowQS: false, //是否默认显示快速选择
+        hmsMenuCfg: { H: [1, 6], m: [5, 6], s: [15, 4] },
 
-    opposite: false,   //默认为false, 为true时,无效日期变成有效日期,该属性对无效天特殊天不起作用
-    specialDates: null,
-    specialDays: null,
-    disabledDates: null,
-    disabledDays: null,
-    onpicking: null,
-    onpicked: null,  //重新选择日期之后派发，可用于两个时间的联动
-    onclearing: null,
-    oncleared: null,
-    ychanging: null,
-    ychanged: null,
-    Mchanging: null,
-    Mchanged: null,
-    dchanging: null,
-    dchanged: null,
-    Hchanging: null,
-    Hchanged: null,
-    mchanging: null,
-    mchanged: null,
-    schanging: null,
-    schanged: null,
-    eCont: null,    //日历控件挂载的dom
-    vel: null,      //指定一个控件或控件的ID,必须具有value属性(如input),用于存储真实值
-    elProp: "",
-    errMsg: "",
-    quickSel: [],   //快速选择数据,可以传入5个快速选择日期 注意:日期格式必须与 realDateFmt realTimeFmt realFullFmt 相匹配
-    has: {},
-    getRealLang: function () {
-        var d = l.$langList;
-        for (var e = 0;
-            e < d.length;
-            e++) { if (d[e].name == this.lang) { return d[e] } } return d[0]
-    }
-};
+        opposite: false,   //默认为false, 为true时,无效日期变成有效日期,该属性对无效天特殊天不起作用
+        specialDates: null,
+        specialDays: null,
+        disabledDates: null,
+        disabledDays: null,
+        onpicking: null,
+        onpicked: null,  //重新选择日期之后派发，可用于两个时间的联动
+        onclearing: null,
+        oncleared: null,
+        ychanging: null,
+        ychanged: null,
+        Mchanging: null,
+        Mchanged: null,
+        dchanging: null,
+        dchanged: null,
+        Hchanging: null,
+        Hchanged: null,
+        mchanging: null,
+        mchanged: null,
+        schanging: null,
+        schanged: null,
+        eCont: null,    //日历控件挂载的dom
+        vel: null,      //指定一个控件或控件的ID,必须具有value属性(如input),用于存储真实值
+        elProp: "",
+        errMsg: "",
+        quickSel: [],   //快速选择数据,可以传入5个快速选择日期 注意:日期格式必须与 realDateFmt realTimeFmt realFullFmt 相匹配
+        has: {},
+        getRealLang: function () {
+            var d = l.$langList;
+            for (var e = 0;
+                e < d.length;
+                e++) { if (d[e].name == this.lang) { return d[e] } } return d[0]
+        }
+    };
 
 var n = window,
     i = { innerHTML: "" },
     z = "document",
     B = "documentElement",
-    H = "getElementsByTagName", E, u, h, f, D,
+    H = "getElementsByTagName",
+    E,//crossFrame=true时
+    u,
+    h,
+    f,
+    D,
     v = navigator.appName;
 
 if (v == "Microsoft Internet Explorer") {
@@ -107,8 +113,8 @@ u = l.$dpPath;
 if (l.$wdate) {
     window.require(['css!plugins/My97DatePicker/skin/WdatePicker'])
 }
-E = n;
 
+E = n;
 // 跨无限iframe
 if (l.$crossFrame) {
     try {
@@ -133,7 +139,7 @@ b();
 if (l.$preLoad && $dp.status == 0) {
     k(n, "onload", function () { g(null, true) })
 }
-if (!n[z].docMD) {
+if (!n[z].docMD) {//window.document.docMD
     k(n[z], "onmousedown", s, true);
 
     n[z].docMD = true
@@ -555,4 +561,3 @@ function a(e, d) {
 }
 
 export default g
-

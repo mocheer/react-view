@@ -104,7 +104,7 @@ export default class DataTable extends Component {
     createHeader(columns, props) {
         var headerRows = [],
             columnCount = columns.length,
-            { headerRowCount } = props,//列表行数
+            { headerRowCount, sortable } = props,//列表行数
             headerColumns = columns.map((column, columnid) => {
                 let thProps = {
                     key: columnid,
@@ -131,7 +131,7 @@ export default class DataTable extends Component {
                     headerRows[1].push(<th {...thProps} >{label} </th>)
                     return null;
                 }
-                let sortBtn = (field || fmt === 'rowid' ?
+                let sortBtn = (sortable && (field || fmt === 'rowid') ?
                     <div style={{ display: 'inline-block', verticalAlign: 'middle', marginBottom: 8 }}  >
                         <div role='button' style={{ height: 6 }} onClick={e => {
                             if (field) {
@@ -400,7 +400,7 @@ export default class DataTable extends Component {
                 if (!this.gc || this.gc.group !== group || this.gc.source !== dataProvider) {
                     let { fields } = group,
                         len = fields.length,
-                        result = this.gc = { group: group, children: dataProvider, source: dataProvider },
+                        gc = this.gc = { group: group, children: dataProvider, source: dataProvider },
                         fn = (index, result) => {
                             let temp = {},
                                 field = fields[index],
@@ -421,11 +421,11 @@ export default class DataTable extends Component {
                                 children.push(item)
                             }
                         }
-                    fn(0, result)
+                    fn(0, gc)
                     let cols = columns.map(item => {
                         return <col style={item.style} />
                     })
-                    result.colgroup = <colgroup>{cols}</colgroup>;
+                    gc.colgroup = <colgroup>{cols}</colgroup>;
                 }
                 dataProvider = this.gc.children;
                 colgroup = this.gc.colgroup;

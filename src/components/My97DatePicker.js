@@ -16,9 +16,16 @@ export default class DatePicker extends Component {
         let { props } = this,
             { placeholder, format, style, value } = props;
         style = Object.assign({ display: 'inline-block' }, style)
+        if (T.isDate(value)) {
+            let fmt = format && format.replace(/y/g, 'Y').replace(/d/g, 'D').replace(/H/g, 'h') || 'YYYY-MM-DD hh:mm:ss'
+            value = T.helper.fmt(value, fmt)
+        } else {
+            value = value.replace('T', ' ')
+        }
+
         return (
             <input ref={input => {
-                if (input) {
+                if (!this.input) {
                     this.input = input;
                     this.value = value;
                 }
@@ -28,7 +35,7 @@ export default class DatePicker extends Component {
                     dateFmt: format,
                     start: value,
                     onpicked: e => {
-                        this.value = this.input.value;
+                        this.value = props.value = this.input.value;
                     }
                 })
             }} />
