@@ -89,11 +89,12 @@ export default class DataTable extends Component {
             }
             ths = nths;
         }
-        if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
-            columnCount--;
-            ths[columnCount].width = tds[columnCount].offsetWidth + 16;
+        if (!T.Sys.isMobile()) {
+            if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
+                columnCount--;
+                ths[columnCount].width = tds[columnCount].offsetWidth + 16;
+            }
         }
-
         for (let i = 0; i < columnCount; i++) {
             ths[i].width = tds[i].offsetWidth;
         }
@@ -413,9 +414,9 @@ export default class DataTable extends Component {
 
                             children = result.children = []
                             for (let label in temp) {
-                                let children = temp[label]
-                                label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: children.length }) || label
-                                let item = { lv: index, label: label, children: children, isGroup: true, expanded: expandAll };
+                                let items = temp[label]
+                                label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: items.length }) || label
+                                let item = { lv: index, label: label, children: items, isGroup: true, expanded: expandAll };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
@@ -451,10 +452,6 @@ export default class DataTable extends Component {
         if (width) {
             bodyStyle.width = width;
             headerStyle = { width: width }
-
-            if (T.Sys.isMobile()) {
-                bodyStyle.overflowX = headerStyle.overflowX = 'hidden'
-            }
         }
 
 
