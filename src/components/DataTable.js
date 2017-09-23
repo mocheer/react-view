@@ -413,8 +413,9 @@ export default class DataTable extends Component {
 
                             children = result.children = []
                             for (let label in temp) {
-                                label = groupLabel && T.helper.fmt(label, groupLabel) || label
-                                let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: expandAll };
+                                let children = temp[label]
+                                label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: children.length }) || label
+                                let item = { lv: index, label: label, children: children, isGroup: true, expanded: expandAll };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
