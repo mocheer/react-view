@@ -345,7 +345,7 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expandAll } = props,
+            { columns, expandAll, groupLabel } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
@@ -390,7 +390,6 @@ export default class DataTable extends Component {
                         return item;
                     })
                     sc.children = T.helper.sortOn(arr, sort)//dataProvider.concat()
-
                 }
                 dataProvider = sc.children;
             }
@@ -414,6 +413,7 @@ export default class DataTable extends Component {
 
                             children = result.children = []
                             for (let label in temp) {
+                                label = groupLabel && T.helper.fmt(label, groupLabel) || label
                                 let item = { lv: index, label: label, children: temp[label], isGroup: true, expanded: expandAll };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
@@ -442,7 +442,7 @@ export default class DataTable extends Component {
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = {};
         // 默认，无限
-        if (height && !T.Sys.isMobile()) {
+        if (height) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
         let headerStyle;
@@ -450,7 +450,13 @@ export default class DataTable extends Component {
         if (width) {
             bodyStyle.width = width;
             headerStyle = { width: width }
+
+            if (T.Sys.isMobile()) {
+                bodyStyle.overflowX = headerStyle.overflowX = 'hidden'
+            }
         }
+
+
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);

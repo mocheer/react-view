@@ -23,7 +23,7 @@ export default class Input extends Component {
         let { props } = this,
             { placeholder, className, readOnly, maxLength, style, value } = props;
         className = className || 'form-control';
-        return <input type="text" className={className} placeholder={placeholder} value={value} />
+        return <input type="text" style={style} className={className} placeholder={placeholder} value={value} />
     }
 }
 /**
