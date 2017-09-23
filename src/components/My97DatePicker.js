@@ -20,7 +20,7 @@ export default class DatePicker extends Component {
             let fmt = format && format.replace(/y/g, 'Y').replace(/d/g, 'D').replace(/H/g, 'h') || 'YYYY-MM-DD hh:mm:ss'
             value = T.helper.fmt(value, fmt)
         } else {
-            value = value.replace('T', ' ')
+            value = value && value.replace('T', ' ')
         }
 
         return (

@@ -138,7 +138,7 @@ export default class Dropdown extends Component {
         //
         switch (type) {
             case 'btn':
-                let style = width ? { width: width } : null;
+                let style = width ? { width: width, textAlign: 'left' } : null;
                 btn = <button className={btnClass} type="button" onClick={handleClick} style={style} >
                     {label} {caret}
                 </button>

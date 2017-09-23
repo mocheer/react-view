@@ -353,7 +353,7 @@ export default class DataTable extends Component {
         if (!dataProvider && showNoData)
             return (
                 <div style={{
-                    height: height,
+                    height: height || 50,
                     backgroundColor: '#FFFFFF',
                     paddingTop: height * 0.4,
                     paddingLeft: '35%'
@@ -442,7 +442,7 @@ export default class DataTable extends Component {
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = {};
         // 默认，无限
-        if (height) {
+        if (height && !T.Sys.isMobile()) {
             bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
         }
         let headerStyle;
@@ -451,10 +451,10 @@ export default class DataTable extends Component {
             bodyStyle.width = width;
             headerStyle = { width: width }
         }
-
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
+
         return (
             <div className="table-responsive DataTable" style={props.style}>
                 <div className="tableheader" style={headerStyle} >
@@ -476,8 +476,8 @@ export default class DataTable extends Component {
  * 初始化属性
  */
 DataTable.defaultProps = {
-    striped: false, //条纹
+    striped: true, //条纹
     condensed: true,
     hover: true, //hover
-    border: true //边框
+    border: false //边框
 }

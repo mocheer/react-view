@@ -5,6 +5,7 @@
  */
 .DataTable{
    cursor:default; 
+   border:1px solid #ddd;
    background-color: #FFFFFF;
 }
 
@@ -15,11 +16,16 @@
   table-layout:fixed;/*固定*/
 }
 
+.DataTable thead{
+  background: #ACCFEB
+}
+
 .DataTable .tablebody{
   overflow: auto
 }
 
-.DataTable th{
+.DataTable thead>tr>th{
+  color:#1B4C74;
   font-weight:bold;
   white-space: normal;
   font-size: 12px;
