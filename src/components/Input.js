@@ -16,6 +16,12 @@ export default class Input extends Component {
     constructor(props) {
         super(props)
     }
+
+    handleChange(e) {
+        let { target } = e,
+            { value } = target;
+        this.value = value;
+    }
     /**
      * 渲染
      */
@@ -23,7 +29,12 @@ export default class Input extends Component {
         let { props } = this,
             { placeholder, className, readOnly, maxLength, style, value } = props;
         className = className || 'form-control';
-        return <input type="text" style={style} className={className} placeholder={placeholder} value={value} />
+        return <input ref={input => {
+            if (!this.input) {
+                this.input = input
+                this.value = value;
+            }
+        }} type="text" style={style} className={className} placeholder={placeholder} value={value} onChange={this.handleChange.bind(this)} />
     }
 }
 /**

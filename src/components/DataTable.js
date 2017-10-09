@@ -207,7 +207,7 @@ export default class DataTable extends Component {
                 }),
                     trProps = { key: rowid }
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
-                return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index} >{dataColumns}</tr>
+                return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index || rowid} >{dataColumns}</tr>
             }, rowid = 0;
 
             dataProvider.forEach((item, index) => {
@@ -270,7 +270,7 @@ export default class DataTable extends Component {
             info.columnid = columnid;
             info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
             info.dataProvider = dataProvider;
-            info.index = reverse ? dataProvider.length - 1 - rowid : rowid;
+            info.index = rowid;
             info.data = dataProvider[+dataset.itemindex];//经过了排序，目前这个值是错的
         }
         return info
@@ -351,7 +351,7 @@ export default class DataTable extends Component {
             { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
         // 无数据
-        if (!dataProvider && showNoData)
+        if (showNoData && (!dataProvider || dataProvider.length === 0))
             return (
                 <div style={{
                     height: height || 50,
@@ -453,8 +453,6 @@ export default class DataTable extends Component {
             bodyStyle.width = width;
             headerStyle = { width: width }
         }
-
-
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);

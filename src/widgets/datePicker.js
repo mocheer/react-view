@@ -118,8 +118,7 @@ E = n;
 // 跨无限iframe
 if (l.$crossFrame) {
     try {
-        while (E.parent != E && E.parent[z][H]("frameset").length == 0)
-        { E = E.parent }
+        while (E.parent != E && E.parent[z][H]("frameset").length == 0) { E = E.parent }
     }
     catch (y) { }
 }
@@ -218,15 +217,12 @@ function b() {
             e = this.$(e);
             if
 							 (e.initcfg) {
-                t(e, "onclick", function ()
-                { g(e.initcfg) });
+                t(e, "onclick", function () { g(e.initcfg) });
 
-                t(e, "onfocus", function ()
-                { g(e.initcfg) })
+                t(e, "onfocus", function () { g(e.initcfg) })
             }
         },
-        hide: function ()
-        { r(this.dd, "none") },
+        hide: function () { r(this.dd, "none") },
         attachEvent: k
     };
     for (var d in w) { E.$dp[d] = w[d] } $dp = E.$dp
@@ -422,8 +418,7 @@ function g(M, d) {
 
                 while (func != null) {
                     var O = func.arguments[0];
-                    if (O && (O + "").indexOf("Event") >= 0)
-                    { return O } func = func.caller
+                    if (O && (O + "").indexOf("Event") >= 0) { return O } func = func.caller
                 }
             } catch (P) {
 
