@@ -177,8 +177,8 @@ export default class DataTable extends Component {
     createRows(columns, dataProvider, selIndex, group) {
         let { props, cellFunc } = this,
             dataRows = [],
-            { styleFunc } = props,
-            cellFunc = cellFunc.bind(this)
+            { styleFunc } = props;
+        cellFunc = cellFunc.bind(this)
         if (dataProvider) {
             let rowFunc = (data, rowid) => {
                 let dataColumns = columns.map((column, columnid) => {
