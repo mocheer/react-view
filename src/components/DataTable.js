@@ -175,8 +175,10 @@ export default class DataTable extends Component {
      * 创建数据行
      */
     createRows(columns, dataProvider, selIndex, group) {
-        let dataRows = [],
-            cellFunc = this.cellFunc.bind(this)
+        let { props, cellFunc } = this,
+            dataRows = [],
+            { styleFunc } = props,
+            cellFunc = cellFunc.bind(this)
         if (dataProvider) {
             let rowFunc = (data, rowid) => {
                 let dataColumns = columns.map((column, columnid) => {
@@ -207,10 +209,14 @@ export default class DataTable extends Component {
                 }),
                     trProps = { key: rowid }
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
+                if (styleFunc) {
+                    thProps.style = styleFunc(data)
+                }
                 return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index || rowid} >{dataColumns}</tr>
             }, rowid = 0;
 
             dataProvider.forEach((item, index) => {
+                //分组
                 if (item.isGroup) {
                     dataRows.push(
                         <tr onClick={e => {
@@ -351,7 +357,7 @@ export default class DataTable extends Component {
             { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
         // 无数据
-        if (showNoData && (!dataProvider || dataProvider.length === 0))
+        if (!dataProvider && showNoData)
             return (
                 <div style={{
                     height: height || 50,
@@ -411,7 +417,6 @@ export default class DataTable extends Component {
                                     itemChildren = temp[val] = temp[val] || [];
                                 itemChildren.push(item);
                             }
-
                             children = result.children = []
                             for (let label in temp) {
                                 let items = temp[label]

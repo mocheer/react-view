@@ -12,12 +12,13 @@ export default class Radio extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selIndex: 0,
             checked: props.checked
         }
         props.group.push(this)
     }
     /**
-     * 
+     * 单个radio change
      */
     handleChange(e) {
         let { props, state } = this;
@@ -37,16 +38,18 @@ export default class Radio extends Component {
      */
     render() {
         let { props, state } = this,
-            { label, dataProvider } = props,
+            { label, dataProvider, onChange } = props,
             { checked } = state,
             content;
-        //todo 暂未完成
+        //
         if (dataProvider) {
             content = dataProvider.map(item => {
                 let { label, checked } = item;
                 return (
-                    <label>
-                        <input type="radio" checked={checked} />
+                    <label style={{ marginRight: 5, marginLeft: 5 }}  >
+                        <input type="radio" checked={checked} onChange={e => {
+                            onChange && onChange({ target: this, selItem: item })
+                        }} />
                         {label}
                     </label>
                 )
@@ -54,15 +57,14 @@ export default class Radio extends Component {
         } else {
             content = (
                 <label>
-                    <input type="radio" checked={checked} />
+                    <input type="radio" checked={checked} onChange={this.handleChange.bind(this)} />
                     {label}
                 </label>
             )
-
         }
         // defaultChecked={checked} 
         return (
-            <div className="radio" style={Object.assign({ display: 'inline', marginRight: 2 }, props.style)} onClick={this.handleChange.bind(this)} >
+            <div className="Radio radio" style={Object.assign({ display: 'inline', marginRight: 2 }, props.style)} >
                 {content}
             </div>
         )
