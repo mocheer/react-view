@@ -210,7 +210,7 @@ export default class DataTable extends Component {
                     trProps = { key: rowid }
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 if (styleFunc) {
-                    thProps.style = styleFunc(data)
+                    trProps.style = styleFunc(data)
                 }
                 return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index || rowid} >{dataColumns}</tr>
             }, rowid = 0;
@@ -417,6 +417,7 @@ export default class DataTable extends Component {
                                     itemChildren = temp[val] = temp[val] || [];
                                 itemChildren.push(item);
                             }
+
                             children = result.children = []
                             for (let label in temp) {
                                 let items = temp[label]
@@ -458,6 +459,8 @@ export default class DataTable extends Component {
             bodyStyle.width = width;
             headerStyle = { width: width }
         }
+
+
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
