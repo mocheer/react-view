@@ -15,13 +15,15 @@ export default class Draggable extends Component {
      */
     render() {
         let { props } = this,
-            { children } = props,
-            drag = component => {
+            { disable, children } = props;
+        if (!disable) {
+            let drag = component => {
                 component.ref = node => {
                     node && draggable(node)
                 }
             }
-        T.isArray(children) ? children.forEach(drag) : drag(children)
+            T.isArray(children) ? children.forEach(drag) : drag(children)
+        }
         return children
     }
 }

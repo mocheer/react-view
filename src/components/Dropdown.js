@@ -59,9 +59,9 @@ export default class Dropdown extends Component {
         this.setState({ opened: opened });
         if (opened) {
             let hide = e => {
-                let { topTag } = this.refs,
+                let { _tag } = this.refs,
                     { target } = e;
-                if (topTag && target && !topTag.contains(target)) {
+                if (_tag && target && !_tag.contains(target)) {
                     window.removeEventListener('click', hide)
                     this.setState({ opened: false });
                 }
@@ -76,7 +76,7 @@ export default class Dropdown extends Component {
      */
     handleChange(event, index) {
         let { props, state } = this,
-            { dataProvider } = this.state,
+            { dataProvider } = state,
             selItem = dataProvider[index],
             { onClick } = props;
         onClick && onClick(selItem)
@@ -103,10 +103,29 @@ export default class Dropdown extends Component {
         }
     }
     /**
+     * 
+     */
+    createPopup(dataProvider) {
+        let { createLabel, createI, handleChange } = this;
+        let dataRows = dataProvider.map((data, index) => {
+            var i = createI(data)
+            var dataLabel = createLabel(data);
+            var liClass = classNames({
+                active: selIndex === index,
+                disabled: data.disabled
+            })
+            return (
+                <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
+                    <a role='button'> {i} {dataLabel}</a>
+                </li>)
+        });
+        return <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
+    }
+    /**
      * 渲染
      */
     render() {
-        let { props, state, createLabel, createI, handleClick, handleChange } = this,
+        let { props, state, handleClick } = this,
             { type, mode, style, width } = props,
             { opened, dataProvider, selIndex, selItem } = state,
             dataList
@@ -117,19 +136,7 @@ export default class Dropdown extends Component {
         let label = createLabel(selItem);
         handleClick = handleClick.bind(this);
         if (opened) {
-            let dataRows = dataProvider.map((data, index) => {
-                var i = createI(data)
-                var dataLabel = createLabel(data);
-                var liClass = classNames({
-                    active: selIndex === index,
-                    disabled: data.disabled
-                })
-                return (
-                    <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
-                        <a role='button'> {i} {dataLabel}</a>
-                    </li>)
-            });
-            dataList = <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
+            dataList = this.createPopup(dataProvider)
         }
         let caret = <span className='caret'></span>,
             dropClass = classNames(mode, { open: opened }, 'Dropdown'),
@@ -150,7 +157,7 @@ export default class Dropdown extends Component {
                 break;
         }
         return (
-            <li ref='topTag' className={dropClass} style={style}>
+            <li ref='_tag' className={dropClass} style={style}>
                 {btn}
                 {dataList}
             </li>

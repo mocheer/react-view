@@ -357,7 +357,7 @@ export default class DataTable extends Component {
             { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
         // 无数据
-        if (!dataProvider && showNoData)
+        if (showNoData && (!dataProvider || dataProvider.length === 0))
             return (
                 <div style={{
                     height: height || 50,

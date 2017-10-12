@@ -14,7 +14,7 @@ export default class DatePicker extends Component {
      */
     render() {
         let { props } = this,
-            { placeholder, format, style, value } = props;
+            { placeholder, format, style, value, doubleCalendar } = props;
         style = Object.assign({ display: 'inline-block' }, style)
         if (T.isDate(value)) {
             let fmt = format && format.replace(/y/g, 'Y').replace(/d/g, 'D').replace(/H/g, 'h') || 'YYYY-MM-DD hh:mm:ss'
@@ -32,6 +32,7 @@ export default class DatePicker extends Component {
             }} type='text' placeholder={placeholder} value={value} style={style} className="form-control Wdate" onClick={e => {
                 pick({
                     el: e.nativeEvent.target,
+                    doubleCalendar: doubleCalendar,
                     dateFmt: format,
                     start: value,
                     onpicked: e => {
