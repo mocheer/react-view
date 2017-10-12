@@ -354,18 +354,16 @@ export default class DataTable extends Component {
         let { props, state, dataProvider } = this,
             { columns, expandAll, groupLabel } = props,
             { selIndex } = state,
-            { group, sort, width, height, reverse, onTableOut, showNoData } = props
+            { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
         let NoData;
         // 无数据
         if (showNoData && (!dataProvider || dataProvider.length === 0))
-            NoData = (
+            NoData = nodataRender && nodataRender(this) || (
                 <div style={{
                     position: 'relative',
                     top: -height * 0.5,
                     height: 0,
-                    backgroundColor: '#FFFFFF',
-                    paddingTop: 0,
                     paddingLeft: '35%'
                 }}>
                     <div style={{
