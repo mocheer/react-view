@@ -356,13 +356,16 @@ export default class DataTable extends Component {
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData } = props
         if (!columns) return null;
+        let NoData;
         // 无数据
         if (showNoData && (!dataProvider || dataProvider.length === 0))
-            return (
+            NoData = (
                 <div style={{
-                    height: height || 50,
+                    position: 'relative',
+                    top: -height * 0.5,
+                    height: 0,
                     backgroundColor: '#FFFFFF',
-                    paddingTop: height * 0.4,
+                    paddingTop: 0,
                     paddingLeft: '35%'
                 }}>
                     <div style={{
@@ -478,6 +481,7 @@ export default class DataTable extends Component {
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>
                 </div>
+                {NoData}
             </div>
         )
     }
