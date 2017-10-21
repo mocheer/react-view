@@ -27,6 +27,7 @@ export default class NavTab extends Component {
     onClick(index) {
         let { props } = this;
         props.onClick && props.onClick({ selIndex: index })
+        props.onTabChange && props.onTabChange({ target: this, selIndex: index })
         this.setState({ selIndex: index })
     }
     /**
@@ -38,25 +39,35 @@ export default class NavTab extends Component {
             { selIndex } = state,
             list = [],
             selItem
-
+        if (!children) {
+            return null;
+        }
         children = children.length ? children : [children]
         height = height || 50
-        let ch = 33;//nav 高度
-        for (let i = 0, l = children.length, item, li, label; i < l; i++) {
+        let ch = 33,//nav 高度
+            i = 0,
+            l = children.length,
+            item, li, label,
+            create = item => {
+                let { props } = item
+                if (!props.height && height > 50) {
+                    props.height = height - ch;
+                }
+                label = <a>{(l === 1 && state.label) || props.label}</a>
+                if (i === selIndex) {
+                    selItem = item;
+                    li = <li key={i} className="active" >{label}</li>
+                } else {
+                    li = <li key={i} role='button' onClick={onClick.bind(this, i)} >{label}</li>
+                }
+                list.push(li)
+            }
+        for (; i < l; i++) {
             item = children[i]
-
-            let { props } = item
-            if (!props.height && height > 50) {
-                props.height = height - ch;
+            if (!item) {
+                break;
             }
-            label = <a>{(l === 1 && state.label) || props.label}</a>
-            if (i === selIndex) {
-                selItem = item;
-                li = <li key={i} className="active" >{label}</li>
-            } else {
-                li = <li key={i} role='button' onClick={onClick.bind(this, i)} >{label}</li>
-            }
-            list.push(li)
+            create(item)
         }
         //nav-pills 胶囊式标签页
         //nav-stacked 垂直排列 

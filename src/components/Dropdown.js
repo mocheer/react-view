@@ -5,23 +5,31 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
+let { helper } = T;
+let defaultProps = {
+    opened: false,  //是否展开
+    direction: 'dropdown'//dropup 向上/上下展开
+};
 //TODO action
 //divider 分割
 export default class Dropdown extends Component {
+    /**
+     * 
+     * @param {*} props 
+     */
     constructor(props) {
         super(props);
-        let { dataProvider } = props,
-            selIndex = props.selIndex,
+        let { dataProvider, selIndex } = props,
             selItem;
-        if (dataProvider) {
-            if (selIndex == -1) {
-                selIndex = 0;
-            }
-            selItem = dataProvider[selIndex]
+        if (dataProvider && selIndex === void 0) {
+            selItem = helper.find(dataProvider, { checked: true }) || dataProvider[0]
         }
+        /**
+         * 
+         */
         this.state = {
             dataProvider: dataProvider,
-            selIndex: selIndex,
+            selIndex: dataProvider ? dataProvider.indexOf(selItem) : -1,
             selItem: selItem,
             opened: props.opened
         }
@@ -32,23 +40,11 @@ export default class Dropdown extends Component {
      * @param {*} nextState 
      */
     shouldComponentUpdate(nextProps, nextState) {
-        let { selItem, selIndex, dataProvider } = nextState;
-        if (selItem !== null || selIndex !== null) {
-            dataProvider = dataProvider || this.state.dataProvider;
-            if (dataProvider) {
-                if (!selItem === void 0) {
-                    nextState.selItem = dataProvider[selIndex];
-                }
-                if (selIndex === void 0) {
-                    nextState.selIndex = dataProvider.indexOf(selItem)
-                }
-                return true
-            }
-        } else if (dataProvider) {
-            nextState.selIndex = 0;
-            nextState.selItem = dataProvider[0];
-            return true;
+        let { hook } = this.props;
+        if (hook) {
+            return hook.call(this, nextProps, nextState)
         }
+        return true;
     }
     /**
      * 点击事件派发
@@ -78,20 +74,21 @@ export default class Dropdown extends Component {
         let { props, state } = this,
             { dataProvider } = state,
             selItem = dataProvider[index],
-            { onClick } = props;
-        onClick && onClick(selItem)
-        this.setState({ opened: false, selIndex: index, selItem: selItem });
+            { onChange } = props;
+        let nextState = { opened: false, selIndex: index, selItem: selItem }
+        onChange && onChange({ target: this, selItem: selItem, source: dataProvider }); //
+        this.setState(nextState);//
     }
     /**
      * 创建文本
      * @param {*} data 
      */
     createLabel(data) {
+        let label = data;
         if (typeof data == 'object') {
-            return data.label;
-        } else {
-            return data;
+            label = data.label;
         }
+        return label
     }
     /**
      * 创建图标
@@ -106,68 +103,83 @@ export default class Dropdown extends Component {
      * 
      */
     createPopup(dataProvider) {
-        let { createLabel, createI, handleChange } = this;
+        let { props, state, createLabel, createI, handleChange } = this;
+        let { type, width } = props;
+        let { selIndex } = state;
         let dataRows = dataProvider.map((data, index) => {
-            var i = createI(data)
-            var dataLabel = createLabel(data);
-            var liClass = classNames({
+            let i = createI(data)
+            let dataLabel = createLabel(data);
+            let liClass = classNames({
                 active: selIndex === index,
                 disabled: data.disabled
             })
             return (
                 <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
                     <a role='button'> {i} {dataLabel}</a>
-                </li>)
+                </li>
+            )
         });
-        return <ul className='dropdown-menu' style={{ minWidth: 70, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
+        //跟按钮同宽度
+        return <ul className='dropdown-menu' style={{ width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
     }
     /**
      * 渲染
      */
     render() {
-        let { props, state, handleClick } = this,
-            { type, mode, style, width } = props,
-            { opened, dataProvider, selIndex, selItem } = state,
+        let { props, state, handleClick, createLabel } = this,
+            { type, direction, style, width, labelFunc, render, group } = props,
+            { opened, dataProvider, selItem } = state,
             dataList
         if (!dataProvider) {
             return null;
         }
-        selItem = selItem || dataProvider[0]
-        let label = createLabel(selItem);
-        handleClick = handleClick.bind(this);
+        let label = labelFunc ? labelFunc(selItem) : createLabel(selItem) || dataProvider[0];
         if (opened) {
-            dataList = this.createPopup(dataProvider)
+            dataList = render && render(dataProvider, selItem) || this.createPopup(dataProvider)
+        } else if (selItem && selItem.popup) {
+            opened = true;
+            dataList = selItem.popup;
+            if (typeof dataList === 'function') {
+                dataList = dataList()
+            }
         }
-        let caret = <span className='caret'></span>,
-            dropClass = classNames(mode, { open: opened }, 'Dropdown'),
+        // 
+        let caretStyle = { marginTop: 8, float: 'right' };//确保按钮宽度太宽时右对齐
+        if (opened) {
+            Object.assign(caretStyle, { borderTop: 6, borderBottom: '4px dashed' })
+        }
+        let caret = <span className='caret' style={caretStyle} />,
+            // 有可能是按钮组的下拉框
+            dropClass = classNames(direction, { open: opened }, { 'btn-group': group !== void 0 }, 'Dropdown'),
             btnClass = classNames('dropdown-toggle', { 'btn btn-default': type === 'btn' }),
             btn
         //
+        handleClick = handleClick.bind(this);
         switch (type) {
             case 'btn':
                 let style = width ? { width: width, textAlign: 'left' } : null;
-                btn = <button className={btnClass} type="button" onClick={handleClick} style={style} >
-                    {label} {caret}
-                </button>
+                btn = (
+                    <button className={btnClass} type="button" onClick={handleClick} style={style} >
+                        {label} {caret}
+                    </button>
+                )
                 break;
             default:
-                btn = <a className={btnClass} role='button' onClick={handleClick} >
-                    {label} {caret}
-                </a>
+                caretStyle.marginTop = caretStyle.float = null;
+                btn = (
+                    <a className={btnClass} role='button' onClick={handleClick} >
+                        {label} {caret}
+                    </a>
+                )
                 break;
         }
         return (
-            <li ref='_tag' className={dropClass} style={style}>
+            <div ref='_tag' className={dropClass} style={style}>
                 {btn}
                 {dataList}
-            </li>
+            </div >
         );
     }
 }
 //设置默认属性
-Dropdown.defaultProps = {
-    selIndex: -1,
-    opened: false,  //是否展开
-    // type: 'text',    // button
-    mode: 'dropdown'//dropup 向上/上下展开
-};
+Dropdown.defaultProps = defaultProps

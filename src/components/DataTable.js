@@ -232,8 +232,7 @@ export default class DataTable extends Component {
                     // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((dataItem, itemIndex) => {
-
-                            dataRows.push(rowFunc(dataItem, rowid++));//key 一样的话展不开index * 10 + itemIndex
+                            dataRows.push(rowFunc(dataItem, rowid++));//key 一样的话展不开
                         })
                     }
 
@@ -266,18 +265,23 @@ export default class DataTable extends Component {
     getEventInfo(event) {
         var info = {},
             { props, dataProvider } = this,
-            { reverse } = props,
+            { sort, group, reverse } = props,
             td = event.target,
             { cellIndex: columnid, parentElement } = td,
             { dataset } = parentElement,
             rowid = +dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
         if (dataProvider && rowid !== void 0) {
+
             info.target = td;
             info.columnid = columnid;
             info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
             info.dataProvider = dataProvider;
             info.index = rowid;
-            info.data = dataProvider[+dataset.itemindex];//经过了排序，目前这个值是错的
+            info.data = dataProvider[+dataset.itemindex];//
+            //台风
+            if (!sort && !group && reverse) {
+                info.data = dataProvider[dataProvider.length - (+dataset.itemindex) - 1]
+            }
         }
         return info
     }

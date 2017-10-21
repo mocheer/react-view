@@ -18,15 +18,17 @@ export default class ToolTip extends Component {
     }
     render() {
         let { state } = this,
-            { target, label } = state;
-        if (!label || !target) {
+            { target, label, offset, hide } = state;
+        if (hide || !label || !target) {
+            state.hide = false;
             return null;
         }
+
         let placement = state.placement || 'left',
             className = classNames('tooltip', 'fade', placement, 'in'),
             rect = target.getBoundingClientRect(),
             style = {};
-
+        //
         switch (placement) {
             case "top":
                 style.left = rect.left
@@ -45,11 +47,16 @@ export default class ToolTip extends Component {
                 style.top = rect.top
                 break;
         }
+        if (offset && offset.length > 0) {
+            style.left += offset[0]
+            style.top += offset[1]
+            offset.length = 0
+        }
         Object.assign(style, state.style)
         return (
             <div className={className} style={style} role="tooltip">
                 <div className="tooltip-arrow"></div>
-                <div className="tooltip-inner">{label}</div>
+                <div className="tooltip-inner" style={{ textAlign: 'left' }}>{label}</div>
             </div>
         );
     }

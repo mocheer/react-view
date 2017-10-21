@@ -22,16 +22,12 @@ export default class Radio extends Component {
      */
     handleChange(e) {
         let { props, state } = this;
-        if (state.checked === true) {
-            return;
+        if (!state.checked) {
+            props.group.forEach(item => {
+                item.setState({ checked: item === this })
+            })
+            props.onChange && props.onChange({ target: this, checked: true })
         }
-        props.group.forEach(item => {
-            if (item !== this) {
-                item.setState({ checked: false })
-            }
-        })
-        this.setState({ checked: true })
-        props.onChange && props.onChange({ target: this, checked: true })
     }
     /**
      * 
@@ -48,7 +44,11 @@ export default class Radio extends Component {
                 return (
                     <label style={{ marginRight: 5, marginLeft: 5 }}  >
                         <input type="radio" checked={checked} onChange={e => {
+                            dataProvider.forEach(data => {
+                                data.checked = data === item;
+                            })
                             onChange && onChange({ target: this, selItem: item })
+                            this.forceUpdate();
                         }} />
                         {label}
                     </label>
