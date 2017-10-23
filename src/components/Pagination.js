@@ -5,12 +5,16 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-//TODO action
+//
 export default class Pagination extends Component {
+    /**
+     * 
+     * @param {*} props 
+     */
     constructor(props) {
         super(props)
         this.state = {
-            selectedIndex: 0,
+            selIndex: 0,
             count: props.count,
             dataProvider: props.dataProvider
         }
@@ -20,9 +24,9 @@ export default class Pagination extends Component {
      * @param {*} event 
      */
     handleForward(event) {
-        var { selectedIndex, count } = this.state;
-        if (selectedIndex < count - 1) {
-            this.setState({ selectedIndex: selectedIndex + 1 });
+        var { selIndex, count } = this.state;
+        if (selIndex < count - 1) {
+            this.setState({ selIndex: selIndex + 1 });
         }
     }
     /**
@@ -30,9 +34,9 @@ export default class Pagination extends Component {
      * @param {*} event 
      */
     handleBack(event) {
-        var { selectedIndex } = this.state;
-        if (selectedIndex != 0) {
-            this.setState({ selectedIndex: selectedIndex - 1 });
+        var { selIndex } = this.state;
+        if (selIndex != 0) {
+            this.setState({ selIndex: selIndex - 1 });
         }
     }
     /**
@@ -41,22 +45,22 @@ export default class Pagination extends Component {
      */
     handleClick(event) {
         var eventTarget = event.target;
-        var selectedIndex = parseInt(eventTarget.innerText);
-        this.setState({ selectedIndex: selectedIndex });
+        var selIndex = parseInt(eventTarget.innerText);
+        this.setState({ selIndex: selIndex });
     }
     /**
-     * 
+     * 渲染
      */
     render() {
         var { handleClick, handleForward, handleBack, state } = this;
         var count = state.count;
         var pageIndexs;
         if (count > 0) {
-            var selectedIndex = state.selectedIndex;
+            var selIndex = state.selIndex;
             pageIndexs = []
             for (var i = 0; i < count; i++) {
                 var li;
-                if (i === selectedIndex) {
+                if (i === selIndex) {
                     li = <li className="active" key={i}><a role='button'>{i}</a></li>
                 } else {
                     li = <li key={i} ><a role='button' onClick={handleClick.bind(this)}>{i}</a></li>

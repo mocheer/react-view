@@ -126,17 +126,19 @@ export default class Dropdown extends Component {
      * 渲染
      */
     render() {
-        let { props, state, handleClick, createLabel } = this,
+        let { props, state, handleClick, createLabel, createPopup } = this,
             { type, direction, style, width, labelFunc, render, group } = props,
             { opened, dataProvider, selItem } = state,
             dataList
-        if (!dataProvider) {
+        label = labelFunc ? labelFunc(selItem) : createLabel(selItem) || dataProvider && dataProvider[0];
+        //
+        if (!dataProvider && !label) {
             return null;
         }
-        let label = labelFunc ? labelFunc(selItem) : createLabel(selItem) || dataProvider[0];
+        render = render || createPopup;
         if (opened) {
-            dataList = render && render(dataProvider, selItem) || this.createPopup(dataProvider)
-        } else if (selItem && selItem.popup) {
+            dataList = render.call(this, dataProvider, selItem)
+        } else if (selItem && selItem.popup) {//暂时这样做，水情快速时间选择
             opened = true;
             dataList = selItem.popup;
             if (typeof dataList === 'function') {
@@ -149,7 +151,6 @@ export default class Dropdown extends Component {
             Object.assign(caretStyle, { borderTop: 6, borderBottom: '4px dashed' })
         }
         let caret = <span className='caret' style={caretStyle} />,
-            // 有可能是按钮组的下拉框
             dropClass = classNames(direction, { open: opened }, { 'btn-group': group !== void 0 }, 'Dropdown'),
             btnClass = classNames('dropdown-toggle', { 'btn btn-default': type === 'btn' }),
             btn

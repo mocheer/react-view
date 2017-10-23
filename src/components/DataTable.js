@@ -323,7 +323,7 @@ export default class DataTable extends Component {
                 label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
                 break;
             case "toFixed"://数字
-                if (label = data[field]) {
+                if (label = data[field] || label === 0) {
                     label = label.toFixed(val)
                 }
                 break;
@@ -449,7 +449,7 @@ export default class DataTable extends Component {
             }
         }
         //
-        let { border, hover, condensed, striped } = props,
+        let { border, hover, condensed, striped, style } = props,
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
@@ -464,14 +464,12 @@ export default class DataTable extends Component {
             bodyStyle.width = width;
             headerStyle = { width: width }
         }
-
-
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
 
         return (
-            <div className="table-responsive DataTable" style={props.style}>
+            <div className="table-responsive DataTable" style={style}>
                 <div className="tableheader" style={headerStyle} >
                     <table className={tableClass}  >
                         <thead ref="header">{headerRows}</thead>

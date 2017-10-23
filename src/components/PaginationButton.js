@@ -9,9 +9,16 @@ import classNames from 'classnames'
  * 
  */
 export default class PaginationButton extends Component {
+    /**
+     * 
+     * @param {*} props 
+     */
     constructor(props) {
         super(props)
     }
+    /**
+     * 
+     */
     render() {
         const { onClick, label, active, disabled } = this.props;
         const liClass = classNames({ active, disabled })

@@ -14,7 +14,7 @@ export default class DatePicker extends Component {
      */
     render() {
         let { props } = this,
-            { placeholder, format, style, value, doubleCalendar } = props;
+            { placeholder, format, style, value, doubleCalendar, maxDate } = props;
         style = Object.assign({ display: 'inline-block' }, style)
         if (T.isDate(value)) {
             let fmt = format && format.replace(/y/g, 'Y').replace(/d/g, 'D').replace(/H/g, 'h') || 'YYYY-MM-DD hh:mm:ss'
@@ -35,6 +35,7 @@ export default class DatePicker extends Component {
                     doubleCalendar: doubleCalendar,
                     dateFmt: format,
                     start: value,
+                    maxDate: maxDate,
                     onpicked: e => {
                         this.value = props.value = this.input.value;
                     }
