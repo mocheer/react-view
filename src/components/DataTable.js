@@ -5,6 +5,7 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
+let isMobile = T.Sys.isMobile();
 /**
  * @param columns 
  * {
@@ -40,9 +41,11 @@ export default class DataTable extends Component {
      * 
      */
     componentDidUpdate() {
+        //头部高度
         this.setHeaderWidth();
         let { refs } = this,
             { tablebody, seltr } = refs;
+        //滚轮移动
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
         }
@@ -53,8 +56,8 @@ export default class DataTable extends Component {
      */
     setHeaderWidth() {
         let { refs } = this,
-            { tablebody, body } = refs
-        if (!body) {
+            { tablebody, body, header } = refs
+        if (!body || !header) {
             return;
         }
         let trs = body.children,
@@ -74,8 +77,7 @@ export default class DataTable extends Component {
         if (tds.length <= 1) {
             return;
         }
-        let header = refs.header,
-            ths = header.querySelectorAll('th'),
+        let ths = header.querySelectorAll('th'),
             columnCount = tds.length;
         //
         if (ths.length !== columnCount) {
@@ -89,7 +91,8 @@ export default class DataTable extends Component {
             }
             ths = nths;
         }
-        if (!T.Sys.isMobile()) {
+        //移动端
+        if (!isMobile) {
             if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
                 columnCount--;
                 ths[columnCount].width = tds[columnCount].offsetWidth + 16;
@@ -454,10 +457,7 @@ export default class DataTable extends Component {
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = {};
-        // 默认，无限
-        if (height) {
-            bodyStyle.height = height - 33 * (headerRows.length);//减去头部高度
-        }
+        // 
         let headerStyle;
         // 默认 div 100%
         if (width) {
@@ -467,10 +467,17 @@ export default class DataTable extends Component {
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
-
         return (
             <div className="table-responsive DataTable" style={style}>
-                <div className="tableheader" style={headerStyle} >
+                <div ref={e => {
+                    //减去表头高度
+                    if (height && e) {
+                        let { tablebody } = this.refs;
+                        if (tablebody) {
+                            tablebody.style.height = (height - e.clientHeight) + 'px';
+                        }
+                    }
+                }} className="tableheader" style={headerStyle} >
                     <table className={tableClass}  >
                         <thead ref="header">{headerRows}</thead>
                     </table>
