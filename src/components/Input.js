@@ -16,7 +16,10 @@ export default class Input extends Component {
     constructor(props) {
         super(props)
     }
-
+    /**
+     * 
+     * @param {*} e 
+     */
     handleChange(e) {
         let { target } = e,
             { value } = target;

@@ -5,7 +5,6 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-
 /**
  * props{title,content,footer}
  */
@@ -35,7 +34,7 @@ export default class NavTab extends Component {
      */
     render() {
         let { props, state, onClick } = this,
-            { height, children } = props,
+            { height, children, justified, style, headerStyle } = props,
             { selIndex } = state,
             list = [],
             selItem
@@ -72,14 +71,15 @@ export default class NavTab extends Component {
         //nav-pills 胶囊式标签页
         //nav-stacked 垂直排列 
         //nav-justified 同等宽度
-        let ulClassName = classNames('nav nav-tabs', props.justified && 'nav-justified')
+        let ulClassName = classNames('nav nav-tabs', justified && 'nav-justified')
+        style = Object.assign({}, style, { height: height })
         return (
-            <div className="NavTab" style={{ height: height }}>
-                <ul className={ulClassName} >
+            <div className="NavTab" style={style}>
+                <ul className={ulClassName} style={headerStyle} >
                     {list}
                 </ul>
                 {selItem}
-            </div>
+            </div >
         );
     }
 }

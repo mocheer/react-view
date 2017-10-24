@@ -105,7 +105,7 @@ export default class DataTable extends Component {
     createHeader(columns, props) {
         var headerRows = [],
             columnCount = columns.length,
-            { headerRowCount, sortable } = props,//列表行数
+            { headerRowCount, sortable, headerHeight } = props,//列表行数
             headerColumns = columns.map((column, columnid) => {
                 let thProps = {
                     key: columnid,
@@ -165,7 +165,7 @@ export default class DataTable extends Component {
                     </th>
                 )
             });
-        headerRows[0] = <tr key={0} >{headerColumns}</tr>;
+        headerRows[0] = <tr key={0} style={{ height: headerHeight }} >{headerColumns}</tr>;
         if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
@@ -493,5 +493,5 @@ DataTable.defaultProps = {
     striped: true, //条纹
     condensed: true,
     hover: true, //hover
-    border: false //边框
+    border: true //边框
 }

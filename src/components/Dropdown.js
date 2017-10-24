@@ -10,8 +10,10 @@ let defaultProps = {
     opened: false,  //是否展开
     direction: 'dropdown'//dropup 向上/上下展开
 };
-//TODO action
-//divider 分割
+/**
+ * divider 分割
+ * {label,val}
+ */
 export default class Dropdown extends Component {
     /**
      * 
@@ -77,7 +79,7 @@ export default class Dropdown extends Component {
             { onChange } = props;
         let nextState = { opened: false, selIndex: index, selItem: selItem }
         onChange && onChange({ target: this, selItem: selItem, source: dataProvider }); //
-        this.setState(nextState);//
+        this.setState(nextState);
     }
     /**
      * 创建文本
@@ -103,6 +105,9 @@ export default class Dropdown extends Component {
      * 
      */
     createPopup(dataProvider) {
+        if (dataProvider.length === 0) {
+            return null;
+        }
         let { props, state, createLabel, createI, handleChange } = this;
         let { type, width } = props;
         let { selIndex } = state;
@@ -129,7 +134,7 @@ export default class Dropdown extends Component {
         let { props, state, handleClick, createLabel, createPopup } = this,
             { type, direction, style, width, labelFunc, render, group } = props,
             { opened, dataProvider, selItem } = state,
-            dataList
+            dataList;
         label = labelFunc ? labelFunc(selItem) : createLabel(selItem) || dataProvider && dataProvider[0];
         //
         if (!dataProvider && !label) {
@@ -153,7 +158,7 @@ export default class Dropdown extends Component {
         let caret = <span className='caret' style={caretStyle} />,
             dropClass = classNames(direction, { open: opened }, { 'btn-group': group !== void 0 }, 'Dropdown'),
             btnClass = classNames('dropdown-toggle', { 'btn btn-default': type === 'btn' }),
-            btn
+            btn;
         //
         handleClick = handleClick.bind(this);
         switch (type) {
