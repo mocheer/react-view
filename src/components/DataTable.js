@@ -175,10 +175,10 @@ export default class DataTable extends Component {
             { styleFunc } = props;
         cellFunc = cellFunc.bind(this)
         if (dataProvider) {
-            let rowFunc = (data, rowid) => {
+            let rowFunc = (data, rowid, itemIndex) => {
                 let dataColumns = columns.map((column, columnid) => {
                     let { itemGroup, field, style } = column,
-                        label = cellFunc(data, rowid, column, field),
+                        label = cellFunc(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: columnid };
                     if (style) {//宽度只需要第一个，但其他样式需要每列都设置
                         tdProps.style = style;
@@ -227,7 +227,7 @@ export default class DataTable extends Component {
                     // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((dataItem, itemIndex) => {
-                            dataRows.push(rowFunc(dataItem, rowid++));//key 一样的话展不开
+                            dataRows.push(rowFunc(dataItem, rowid++, itemIndex));//key 一样的话展不开
                         })
                     }
 
@@ -355,7 +355,7 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expandAll, groupLabel, hideHeader } = props,
+            { columns, expand, groupLabel, hideHeader } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
@@ -388,6 +388,7 @@ export default class DataTable extends Component {
                     let { fields } = group,
                         len = fields.length,
                         gc = this.gc = { group: group, children: dataProvider, source: dataProvider },
+                        expandAll = expand === true,
                         fn = (index, result) => {
                             let temp = {},
                                 field = fields[index],
@@ -403,7 +404,7 @@ export default class DataTable extends Component {
                             for (let label in temp) {
                                 let items = temp[label]
                                 label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: items.length }) || label
-                                let item = { lv: index, label: label, children: items, isGroup: true, expanded: expandAll };
+                                let item = { lv: index, label: label, children: items, isGroup: true, expanded: expandAll || expand > children.length };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
