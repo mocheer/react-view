@@ -5,6 +5,7 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
+
 /**
  * props{title,content,footer}
  */
@@ -16,7 +17,7 @@ export default class NavTab extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selIndex: 0
+            selIndex: props.selIndex || 0
         };
     }
     /**

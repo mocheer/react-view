@@ -5,25 +5,31 @@
  */
 import React, { Component, PropTypes } from 'react'
 /**
- * actions:{loadingAction,clickAction}
- * store
+ * 
+ * 
  */
 export default class DataList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataProvider: this.props.dataProvider
+            // dataProvider: this.props.dataProvider
         };
     }
+    /**
+     * 渲染
+     */
     render() {
-        let dataProvider = this.state.dataProvider,
+        let { props, state } = this,
+            { dataProvider, onClick } = props,
             dataRows;
         if (dataProvider) {
             dataRows = dataProvider.map(function (data) {
                 if (typeof data !== "string") {
                     data = data.label;
                 }
-                return <a role='button' className="list-group-item">{dataLabel}</a>
+                return <a role='button' className="list-group-item" onClick={e => {
+                    onClick && onClick()
+                }}>{dataLabel}</a>
             });
         }
         return (

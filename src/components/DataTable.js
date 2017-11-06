@@ -32,17 +32,9 @@ export default class DataTable extends Component {
         };
     }
     /**
-     * 设置列头宽度
-     */
-    componentDidMount() {
-        this.setHeaderWidth();
-    }
-    /**
      * 
      */
     componentDidUpdate() {
-        //头部高度
-        this.setHeaderWidth();
         let { refs } = this,
             { tablebody, seltr } = refs;
         //滚轮移动
@@ -168,7 +160,7 @@ export default class DataTable extends Component {
                     </th>
                 )
             });
-        headerRows[0] = <tr key={0} style={{ height: headerHeight }} >{headerColumns}</tr>;
+        headerRows[0] = <tr key={0} style={{ height: headerHeight || 30 }} >{headerColumns}</tr>;
         if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
@@ -325,6 +317,10 @@ export default class DataTable extends Component {
             case "check"://复选框
                 label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
                 break;
+            case 'toFixed1'://雨量
+                val = val || 1;
+            case 'toFixed2'://水位
+                val = val || 2;
             case "toFixed"://数字
                 if (label = data[field] || label === 0) {
                     label = label.toFixed(val)
@@ -333,7 +329,7 @@ export default class DataTable extends Component {
             case "date"://时间
                 label = T.clock(data[field]).fmt(val)
                 break;
-            case "rowid"://序号
+            case "rowid"://序号，从1开始
                 label = rowid + 1;
                 break;
             case "link"://超链接
@@ -359,33 +355,10 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expandAll, groupLabel } = props,
+            { columns, expandAll, groupLabel, hideHeader } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
-        let NoData;
-        // 无数据
-        if (showNoData && (!dataProvider || dataProvider.length === 0))
-            NoData = nodataRender && nodataRender(this) || (
-                <div style={{
-                    position: 'relative',
-                    top: -height * 0.5,
-                    height: 0,
-                    paddingLeft: '35%'
-                }}>
-                    <div style={{
-                        width: 120,
-                        fontSize: 25,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        border: 'solid red',
-                        color: 'red',
-                        transform: 'rotate(20deg)'
-                    }}>
-                        {typeof showNoData === 'string' ? showNoData : '暂无数据'}
-                    </div>
-                </div>
-            )
         let colgroup;
         // 倒序排序，分组时不能倒序
         if (dataProvider) {
@@ -464,25 +437,62 @@ export default class DataTable extends Component {
             bodyStyle.width = width;
             headerStyle = { width: width }
         }
+
+        bodyStyle.height = hideHeader ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
+        //
+
+        let NoData;
+        // 无数据
+        if (showNoData && (!dataProvider || dataProvider.length === 0))
+            NoData = nodataRender && nodataRender(this) || (
+                <div style={{
+                    position: 'relative',
+                    top: -height * 0.5,
+                    height: 0,
+                    paddingLeft: '35%'
+                }}>
+                    <div style={{
+                        width: 120,
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        border: 'solid #999',
+                        color: '#777',
+                        transform: 'rotate(20deg)'
+                    }}>
+                        {typeof showNoData === 'string' ? showNoData : '暂无数据'}
+                    </div>
+                </div>
+            )
         return (
             <div className="table-responsive DataTable" style={style}>
-                <div ref={e => {
-                    //减去表头高度
-                    if (height && e) {
-                        let { tablebody } = this.refs;
-                        if (tablebody) {
-                            tablebody.style.height = (height - e.clientHeight) + 'px';
+                {
+                    !hideHeader && <div ref={e => {
+                        //减去表头高度
+                        if (height && e) {
+                            let { tablebody } = this.refs;
+                            if (tablebody) {// 当父节点隐藏时 e.clientHeight = 0
+                                if (e.clientHeight) {
+                                    this.setHeaderWidth();//设置列头宽度
+                                    tablebody.style.height = (height - e.clientHeight) + 'px';
+                                }
+                            }
                         }
-                    }
-                }} className="tableheader" style={headerStyle} >
-                    <table className={tableClass}  >
-                        <thead ref="header">{headerRows}</thead>
-                    </table>
-                </div>
-                <div ref='tablebody' className="tablebody" onClick={onTableClick} onMouseOver={onTableOver} style={bodyStyle} onMouseOut={onTableOut}>
+                    }} className="tableheader" style={headerStyle} >
+                        <table className={tableClass}  >
+                            <thead ref="header">{headerRows}</thead>
+                        </table>
+                    </div>
+                }
+                <div ref='tablebody'
+                    className="tablebody"
+                    style={bodyStyle}
+                    onClick={onTableClick}
+                    onMouseOver={onTableOver}
+                    onMouseOut={onTableOut}>
                     <table className={tableClass} style={{ borderTop: 0 }} >
                         {colgroup}
                         <tbody ref="body" >{dataRows}</tbody>
