@@ -16,11 +16,19 @@ let isMobile = T.Sys.isMobile();
  *      group      //合并表头
  *      fmt        //{type,val}|string
  * }
- * @param group      分组
- * @param showNoData 当dataProvider为空时显示no data提示框
- * @param reverse    倒序排列，比如说台风路径信息
- * @param dataProvider 
- * @param groupLabel
+ * @param group         分组
+ * @param showNoData    当dataProvider为空时显示no data提示框
+ * @param reverse       倒序排列，比如说台风路径信息
+ * @param dataProvider  数据源
+ * @param groupLabel    分组名称
+ * @param headerStyle   表头样式
+ * {
+ *   backgroundColor 背景色：
+ *   color           字体色：
+ *   fontWeight      字体粗细：normal
+ *   borderColor     边界线：
+ *   height          行高：
+ * }
  * 
  */
 export default class DataTable extends Component {
@@ -103,19 +111,19 @@ export default class DataTable extends Component {
     createHeader(columns, props) {
         var headerRows = [],
             colCount = columns.length,
-            { headerRowCount, sortable, headerHeight } = props,//列表行数
-            headerColumns = columns.map((column, columnid) => {
+            { headerRowCount, sortable, headerStyle } = props,//列表行数
+            headerColumns = columns.map((column, colid) => {
                 let { label, group, style, field, fmt } = column;
                 let thProps = {
-                    key: columnid,
-                    style: { width: style && style.width }
+                    key: colid,
+                    style: { width: style && style.width, borderColor: headerStyle && headerStyle.borderColor }
                 }
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
                 } else if (group) {//列头合并，多表头
-                    if (columnid === 0 || columns[columnid - 1].group !== group) {
+                    if (colid === 0 || columns[colid - 1].group !== group) {
                         var colSpan = 1;
-                        for (var cid = columnid + 1; cid < colCount; cid++) {
+                        for (var cid = colid + 1; cid < colCount; cid++) {
                             if (columns[cid].group === group) {
                                 colSpan++;
                             } else {
@@ -164,7 +172,7 @@ export default class DataTable extends Component {
                     </th>
                 )
             });
-        headerRows[0] = <tr key={0} style={{ height: headerHeight || 30 }} >{headerColumns}</tr>;
+        headerRows[0] = <tr key={0} style={{ height: headerStyle && headerStyle.height }}>{headerColumns}</tr>;
         if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
@@ -180,10 +188,10 @@ export default class DataTable extends Component {
         cellFn = cellFn.bind(this)
         if (dataProvider) {
             let rowFn = (data, rowid, itemIndex) => {
-                let dataColumns = columns.map((column, columnid) => {
+                let dataColumns = columns.map((column, colid) => {
                     let { itemGroup, field, style } = column,
                         label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
-                        tdProps = { key: columnid };
+                        tdProps = { key: colid };
                     if (style) {//宽度已由colgroup设置,但其他样式需要每列都设置
                         tdProps.style = style;
                     }
@@ -266,13 +274,13 @@ export default class DataTable extends Component {
             { props, dataProvider } = this,
             { sort, group, reverse } = props,
             td = event.target,
-            { cellIndex: columnid, parentElement } = td,
+            { cellIndex: colid, parentElement } = td,
             { dataset } = parentElement,
             rowid = +dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
         if (dataProvider && rowid !== void 0) {
 
             info.target = td;
-            info.columnid = columnid;
+            info.colid = colid;
             info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
             info.dataProvider = dataProvider;
             info.index = rowid;
@@ -359,7 +367,7 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expand, groupLabel, hideHeader, headerStyle } = props,
+            { columns, expand, groupLabel, headerStyle } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
@@ -428,15 +436,14 @@ export default class DataTable extends Component {
             }
         }
         //
-        let { border, hover, condensed, striped, style } = props,
+        let headerVisible = !headerStyle || headerStyle.display !== 'none',
+            { border, hover, condensed, striped, style } = props,
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
-            bodyStyle = { width: width },
-            headerStyle = Object.assign(headerStyle || {}, { width: width });
-        //
-        console.log(headerStyle)
-        bodyStyle.height = hideHeader ? height : height - 33 * headerRows.length;
+            bodyStyle = { width: width };
+        headerStyle = Object.assign(headerStyle || {}, { width: width });
+        bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
@@ -468,7 +475,7 @@ export default class DataTable extends Component {
         return (
             <div className="table-responsive DataTable" style={style}>
                 {
-                    !hideHeader && <div ref={e => {
+                    headerVisible && <div ref={e => {
                         this.header = e;
                     }} className="tableheader" style={headerStyle} >
                         <table className={tableClass}  >
