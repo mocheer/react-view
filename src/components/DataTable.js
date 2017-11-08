@@ -95,7 +95,7 @@ export default class DataTable extends Component {
         }
 
         for (let i = 0; i < columnCount; i++) {
-            ths[i].width = tds[i].offsetWidth;//父节点隐藏时offsetWidth = 0
+            ths[i].width = tds[i].offsetWidth;
         }
     }
     /**
@@ -106,10 +106,11 @@ export default class DataTable extends Component {
             columnCount = columns.length,
             { headerRowCount, sortable, headerHeight } = props,//列表行数
             headerColumns = columns.map((column, columnid) => {
+                let { label, group, style, field, fmt } = column;
                 let thProps = {
                     key: columnid,
+                    style: { width: style && style.width }
                 }
-                let { label, group, style, field, fmt } = column;
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
                 } else if (group) {//列头合并，多表头
@@ -488,10 +489,9 @@ export default class DataTable extends Component {
                         let { header } = this
                         this.tablebody = e;
                         //减去表头高度
-                        console.log(props.label, header.clientHeight)
-                        if (height && header) {// 当父节点隐藏时 e.clientHeight = 0
+                        if (height && header && header.clientHeight) {// 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
                             this.setHeaderWidth();//设置列头宽度
-                            e.style.height = (height - (header.clientHeight || 30)) + 'px';
+                            e.style.height = (height - header.clientHeight) + 'px';
                         }
                     }
                 }}
