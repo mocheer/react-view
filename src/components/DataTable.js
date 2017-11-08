@@ -9,7 +9,7 @@ let isMobile = T.Sys.isMobile();
 /**
  * @param columns 
  * {
- *      field      //
+ *      field      //文本字段
  *      label      //表头文本
  *      itemGroup  //按顺序合并同组数据行
  *      itemIcon   //图标
@@ -19,6 +19,9 @@ let isMobile = T.Sys.isMobile();
  * @param group      分组
  * @param showNoData 当dataProvider为空时显示no data提示框
  * @param reverse    倒序排列，比如说台风路径信息
+ * @param dataProvider 
+ * @param groupLabel
+ * 
  */
 export default class DataTable extends Component {
     /**
@@ -35,8 +38,8 @@ export default class DataTable extends Component {
      * 
      */
     componentDidUpdate() {
-        let { refs } = this,
-            { tablebody, seltr } = refs;
+        let { tablebody, refs } = this,
+            { seltr } = refs;
         //滚轮移动
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
@@ -47,8 +50,8 @@ export default class DataTable extends Component {
      * 统一列表列宽
      */
     setHeaderWidth() {
-        let { refs } = this,
-            { tablebody, body, header } = refs
+        let { tablebody, refs } = this,
+            { body, header } = refs
         if (!body || !header) {
             return;
         }
@@ -90,8 +93,9 @@ export default class DataTable extends Component {
                 ths[columnCount].width = tds[columnCount].offsetWidth + 16;
             }
         }
+
         for (let i = 0; i < columnCount; i++) {
-            ths[i].width = tds[i].offsetWidth;
+            ths[i].width = tds[i].offsetWidth;//父节点隐藏时offsetWidth = 0
         }
     }
     /**
@@ -472,23 +476,25 @@ export default class DataTable extends Component {
             <div className="table-responsive DataTable" style={style}>
                 {
                     !hideHeader && <div ref={e => {
-                        //减去表头高度
-                        if (height && e) {
-                            let { tablebody } = this.refs;
-                            if (tablebody) {// 当父节点隐藏时 e.clientHeight = 0
-                                if (e.clientHeight) {
-                                    this.setHeaderWidth();//设置列头宽度
-                                    tablebody.style.height = (height - e.clientHeight) + 'px';
-                                }
-                            }
-                        }
+                        this.header = e;
                     }} className="tableheader" style={headerStyle} >
                         <table className={tableClass}  >
                             <thead ref="header">{headerRows}</thead>
                         </table>
                     </div>
                 }
-                <div ref='tablebody'
+                <div ref={e => {
+                    if (e) {
+                        let { header } = this
+                        this.tablebody = e;
+                        //减去表头高度
+                        console.log(props.label, header.clientHeight)
+                        if (height && header) {// 当父节点隐藏时 e.clientHeight = 0
+                            this.setHeaderWidth();//设置列头宽度
+                            e.style.height = (height - (header.clientHeight || 30)) + 'px';
+                        }
+                    }
+                }}
                     className="tablebody"
                     style={bodyStyle}
                     onClick={onTableClick}
@@ -500,7 +506,7 @@ export default class DataTable extends Component {
                     </table>
                 </div>
                 {NoData}
-            </div>
+            </div >
         )
     }
 }
