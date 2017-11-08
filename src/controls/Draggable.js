@@ -5,7 +5,7 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-import draggable from '../utils/draggable'
+import draggable from '../../libs/draggable'
 /**
  * 
  */

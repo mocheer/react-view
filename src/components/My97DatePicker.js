@@ -4,7 +4,7 @@
  * @param date 2016.3.24
  */
 import React, { Component, PropTypes } from 'react'
-import pick from '../widgets/datePicker'
+import pick from '../../libs/datePicker'
 /**
  * 
  */

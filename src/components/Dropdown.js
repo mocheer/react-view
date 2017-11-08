@@ -157,7 +157,7 @@ export default class Dropdown extends Component {
             }
         }
         // 
-        let caretStyle = { marginTop: 8, float: 'right' };//确保按钮宽度太宽时右对齐
+        let caretStyle = { marginTop: 8, float: 'right', marginLeft: 3 };//确保按钮宽度太宽时右对齐
         if (opened) {
             Object.assign(caretStyle, { borderTop: 6, borderBottom: '4px dashed' })
         }

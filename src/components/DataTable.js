@@ -73,11 +73,11 @@ export default class DataTable extends Component {
             return;
         }
         let ths = header.querySelectorAll('th'),
-            columnCount = tds.length;
+            colCount = tds.length;
         //
-        if (ths.length !== columnCount) {
+        if (ths.length !== colCount) {
             let nths = [];
-            for (let i = 0, l = columnCount, count = ths.length; i < count; i++) {
+            for (let i = 0, l = colCount, count = ths.length; i < count; i++) {
                 if (ths[i].colSpan > 1) {
 
                 } else {
@@ -86,16 +86,15 @@ export default class DataTable extends Component {
             }
             ths = nths;
         }
-        //移动端
+        // 非移动端 加上滚动条宽度
         if (!isMobile) {
             if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
-                columnCount--;
-                ths[columnCount].width = tds[columnCount].offsetWidth + 16;
+                colCount--;
+                ths[colCount].style.width = tds[colCount].offsetWidth + 17 + 'px';
             }
         }
-
-        for (let i = 0; i < columnCount; i++) {
-            ths[i].width = tds[i].offsetWidth;
+        for (let i = 0; i < colCount; i++) {
+            ths[i].style.width = tds[i].offsetWidth + 'px';
         }
     }
     /**
@@ -103,7 +102,7 @@ export default class DataTable extends Component {
      */
     createHeader(columns, props) {
         var headerRows = [],
-            columnCount = columns.length,
+            colCount = columns.length,
             { headerRowCount, sortable, headerHeight } = props,//列表行数
             headerColumns = columns.map((column, columnid) => {
                 let { label, group, style, field, fmt } = column;
@@ -116,7 +115,7 @@ export default class DataTable extends Component {
                 } else if (group) {//列头合并，多表头
                     if (columnid === 0 || columns[columnid - 1].group !== group) {
                         var colSpan = 1;
-                        for (var cid = columnid + 1; cid < columnCount; cid++) {
+                        for (var cid = columnid + 1; cid < colCount; cid++) {
                             if (columns[cid].group === group) {
                                 colSpan++;
                             } else {
@@ -185,7 +184,7 @@ export default class DataTable extends Component {
                     let { itemGroup, field, style } = column,
                         label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: columnid };
-                    if (style) {//宽度只需要第一个，但其他样式需要每列都设置
+                    if (style) {//宽度已由colgroup设置,但其他样式需要每列都设置
                         tdProps.style = style;
                     }
                     //将同一组的数据合并成一行（前提是已经按序排列）
@@ -360,11 +359,14 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expand, groupLabel, hideHeader } = props,
+            { columns, expand, groupLabel, hideHeader, headerStyle } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
-        let colgroup;
+        let cols = columns.map(item => {
+            return <col style={item.style} />
+        })
+        let colgroup = <colgroup>{cols}</colgroup>;
         // 倒序排序，分组时不能倒序
         if (dataProvider) {
             // 排序
@@ -417,13 +419,8 @@ export default class DataTable extends Component {
                             }
                         }
                     fn(0, gc)
-                    let cols = columns.map(item => {
-                        return <col style={item.style} />
-                    })
-                    gc.colgroup = <colgroup>{cols}</colgroup>;
                 }
                 dataProvider = this.gc.children;
-                colgroup = this.gc.colgroup;
             }
             //倒序
             if (reverse) {
@@ -435,15 +432,10 @@ export default class DataTable extends Component {
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
-            bodyStyle = {};
-        // 
-        let headerStyle;
-        // 默认 div 100%
-        if (width) {
-            bodyStyle.width = width;
-            headerStyle = { width: width }
-        }
-
+            bodyStyle = { width: width },
+            headerStyle = Object.assign(headerStyle || {}, { width: width });
+        //
+        console.log(headerStyle)
         bodyStyle.height = hideHeader ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
@@ -488,9 +480,10 @@ export default class DataTable extends Component {
                     if (e) {
                         let { header } = this
                         this.tablebody = e;
-                        //减去表头高度
-                        if (height && header && header.clientHeight) {// 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
-                            this.setHeaderWidth();//设置列头宽度
+                        // 减去表头高度
+                        // 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
+                        if (height && header && header.clientHeight) {
+                            this.setHeaderWidth();
                             e.style.height = (height - header.clientHeight) + 'px';
                         }
                     }
