@@ -170,15 +170,15 @@ export default class DataTable extends Component {
      * 创建数据行
      */
     createRows(columns, dataProvider, selIndex, group) {
-        let { props, cellFunc } = this,
+        let { props, cellFn } = this,
             dataRows = [],
             { styleFunc } = props;
-        cellFunc = cellFunc.bind(this)
+        cellFn = cellFn.bind(this)
         if (dataProvider) {
-            let rowFunc = (data, rowid, itemIndex) => {
+            let rowFn = (data, rowid, itemIndex) => {
                 let dataColumns = columns.map((column, columnid) => {
                     let { itemGroup, field, style } = column,
-                        label = cellFunc(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
+                        label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: columnid };
                     if (style) {//宽度只需要第一个，但其他样式需要每列都设置
                         tdProps.style = style;
@@ -227,12 +227,12 @@ export default class DataTable extends Component {
                     // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((dataItem, itemIndex) => {
-                            dataRows.push(rowFunc(dataItem, rowid++, itemIndex));//key 一样的话展不开
+                            dataRows.push(rowFn(dataItem, rowid++, itemIndex));//key 一样的话展不开
                         })
                     }
 
                 } else {
-                    dataRows.push(rowFunc(item, index));//key 一样的话展不开
+                    dataRows.push(rowFn(item, index));//key 一样的话展不开
                 }
 
             });
@@ -306,7 +306,7 @@ export default class DataTable extends Component {
     /**
     * 格式化
     */
-    cellFunc(data, rowid, column, field) {
+    cellFn(data, rowid, column, field) {
         let { fmt } = column,
             label, type = fmt, val;
         if (typeof fmt == 'object') {
@@ -508,8 +508,8 @@ export default class DataTable extends Component {
  * 初始化属性
  */
 DataTable.defaultProps = {
-    striped: true, //条纹
-    condensed: true,
-    hover: true, //hover
-    border: true //边框
+    striped: true,  //条纹
+    condensed: true,//
+    hover: true,    //hover
+    border: true    //边框
 }

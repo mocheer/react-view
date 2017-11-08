@@ -11,8 +11,8 @@ let defaultProps = {
     direction: 'dropdown'//dropup 向上/上下展开
 };
 /**
- * divider 分割
- * {label,val}
+ * @props dataProvider {label,val}
+ * @props selIndex 
  */
 export default class Dropdown extends Component {
     /**
@@ -57,12 +57,17 @@ export default class Dropdown extends Component {
         this.setState({ opened: opened });
         if (opened) {
             let hide = e => {
-                let { _tag } = this.refs,
-                    { target } = e;
-                if (_tag && target && !_tag.contains(target)) {
-                    window.removeEventListener('click', hide)
-                    this.setState({ opened: false });
+                let { tag } = this.refs,
+                    { target } = e,
+                    parent = target;
+                while (parent) {
+                    if (parent === tag) {
+                        return;
+                    }
+                    parent = parent.parentNode;
                 }
+                window.removeEventListener('click', hide)
+                this.setState({ opened: false });
             }
             window.addEventListener('click', hide)
         }
@@ -132,15 +137,16 @@ export default class Dropdown extends Component {
      */
     render() {
         let { props, state, handleClick, createLabel, createPopup } = this,
-            { type, direction, style, width, labelFunc, render, group } = props,
+            { type, direction, style, width, labelFn, render, group, icon, label } = props,
             { opened, dataProvider, selItem } = state,
             dataList;
-        label = labelFunc ? labelFunc(selItem) : createLabel(selItem) || dataProvider && dataProvider[0];
+        label = (labelFn ? labelFn(selItem) : createLabel(selItem)) || dataProvider && dataProvider[0] || label;
         //
-        if (!dataProvider && !label) {
+        if (!label) {
             return null;
         }
         render = render || createPopup;
+
         if (opened) {
             dataList = render.call(this, dataProvider, selItem)
         } else if (selItem && selItem.popup) {//暂时这样做，水情快速时间选择
@@ -161,12 +167,15 @@ export default class Dropdown extends Component {
             btn;
         //
         handleClick = handleClick.bind(this);
+        if (icon) {
+            icon = <img style={{ height: 18 }} src={icon} />
+        }
         switch (type) {
             case 'btn':
                 let style = width ? { width: width, textAlign: 'left' } : null;
                 btn = (
                     <button className={btnClass} type="button" onClick={handleClick} style={style} >
-                        {label} {caret}
+                        {icon} {label} {caret}
                     </button>
                 )
                 break;
@@ -179,8 +188,9 @@ export default class Dropdown extends Component {
                 )
                 break;
         }
+
         return (
-            <div ref='_tag' className={dropClass} style={style}>
+            <div ref='tag' className={dropClass} style={style}>
                 {btn}
                 {dataList}
             </div >
@@ -188,4 +198,4 @@ export default class Dropdown extends Component {
     }
 }
 //设置默认属性
-Dropdown.defaultProps = defaultProps
+Dropdown.defaultProps = defaultProps;

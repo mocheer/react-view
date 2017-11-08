@@ -16,7 +16,7 @@ let $dp,
         $wdate: true,//是否自动引入Wdate类 设置为true时,可直接在引入WdatePicker.js的页面里使用 class="Wdate" Wdate可在skin目录下的WdatePicker.css文件中定义
         $crossFrame: false, //跨iframe
         $preLoad: false,    //没有任何用处，因为这里不直接嵌入
-        $dpPath: "tree/plugins/My97DatePicker/",//指定程序包的绝对位置
+        $dpPath: (window.T || 'tree') + "/plugins/My97DatePicker/",//指定程序包的绝对位置
         doubleCalendar: false, //是否是双月模式
         enableKeyboard: true,  //键盘控制开关
         enableInputMask: true, //文本框输入启用掩码开关
