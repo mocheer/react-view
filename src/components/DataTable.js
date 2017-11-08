@@ -94,11 +94,11 @@ export default class DataTable extends Component {
             }
             ths = nths;
         }
-        // 非移动端 加上滚动条宽度
+        // 非移动端 加上滚动条宽度17-1
         if (!isMobile) {
             if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
                 colCount--;
-                ths[colCount].style.width = tds[colCount].offsetWidth + 17 + 'px';
+                ths[colCount].style.width = tds[colCount].offsetWidth + 16 + 'px';
             }
         }
         for (let i = 0; i < colCount; i++) {
@@ -443,6 +443,7 @@ export default class DataTable extends Component {
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = { width: width };
         headerStyle = Object.assign(headerStyle || {}, { width: width });
+        headerStyle.height = headerStyle.height || 30
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
@@ -465,8 +466,8 @@ export default class DataTable extends Component {
                         fontWeight: 'bold',
                         textAlign: 'center',
                         border: 'solid #999',
-                        color: '#777',
-                        transform: 'rotate(20deg)'
+                        color: '#777'
+                        // transform: 'rotate(20deg)'
                     }}>
                         {typeof showNoData === 'string' ? showNoData : '暂无数据'}
                     </div>
@@ -489,9 +490,9 @@ export default class DataTable extends Component {
                         this.tablebody = e;
                         // 减去表头高度
                         // 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
-                        if (height && header && header.clientHeight) {
-                            this.setHeaderWidth();
-                            e.style.height = (height - header.clientHeight) + 'px';
+                        if (height && header) {
+                            header.clientHeight && this.setHeaderWidth();
+                            e.style.height = (height - (header.clientHeight || headerStyle.height)) + 'px';
                         }
                     }
                 }}
