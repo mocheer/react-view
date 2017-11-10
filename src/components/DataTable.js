@@ -172,7 +172,7 @@ export default class DataTable extends Component {
                     </th>
                 )
             });
-        headerRows[0] = <tr key={0} style={{ height: headerStyle && headerStyle.height }}>{headerColumns}</tr>;
+        headerRows[0] = <tr key={0} style={{ height: headerStyle && headerStyle.height || 30 }}>{headerColumns}</tr>;
         if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
