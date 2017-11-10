@@ -172,7 +172,7 @@ export default class DataTable extends Component {
                     </th>
                 )
             });
-        headerRows[0] = <tr key={0} style={{ height: headerStyle && headerStyle.height || 30 }}>{headerColumns}</tr>;
+        headerRows[0] = <tr key={0} style={{ height: headerStyle && headerStyle.height }}>{headerColumns}</tr>;
         if (headerRows[1]) {
             headerRows[1] = <tr key={1} >{headerRows[1]}</tr>;
         }
@@ -443,7 +443,6 @@ export default class DataTable extends Component {
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = { width: width };
         headerStyle = Object.assign(headerStyle || {}, { width: width });
-        headerStyle.height = headerStyle.height || 30
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
@@ -492,7 +491,7 @@ export default class DataTable extends Component {
                         // 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
                         if (height && header) {
                             header.clientHeight && this.setHeaderWidth();
-                            e.style.height = (height - (header.clientHeight || headerStyle.height)) + 'px';
+                            e.style.height = (height - (header.clientHeight || headerStyle.height || 30)) + 'px';
                         }
                     }
                 }}
