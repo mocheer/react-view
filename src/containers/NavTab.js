@@ -27,8 +27,11 @@ export default class NavTab extends Component {
     onClick(index) {
         let { props } = this;
         props.onClick && props.onClick({ selIndex: index })
-        props.onTabChange && props.onTabChange({ target: this, selIndex: index })
-        this.setState({ selIndex: index })
+        let changeEnabled = props.onTabChange && props.onTabChange({ target: this, selIndex: index })
+        if (changeEnabled !== false) {
+            this.setState({ selIndex: index })
+        }
+
     }
     /**
      * 渲染
@@ -88,5 +91,5 @@ export default class NavTab extends Component {
  * 
  */
 NavTab.defaultProps = {
-
+    headerStyle: { background: '#E4F3FF', paddingTop: 2, paddingLeft: 2, paddingRight: 2 }
 }
