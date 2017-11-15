@@ -15,6 +15,7 @@ let isMobile = T.Sys.isMobile();
  *      itemIcon   //图标
  *      group      //合并表头
  *      fmt        //{type,val}|string
+ *      innerHTML  
  * }
  * @param group         分组
  * @param showNoData    当dataProvider为空时显示no data提示框
@@ -189,7 +190,7 @@ export default class DataTable extends Component {
         if (dataProvider) {
             let rowFn = (data, rowid, itemIndex) => {
                 let dataColumns = columns.map((column, colid) => {
-                    let { itemGroup, field, style } = column,
+                    let { itemGroup, field, style, innerHTML } = column,
                         label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: colid };
                     if (style) {//宽度已由colgroup设置,但其他样式需要每列都设置
@@ -212,6 +213,11 @@ export default class DataTable extends Component {
                         }
                         return null;
                     }
+                    //innerHTML 为了 <br/> 换行
+                    if (innerHTML) {
+                        tdProps.dangerouslySetInnerHTML = { __html: label }
+                        return <td {...tdProps} />
+                    }
                     return <td {...tdProps} >{label}</td>
                 }),
                     trProps = { key: rowid }
@@ -226,7 +232,7 @@ export default class DataTable extends Component {
                 //分组
                 if (item.isGroup) {
                     dataRows.push(
-                        <tr onClick={e => {
+                        <tr style={styleFunc && styleFunc(item)} onClick={e => {
                             item.expanded = !item.expanded;
                             this.forceUpdate();
                         }} role='button' >
