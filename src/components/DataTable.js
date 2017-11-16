@@ -15,12 +15,12 @@ let isMobile = T.Sys.isMobile();
  *      itemIcon   //图标
  *      group      //合并表头
  *      fmt        //{type,val}|string
- *      innerHTML  
+ *      html  
  * }
  * @param group         分组
  * @param showNoData    当dataProvider为空时显示no data提示框
- * @param reverse       倒序排列，比如说台风路径信息
- * @param dataProvider  数据源
+ * @param reverse       倒序排列，常用于时间倒序
+ * @param dataProvider  数据源：一维数组，树结构{label,children,expanded}
  * @param groupLabel    分组名称
  * @param headerStyle   表头样式
  * {
@@ -190,7 +190,7 @@ export default class DataTable extends Component {
         if (dataProvider) {
             let rowFn = (data, rowid, itemIndex) => {
                 let dataColumns = columns.map((column, colid) => {
-                    let { itemGroup, field, style, innerHTML } = column,
+                    let { itemGroup, field, style, html } = column,
                         label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: colid };
                     if (style) {//宽度已由colgroup设置,但其他样式需要每列都设置
@@ -213,8 +213,8 @@ export default class DataTable extends Component {
                         }
                         return null;
                     }
-                    //innerHTML 为了 <br/> 换行
-                    if (innerHTML) {
+                    //html 为了 <br/> 换行
+                    if (html) {
                         tdProps.dangerouslySetInnerHTML = { __html: label }
                         return <td {...tdProps} />
                     }
@@ -230,16 +230,17 @@ export default class DataTable extends Component {
 
             dataProvider.forEach((item, index) => {
                 //分组
-                if (item.isGroup) {
+                if (item.children) {
                     dataRows.push(
                         <tr style={styleFunc && styleFunc(item)} onClick={e => {
                             item.expanded = !item.expanded;
                             this.forceUpdate();
                         }} role='button' >
-                            <td colSpan={columns.length}>
+                            {/* <td colSpan={columns.length}>
                                 <span className="caret" style={{ marginRight: 5 }} />
                                 {item.label}
-                            </td>
+                            </td> */}
+                            <td colSpan={columns.length} dangerouslySetInnerHTML={{ __html: '<span class="caret" style="margin-right: 5px;" ></span>' + item.label }} />
                         </tr>
                     )
                     // rowid++
@@ -425,7 +426,7 @@ export default class DataTable extends Component {
                             for (let label in temp) {
                                 let items = temp[label]
                                 label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: items.length }) || label
-                                let item = { lv: index, label: label, children: items, isGroup: true, expanded: expandAll || expand > children.length };
+                                let item = { lv: index, label: label, children: items, expanded: expandAll || expand > children.length };
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
