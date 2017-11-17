@@ -275,6 +275,7 @@ export default class DataTable extends Component {
     }
     /**
      * 事件信息
+     * @update 2017.11.17 因为浏览器兼容弃用dataset
      */
     getEventInfo(event) {
         var info = {},
@@ -282,9 +283,8 @@ export default class DataTable extends Component {
             { sort, group, reverse } = props,
             td = event.target,
             { cellIndex: colid, parentElement } = td,
-            { dataset } = parentElement,
-            rowid = +dataset.rowindex || +parentElement.getAttribute('data-rowIndex'), //parentElement.rowIndex;//td.parentElement = tr
-            itemindex = +dataset.itemindex || +parentElement.getAttribute('data-Itemindex')
+            rowid = +parentElement.getAttribute('data-rowIndex'), //parentElement.rowIndex;//td.parentElement = tr
+            itemindex = +parentElement.getAttribute('data-itemIndex')
         if (dataProvider && rowid !== void 0) {
 
             info.target = td;
