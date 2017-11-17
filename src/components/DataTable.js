@@ -283,7 +283,8 @@ export default class DataTable extends Component {
             td = event.target,
             { cellIndex: colid, parentElement } = td,
             { dataset } = parentElement,
-            rowid = +dataset.rowindex //parentElement.rowIndex;//td.parentElement = tr
+            rowid = +dataset.rowindex || +parentElement.getAttribute('data-rowIndex'), //parentElement.rowIndex;//td.parentElement = tr
+            itemindex = +dataset.itemindex || +parentElement.getAttribute('data-Itemindex')
         if (dataProvider && rowid !== void 0) {
 
             info.target = td;
@@ -291,10 +292,10 @@ export default class DataTable extends Component {
             info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
             info.dataProvider = dataProvider;
             info.index = rowid;
-            info.data = dataProvider[+dataset.itemindex];//
+            info.data = dataProvider[itemindex];//
             //台风
             if (!sort && !group && reverse) {
-                info.data = dataProvider[dataProvider.length - (+dataset.itemindex) - 1]
+                info.data = dataProvider[dataProvider.length - (+itemindex) - 1]
             }
         }
         return info
@@ -306,6 +307,7 @@ export default class DataTable extends Component {
         var info = this.getEventInfo(event),
             { onItemClick } = this.props,
             { data } = info;
+
         onItemClick && onItemClick(info)
         if (data && data.children) {
             return;
@@ -341,7 +343,7 @@ export default class DataTable extends Component {
             case 'toFixed2'://水位
                 val = val || 2;
             case "toFixed"://数字
-                if (label = data[field] || label === 0) {
+                if ((label = data[field]) || label === 0) {
                     label = label.toFixed(val)
                 }
                 break;

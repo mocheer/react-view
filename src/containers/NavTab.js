@@ -27,11 +27,8 @@ export default class NavTab extends Component {
     onClick(index) {
         let { props } = this;
         props.onClick && props.onClick({ selIndex: index })
-        let changeEnabled = props.onTabChange && props.onTabChange({ target: this, selIndex: index })
-        if (changeEnabled !== false) {
-            this.setState({ selIndex: index })
-        }
-
+        props.onTabChange && props.onTabChange({ target: this, selIndex: index })
+        this.setState({ selIndex: index })
     }
     /**
      * 渲染
@@ -56,8 +53,9 @@ export default class NavTab extends Component {
                 if (!props.height && height > 50) {
                     props.height = height - ch;
                 }
-                label = <a>{(l === 1 && state.label) || props.label}</a>
-                if (i === selIndex) {
+                let active = i === selIndex;
+                label = <a style={{color:active?null:'inherit'}}>{(l === 1 && state.label) || props.label}</a>
+                if (active) {
                     selItem = item;
                     li = <li key={i} className="active" >{label}</li>
                 } else {
@@ -87,9 +85,10 @@ export default class NavTab extends Component {
         );
     }
 }
+T.style('nav>li>a:hover{ background-color: none;}')
 /**
  * 
  */
 NavTab.defaultProps = {
-    headerStyle: { background: '#E4F3FF', paddingTop: 2, paddingLeft: 2, paddingRight: 2 }
+    headerStyle:{ background: '#E4F3FF', paddingTop: 2, paddingLeft: 2, paddingRight: 2 }
 }
