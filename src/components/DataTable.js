@@ -284,10 +284,10 @@ export default class DataTable extends Component {
             { sort, group, reverse } = props,
             td = event.target,
             { cellIndex: colid, parentElement } = td,
-            rowid = +parentElement.getAttribute('data-rowIndex'), //parentElement.rowIndex;//td.parentElement = tr
+            dataRowid = parentElement.getAttribute('data-rowIndex'),
+            rowid = +dataRowid, //parentElement.rowIndex;//td.parentElement = tr
             itemindex = +parentElement.getAttribute('data-itemIndex')
-        if (dataProvider && rowid !== void 0) {
-
+        if (dataProvider && dataRowid) {
             info.target = td;
             info.colid = colid;
             info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
@@ -308,10 +308,11 @@ export default class DataTable extends Component {
         var info = this.getEventInfo(event),
             { onItemClick } = this.props,
             { data } = info;
-
-        onItemClick && onItemClick(info)
-        if (data && data.children) {
+        console.log(data,!data || (data && data.children))
+        if (!data || (data && data.children)) {//分组行点击
             return;
+        }else {
+            onItemClick && onItemClick(info)
         }
         this.setState({
             selIndex: info.rowid
@@ -451,14 +452,13 @@ export default class DataTable extends Component {
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
-            bodyStyle = { width: width };
+            bodyStyle = { width: width,overflowY:'auto' };
         headerStyle = Object.assign(headerStyle || {}, { width: width });
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
         //
-
         let NoData;
         // 无数据
         if (showNoData && (!dataProvider || dataProvider.length === 0))
@@ -501,7 +501,7 @@ export default class DataTable extends Component {
                         // 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
                         if (height && header) {
                             header.clientHeight && this.setHeaderWidth();
-                            e.style.height = (height - (header.clientHeight || headerStyle.height || 30)) + 'px';
+                            e.style.height = (height - (header.clientHeight || headerStyle.height || 33)) + 'px';
                         }
                     }
                 }}

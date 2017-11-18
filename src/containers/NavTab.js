@@ -44,7 +44,7 @@ export default class NavTab extends Component {
         }
         children = children.length ? children : [children]
         height = height || 50
-        let ch = 33,//nav 高度
+        let ch = 36,//nav 高度 36
             i = 0,
             l = children.length,
             item, li, label,
