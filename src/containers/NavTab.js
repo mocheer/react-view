@@ -85,10 +85,10 @@ export default class NavTab extends Component {
         );
     }
 }
-T.style('nav>li>a:hover{ background-color: none;}')
+
 /**
  * 
  */
 NavTab.defaultProps = {
-    headerStyle:{ background: '#E4F3FF', paddingTop: 2, paddingLeft: 2, paddingRight: 2 }
+   
 }

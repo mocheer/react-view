@@ -72,7 +72,7 @@ export default class DataTable extends Component {
         }
         while (i < len) {
             tr = trs[i]
-            if (tr.dataset.rowindex !== void 0) {
+            if (tr.getAttribute('data-rowIndex') !== void 0) {//dataset.rowindex
                 break;
             }
             i++;
@@ -97,7 +97,8 @@ export default class DataTable extends Component {
         }
         // 非移动端 加上滚动条宽度17-1
         if (!isMobile) {
-            if (tablebody.scrollHeight > tablebody.clientHeight || tablebody.offsetHeight > tablebody.clientHeight) {
+            // || tablebody.offsetHeight > tablebody.clientHeight
+            if (tablebody.scrollHeight > tablebody.clientHeight ) {
                 colCount--;
                 ths[colCount].style.width = tds[colCount].offsetWidth + 16 + 'px';
             }
@@ -486,7 +487,7 @@ export default class DataTable extends Component {
                 {
                     headerVisible && <div ref={e => {
                         this.header = e;
-                    }} className="tableheader" style={headerStyle} >
+                    }} className="header" style={headerStyle} >
                         <table className={tableClass}  >
                             <thead ref="header">{headerRows}</thead>
                         </table>
@@ -504,7 +505,7 @@ export default class DataTable extends Component {
                         }
                     }
                 }}
-                    className="tablebody"
+                    className="content"
                     style={bodyStyle}
                     onClick={onTableClick}
                     onMouseOver={onTableOver}
