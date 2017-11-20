@@ -61,8 +61,8 @@ export default class Modal extends Component {
         //
         return (
             <div className="modal fade in" tabindex="-1" role="dialog" style={{ backgroundColor: 'rgba(200,200,200,0.8)', display: visible === false ? 'none' : 'block' }}>
-                <div className="modal-dialog"  >
-                    <div className="modal-content" style={{ width: width && (width + 10) }} >
+                <div className="modal-dialog" style={{ width: width && (width + 10) }}  >
+                    <div className="modal-content"  >
                         <div className="modal-header" >
                             <button type="button" className="close" onClick={e => {
                                 onClosed && onClosed();

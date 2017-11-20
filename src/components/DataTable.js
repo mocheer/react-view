@@ -42,6 +42,7 @@ export default class DataTable extends Component {
         this.state = {
             selIndex: -1
         };
+        this.radioGroup = 'radio' + T.stmap;
     }
     /**
      * 
@@ -98,7 +99,7 @@ export default class DataTable extends Component {
         // 非移动端 加上滚动条宽度17-1
         if (!isMobile) {
             // || tablebody.offsetHeight > tablebody.clientHeight
-            if (tablebody.scrollHeight > tablebody.clientHeight ) {
+            if (tablebody.scrollHeight > tablebody.clientHeight) {
                 colCount--;
                 ths[colCount].style.width = tds[colCount].offsetWidth + 16 + 'px';
             }
@@ -119,6 +120,17 @@ export default class DataTable extends Component {
                 let thProps = {
                     key: colid,
                     style: { width: style && style.width, borderColor: headerStyle && headerStyle.borderColor }
+                }
+                if (fmt === 'check') {
+                    label = <input type="checkbox" checked={this.state.checkAll} onChange={e => {
+                        let { dataProvider } = this;
+                        let checked = !this.state.checkAll;
+                        dataProvider.forEach(item => {
+                            item.checked = checked;
+                        })
+                        this.props.onCheckAll && this.props.onCheckAll({ target: this, checked: checked })
+                        this.setState({ checkAll: !this.state.checkAll })
+                    }} />
                 }
                 if (headerRowCount > 1 && !group) {
                     thProps.rowSpan = headerRowCount;
@@ -275,6 +287,19 @@ export default class DataTable extends Component {
         this.forceUpdate()
     }
     /**
+     * radio 选中
+     */
+    onRadioCheck(data, column) {
+        let { props, dataProvider } = this
+        for (let i = 0, l = dataProvider.length, item; i < l; i++) {
+            item = dataProvider[i];
+            item.checked = false;
+        }
+        data.checked = true;
+        column.onChange(data, column)
+        this.forceUpdate()
+    }
+    /**
      * 事件信息
      * @update 2017.11.17 因为浏览器兼容弃用dataset
      */
@@ -308,10 +333,10 @@ export default class DataTable extends Component {
         var info = this.getEventInfo(event),
             { onItemClick } = this.props,
             { data } = info;
-        console.log(data,!data || (data && data.children))
+        console.log(data, !data || (data && data.children))
         if (!data || (data && data.children)) {//分组行点击
             return;
-        }else {
+        } else {
             onItemClick && onItemClick(info)
         }
         this.setState({
@@ -339,6 +364,9 @@ export default class DataTable extends Component {
         switch (type) {
             case "check"://复选框
                 label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
+                break;
+            case 'radio':
+                label = <input type="radio" name={this.radioGroup} checked={data.checked} onChange={this.onRadioCheck.bind(this, data, column)} />
                 break;
             case 'toFixed1'://雨量
                 val = val || 1;
@@ -452,7 +480,7 @@ export default class DataTable extends Component {
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
-            bodyStyle = { width: width,overflowY:'auto' };
+            bodyStyle = { width: width, overflowY: 'auto' };
         headerStyle = Object.assign(headerStyle || {}, { width: width });
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //

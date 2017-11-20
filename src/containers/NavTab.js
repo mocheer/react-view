@@ -35,7 +35,7 @@ export default class NavTab extends Component {
      */
     render() {
         let { props, state, onClick } = this,
-            { height, children, justified, style, headerStyle } = props,
+            { height, children, justified, style, headerStyle, itemWidth } = props,
             { selIndex } = state,
             list = [],
             selItem
@@ -54,12 +54,13 @@ export default class NavTab extends Component {
                     props.height = height - ch;
                 }
                 let active = i === selIndex;
-                label = <a style={{color:active?null:'inherit'}}>{(l === 1 && state.label) || props.label}</a>
+                //在360浏览器下 会换行。
+                label = <a style={{ color: active ? null : 'inherit' }}>{(l === 1 && state.label) || props.label}</a>
                 if (active) {
                     selItem = item;
-                    li = <li key={i} className="active" >{label}</li>
+                    li = <li style={{ width: itemWidth }} key={i} className="active" >{label}</li>
                 } else {
-                    li = <li key={i} role='button' onClick={onClick.bind(this, i)} >{label}</li>
+                    li = <li style={{ width: itemWidth }} key={i} role='button' onClick={onClick.bind(this, i)} >{label}</li>
                 }
                 list.push(li)
             }
@@ -90,5 +91,5 @@ export default class NavTab extends Component {
  * 
  */
 NavTab.defaultProps = {
-   
+
 }
