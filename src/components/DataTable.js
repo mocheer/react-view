@@ -5,7 +5,8 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-let isMobile = T.Sys.isMobile();
+let { stamp, Sys, data: $data } = T,
+    isMobile = Sys.isMobile();
 /**
  * @param columns 
  * {
@@ -42,7 +43,7 @@ export default class DataTable extends Component {
         this.state = {
             selIndex: -1
         };
-        this.radioGroup = 'radio' + T.stmap;
+        this.radioGroup = 'radio' + stamp;
     }
     /**
      * 
@@ -54,10 +55,12 @@ export default class DataTable extends Component {
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
         }
+
     }
     /**
      * colSpan 合并列
      * 统一列表列宽
+     * @弃用 待测试
      */
     setHeaderWidth() {
         let { tablebody, refs } = this,
@@ -71,13 +74,7 @@ export default class DataTable extends Component {
         if (len <= 0) {
             return;
         }
-        while (i < len) {
-            tr = trs[i]
-            if (tr.getAttribute('data-rowIndex') !== void 0) {//dataset.rowindex
-                break;
-            }
-            i++;
-        }
+        let tr = trs[trs.length - 1]
         let tds = tr.children;
         if (tds.length <= 1) {
             return;
@@ -121,7 +118,7 @@ export default class DataTable extends Component {
                     key: colid,
                     style: { width: style && style.width, borderColor: headerStyle && headerStyle.borderColor }
                 }
-                if (fmt === 'check') {
+                if (fmt === 'check' && this.props.onCheckAll) {
                     label = <input type="checkbox" checked={this.state.checkAll} onChange={e => {
                         let { dataProvider } = this;
                         let checked = !this.state.checkAll;
@@ -232,13 +229,14 @@ export default class DataTable extends Component {
                         return <td {...tdProps} />
                     }
                     return <td {...tdProps} >{label}</td>
-                }),
-                    trProps = { key: rowid }
+                }), trProps = { key: rowid };
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 if (styleFunc) {
                     trProps.style = styleFunc(data)
                 }
-                return <tr {...trProps} data-rowIndex={rowid} data-itemIndex={data.__index || rowid} >{dataColumns}</tr>
+                let tr = <tr {...trProps} >{dataColumns}</tr>
+                $data(tr, data)
+                return tr
             }, rowid = 0;
 
             dataProvider.forEach((item, index) => {
@@ -303,28 +301,22 @@ export default class DataTable extends Component {
      * 事件信息
      * @update 2017.11.17 因为浏览器兼容弃用dataset
      */
-    getEventInfo(event) {
-        var info = {},
-            { props, dataProvider } = this,
+    getEventInfo(e) {
+        let { props, dataProvider } = this;
+        if (!dataProvider) return;
+        let info = {},
             { sort, group, reverse } = props,
-            td = event.target,
-            { cellIndex: colid, parentElement } = td,
-            dataRowid = parentElement.getAttribute('data-rowIndex'),
-            rowid = +dataRowid, //parentElement.rowIndex;//td.parentElement = tr
-            itemindex = +parentElement.getAttribute('data-itemIndex')
-        if (dataProvider && dataRowid) {
-            info.target = td;
-            info.colid = colid;
-            info.rowid = rowid; //当前rowid，用于标识选中行，并修改选中行背景
-            info.dataProvider = dataProvider;
-            info.index = rowid;
-            info.data = dataProvider[itemindex];//
-            //台风
-            if (!sort && !group && reverse) {
-                info.data = dataProvider[dataProvider.length - (+itemindex) - 1]
-            }
-        }
-        return info
+            { _targetInst } = e,
+            { _hostParent } = _targetInst,
+            r_td = _targetInst._currentElement,
+            r_tr = _hostParent._currentElement,
+            data = $data(r_tr);
+        info.colid = r_td.key;
+        info.rowid = r_tr.key; //当前rowid，用于标识选中行，并修改选中行背景
+        info.index = dataProvider.indexOf(data);
+        info.data = data;
+        info.source = dataProvider;
+        return info;
     }
     /**
      * 表格点击
@@ -333,14 +325,14 @@ export default class DataTable extends Component {
         var info = this.getEventInfo(event),
             { onItemClick } = this.props,
             { data } = info;
-        console.log(data, !data || (data && data.children))
+
         if (!data || (data && data.children)) {//分组行点击
             return;
         } else {
             onItemClick && onItemClick(info)
         }
         this.setState({
-            selIndex: info.rowid
+            selIndex: +info.rowid
         })
     }
     /**
@@ -425,13 +417,7 @@ export default class DataTable extends Component {
                 let { source } = sc;
                 if (source !== dataProvider) {
                     sc.source = dataProvider;
-                    let arr = dataProvider.map((item, index) => {
-                        if (item.__index === void 0) {
-                            item.__index = index;
-                        }
-                        return item;
-                    })
-                    sc.children = T.helper.sortOn(arr, sort)//dataProvider.concat()
+                    sc.children = T.helper.sortOn(dataProvider.concat(), sort)//dataProvider.concat()
                 }
                 dataProvider = sc.children;
             }
@@ -449,7 +435,7 @@ export default class DataTable extends Component {
                                 { children } = result;
                             for (let j = 0, len = children.length; j < len; j++) {
                                 let item = children[j],
-                                    val = item[field],
+                                    val = item[field] || '其他',
                                     itemChildren = temp[val] = temp[val] || [];
                                 itemChildren.push(item);
                             }
@@ -480,7 +466,7 @@ export default class DataTable extends Component {
             headerRows = this.createHeader(columns, props),
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
-            bodyStyle = { width: width, overflowY: 'auto' };
+            bodyStyle = { width: width, overflowY: 'auto', borderLeft: 0, borderRight: 0 };
         headerStyle = Object.assign(headerStyle || {}, { width: width });
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
         //
@@ -528,7 +514,7 @@ export default class DataTable extends Component {
                         // 减去表头高度
                         // 当父节点隐藏时 header.clientHeight = 0,td.offsetWidth = 0
                         if (height && header) {
-                            header.clientHeight && this.setHeaderWidth();
+                            // header.clientHeight && this.setHeaderWidth();
                             e.style.height = (height - (header.clientHeight || headerStyle.height || 33)) + 'px';
                         }
                     }

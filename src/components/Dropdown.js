@@ -125,7 +125,8 @@ export default class Dropdown extends Component {
             })
             return (
                 <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
-                    <a role='button'> {i} {dataLabel}</a>
+                    {/* boostrap 3px 20px */}
+                    <a role='button' style={{ padding: '2px 2px' }}> {i} {dataLabel}</a>
                 </li>
             )
         });
@@ -141,6 +142,9 @@ export default class Dropdown extends Component {
             { opened, dataProvider, selItem } = state,
             dataList;
         label = (labelFn ? labelFn(selItem) : createLabel(selItem)) || dataProvider && dataProvider[0] || label;
+        if (typeof label === 'object') {//第一个数据可能是个object
+            label = label.label;
+        }
         //
         if (!label) {
             return null;
@@ -188,7 +192,6 @@ export default class Dropdown extends Component {
                 )
                 break;
         }
-
         return (
             <div ref='tag' className={dropClass} style={style}>
                 {btn}
