@@ -485,9 +485,9 @@ export default class DataTable extends Component {
         if (showNoData && (!dataProvider || dataProvider.length === 0))
             NoData = nodataRender && nodataRender(this) || (
                 <div style={{
-                    position: 'relative',
-                    top: -height * 0.5,
-                    height: 0,
+                    position: 'absolute',
+                    top: '50%',
+                    height: 50,
                     paddingLeft: '35%'
                 }}>
                     <div style={{
