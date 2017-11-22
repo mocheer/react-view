@@ -485,10 +485,10 @@ export default class DataTable extends Component {
         if (showNoData && (!dataProvider || dataProvider.length === 0))
             NoData = nodataRender && nodataRender(this) || (
                 <div style={{
-                    position: 'absolute',
-                    top: '50%',
+                    position: 'relative',
+                    top: height / 2 - 40,
                     height: 50,
-                    paddingLeft: '35%'
+                    paddingLeft: '30%'
                 }}>
                     <div style={{
                         width: 120,
@@ -543,8 +543,8 @@ export default class DataTable extends Component {
                         {colgroup}
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>
+                    {NoData}
                 </div>
-                {NoData}
             </div >
         )
     }
