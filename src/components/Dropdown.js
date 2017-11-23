@@ -125,13 +125,15 @@ export default class Dropdown extends Component {
             })
             return (
                 <li className={liClass} key={index} onClick={handleChange.bind(this, event, index)}  >
-                    {/* boostrap 3px 20px */}
-                    <a role='button' style={{ padding: '2px 2px' }}> {i} {dataLabel}</a>
+                    <a role='button' style={{ padding: '2px 8px' }}>{i}{dataLabel}</a>
                 </li>
             )
         });
         //跟按钮同宽度
-        return <ul className='dropdown-menu' style={{ width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >{dataRows}</ul>;//160
+        return <ul className='dropdown-menu'
+            style={{ left: type === 'btn' ? 0 : -8, width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >
+            {dataRows}
+        </ul>;//160
     }
     /**
      * 渲染

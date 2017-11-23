@@ -13,10 +13,11 @@ let { stamp, Sys, data: $data } = T,
  *      field      //文本字段
  *      label      //表头文本
  *      itemGroup  //按顺序合并同组数据行
- *      itemIcon   //图标
+ *      icon       //默认图标
+ *      itemIcon   //子项图标
  *      group      //合并表头
  *      fmt        //{type,val}|string
- *      html  
+ *      html        
  * }
  * @param group         分组
  * @param showNoData    当dataProvider为空时显示no data提示框
@@ -202,7 +203,7 @@ export default class DataTable extends Component {
         if (dataProvider) {
             let rowFn = (data, rowid, itemIndex) => {
                 let dataColumns = columns.map((column, colid) => {
-                    let { itemGroup, field, style, html } = column,
+                    let { itemIcon, itemGroup, field, style, html } = column,
                         label = cellFn(data, itemIndex === void 0 ? rowid : itemIndex, column, field),
                         tdProps = { key: colid };
                     if (style) {//宽度已由colgroup设置,但其他样式需要每列都设置
@@ -220,7 +221,6 @@ export default class DataTable extends Component {
                                     break;
                                 }
                             }
-                            tdProps.rowSpan = rowSpan;
                             return <td {...tdProps} >{label}</td>;
                         }
                         return null;
@@ -230,7 +230,9 @@ export default class DataTable extends Component {
                         tdProps.dangerouslySetInnerHTML = { __html: label }
                         return <td {...tdProps} />
                     }
-                    return <td {...tdProps} >{label}</td>
+                    tdProps.rowSpan = rowSpan;
+                    itemIcon = itemIcon && <img style={{ width: 16, height: 16 }} src={itemIcon} />
+                    return <td {...tdProps} >{itemIcon}{label}</td>
                 }), trProps = { key: rowid };
                 selIndex === rowid && (trProps.className = 'info') && (trProps.ref = 'seltr')
                 if (styleFunc) {
@@ -324,10 +326,10 @@ export default class DataTable extends Component {
      * 表格点击
      */
     onTableClick(event) {
-        var info = this.getEventInfo(event),
-            { onItemClick } = this.props,
-            { data } = info;
-
+        let info = this.getEventInfo(event),
+            { onItemClick } = this.props;
+        if (!info) return;
+        let { data } = info;
         if (!data || (data && data.children)) {//分组行点击
             return;
         } else {
@@ -342,7 +344,7 @@ export default class DataTable extends Component {
      */
     onTableOver(event) {
         var info = this.getEventInfo(event),
-            { onItemOver } = this.props
+            { onItemOver } = this.props;
         onItemOver && onItemOver(info)
     }
     /**
