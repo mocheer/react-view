@@ -85,6 +85,10 @@ export default class DataTable extends Component {
             }
             i++;
         }
+        // 分组全部伸缩
+        if (tds.length !== count) {
+            return;
+        }
         let ths = header.querySelectorAll('th');
         //
         if (ths.length !== count) {
@@ -414,10 +418,7 @@ export default class DataTable extends Component {
         if (dataProvider) {
             // 排序
             if (sort) {
-                let { sc } = this;
-                if (!sc) {
-                    this.sc = sc = {};
-                }
+                let sc = this.sc = this.sc || {};
                 let { source } = sc;
                 if (source !== dataProvider) {
                     sc.source = dataProvider;
@@ -469,6 +470,7 @@ export default class DataTable extends Component {
                 dataProvider = dataProvider.concat().reverse();
             }
         }
+
         //
         let headerVisible = !headerStyle || headerStyle.display !== 'none',
             { border, hover, condensed, striped, style } = props,
@@ -478,6 +480,8 @@ export default class DataTable extends Component {
             bodyStyle = { overflowX: 'hidden', overflowY: 'auto', borderLeft: 0, borderRight: 0, display: 'inline-block', float: 'left' };
         headerStyle = Object.assign(headerStyle || {}, { display: 'inline-block', float: 'left' })//float 消除inline-block 间距
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
+
+
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
@@ -487,10 +491,10 @@ export default class DataTable extends Component {
         if (showNoData && (!dataProvider || dataProvider.length === 0))
             NoData = nodataRender && nodataRender(this) || (
                 <div style={{
-                    position: 'relative',
-                    top: height / 2 - 40,
-                    height: 50,
-                    paddingLeft: '30%'
+                    position: 'absolute',
+                    top: '50%',
+                    left: '35%',
+                    height: 50
                 }}>
                     <div style={{
                         width: 120,
@@ -505,13 +509,26 @@ export default class DataTable extends Component {
                     </div>
                 </div>
             )
+
+        let busy;
+        if (props.busy) {
+            props.busy = false;
+            busy = (
+                <div style={{ height: '100%', background: 'rgba(200,200,200,0.5)' }}>
+                    <img src={T.assets + 'common/loading.gif'} style={{ position: 'absolute', left: '50%', top: '50%' }} />
+                </div>
+            )
+        }
         return (
             <div ref={e => {
-                let hasHScroll = e && e.clientWidth < e.scrollWidth;
-                if (hasHScroll) {
-                    let { tablebody } = this
-                    if (tablebody) {
-                        tablebody.style.height = tablebody.clientHeight - 17 + 'px';
+                if (e) {
+                    //水平滚动条
+                    let hasHScroll = e.clientWidth < e.scrollWidth;
+                    if (hasHScroll) {
+                        let { tablebody } = this
+                        if (tablebody) {
+                            tablebody.style.height = tablebody.clientHeight - 17 + 'px';
+                        }
                     }
                 }
             }} className="table-responsive DataTable" style={style}>
@@ -546,6 +563,7 @@ export default class DataTable extends Component {
                         <tbody ref="body" >{dataRows}</tbody>
                     </table>
                     {NoData}
+                    {busy}
                 </div>
             </div >
         )
@@ -560,3 +578,4 @@ DataTable.defaultProps = {
     hover: true,    //hover
     border: true    //边框
 }
+

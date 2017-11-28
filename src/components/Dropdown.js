@@ -56,19 +56,19 @@ export default class Dropdown extends Component {
         let opened = !this.state.opened
         this.setState({ opened: opened });
         if (opened) {
-            let hide = e => {
-                let { tag } = this.refs,
-                    { target } = e,
-                    parent = target;
-                while (parent) {
-                    if (parent === tag) {
-                        return;
+            let { container } = this.refs,
+                hide = e => {
+                    let { target } = e,
+                        parent = target;
+                    while (parent) {
+                        if (parent === container) {
+                            return;
+                        }
+                        parent = parent.parentNode;
                     }
-                    parent = parent.parentNode;
+                    window.removeEventListener('click', hide)
+                    this.setState({ opened: false });
                 }
-                window.removeEventListener('click', hide)
-                this.setState({ opened: false });
-            }
             window.addEventListener('click', hide)
         }
     }
@@ -195,7 +195,7 @@ export default class Dropdown extends Component {
                 break;
         }
         return (
-            <div ref='tag' className={dropClass} style={style}>
+            <div ref='container' className={dropClass} style={style}>
                 {btn}
                 {dataList}
             </div >
