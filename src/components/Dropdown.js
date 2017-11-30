@@ -23,14 +23,12 @@ export default class Dropdown extends Component {
         super(props);
         let { dataProvider, selIndex } = props,
             selItem;
-        if (dataProvider && selIndex === void 0) {
-            selItem = helper.find(dataProvider, { checked: true }) || dataProvider[0]
+
+        selIndex = selIndex || 0;
+        if (dataProvider) {
+            selItem = helper.find(dataProvider, { checked: true }) || dataProvider[selIndex]
         }
-        /**
-         * 
-         */
         this.state = {
-            dataProvider: dataProvider,
             selIndex: dataProvider ? dataProvider.indexOf(selItem) : -1,
             selItem: selItem,
             opened: props.opened
@@ -69,7 +67,9 @@ export default class Dropdown extends Component {
                     window.removeEventListener('click', hide)
                     this.setState({ opened: false });
                 }
-            window.addEventListener('click', hide)
+            //需要由于handleChange执行
+            //可能dropdown里面还有dropdown
+            window.addEventListener('click', hide, true)
         }
     }
     /**
@@ -79,10 +79,11 @@ export default class Dropdown extends Component {
      */
     handleChange(event, index) {
         let { props, state } = this,
-            { dataProvider } = state,
+            { dataProvider } = props,
             selItem = dataProvider[index],
             { onChange } = props;
         let nextState = { opened: false, selIndex: index, selItem: selItem }
+        // Object.assign(state,nextState)
         onChange && onChange({ target: this, selItem: selItem, source: dataProvider }); //
         this.setState(nextState);
     }
@@ -115,12 +116,12 @@ export default class Dropdown extends Component {
         }
         let { props, state, createLabel, createI, handleChange } = this;
         let { type, width } = props;
-        let { selIndex } = state;
+        let { selIndex, selItem, opened } = state;
         let dataRows = dataProvider.map((data, index) => {
             let i = createI(data)
             let dataLabel = createLabel(data);
             let liClass = classNames({
-                active: selIndex === index,
+                active: selIndex === index || selItem === data,
                 disabled: data.disabled
             })
             return (
@@ -131,19 +132,32 @@ export default class Dropdown extends Component {
         });
         //跟按钮同宽度
         return <ul className='dropdown-menu'
-            style={{ left: type === 'btn' ? 0 : -8, width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >
+            style={{ display: opened ? 'block' : 'none', left: type === 'btn' ? 0 : -8, width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >
             {dataRows}
         </ul>;//160
     }
+
     /**
      * 渲染
      */
     render() {
         let { props, state, handleClick, createLabel, createPopup } = this,
-            { type, direction, style, width, labelFn, render, group, icon, label } = props,
-            { opened, dataProvider, selItem } = state,
+            { type, direction, style, width, labelFn, render, group, icon, dataProvider } = props,
+            { opened, selItem } = state,
             dataList;
-        label = (labelFn ? labelFn(selItem) : createLabel(selItem)) || dataProvider && dataProvider[0] || label;
+        //
+        let label = (labelFn ? labelFn(selItem) : createLabel(selItem));
+        if (!label) {//默认选中
+            if (dataProvider) {
+                label = dataProvider[0];
+                state.selIndex = 0;
+                state.selItem = selItem = label;
+            } else {
+                label = props.label;
+            }
+        }
+
+
         if (typeof label === 'object') {//第一个数据可能是个object
             label = label.label;
         }

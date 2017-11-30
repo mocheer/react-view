@@ -406,7 +406,7 @@ export default class DataTable extends Component {
      */
     render() {
         let { props, state, dataProvider } = this,
-            { columns, expand, groupLabel, headerStyle } = props,
+            { columns, expand, groupLabel, headerStyle, minRows } = props,
             { selIndex } = state,
             { group, sort, width, height, reverse, onTableOut, showNoData, nodataRender } = props
         if (!columns) return null;
@@ -480,8 +480,12 @@ export default class DataTable extends Component {
             bodyStyle = { overflowX: 'hidden', overflowY: 'auto', borderLeft: 0, borderRight: 0, display: 'inline-block', float: 'left' };
         headerStyle = Object.assign(headerStyle || {}, { display: 'inline-block', float: 'left' })//float 消除inline-block 间距
         bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
-
-
+        while (dataRows.length < minRows) {
+            let tds = columns.map(item => {
+                return <td />
+            })
+            dataRows.push(<tr style={{ height: 28 }} >{tds}</tr>)
+        }
         //
         let onTableClick = this.onTableClick.bind(this),
             onTableOver = this.onTableOver.bind(this);
@@ -519,6 +523,7 @@ export default class DataTable extends Component {
                 </div>
             )
         }
+
         return (
             <div ref={e => {
                 if (e) {
