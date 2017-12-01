@@ -23,7 +23,7 @@ export default class Progress extends Component {
         let { props, state } = this,
             { auto } = props,
             { val } = state,
-            { toPercent } = T.helper;
+            { toPercent } = T;
         if (auto) {
             setTimeout(() => {
 

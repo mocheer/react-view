@@ -5,10 +5,10 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-let { stamp, Sys, data: $data } = T,
-    isMobile = Sys.isMobile();
+let { stamp, data: $data } = T,
+    isMobile = T.isMobile();
 /**
- * @param columns 
+ * @property columns 
  * {
  *      field      //文本字段
  *      label      //表头文本
@@ -19,12 +19,12 @@ let { stamp, Sys, data: $data } = T,
  *      fmt        //{type,val}|string
  *      html        
  * }
- * @param group         分组
- * @param showNoData    当dataProvider为空时显示no data提示框
- * @param reverse       倒序排列，常用于时间倒序
- * @param dataProvider  数据源：一维数组，树结构{label,children,expanded}
- * @param groupLabel    分组名称
- * @param headerStyle   表头样式
+ * @property {*} group         分组
+ * @property {*} showNoData    当dataProvider为空时显示no data提示框
+ * @property {*} reverse       倒序排列，常用于时间倒序
+ * @property {label,children,expanded} dataProvider  数据源：一维数组，树结构
+ * @property {*} groupLabel    分组名称
+ * @property {backgroundColor,color,fontWeight,borderColor,height} headerStyle
  * {
  *   backgroundColor 背景色：
  *   color           字体色：
@@ -32,11 +32,9 @@ let { stamp, Sys, data: $data } = T,
  *   borderColor     边界线：
  *   height          行高：
  * }
- * 
  */
 export default class DataTable extends Component {
     /**
-     * 
      * @param {*} props 
      */
     constructor(props) {
@@ -296,13 +294,13 @@ export default class DataTable extends Component {
      * radio 选中
      */
     onRadioCheck(data, column) {
-        let { props, dataProvider } = this
-        for (let i = 0, l = dataProvider.length, item; i < l; i++) {
-            item = dataProvider[i];
+        let { props, dataProvider } = this;
+        dataProvider.forEach(item => {
             item.checked = false;
-        }
-        data.checked = true;
-        column.onChange(data, column)
+        })
+        //不一定为true
+        data.checked = !data.checked;
+        column.onChange(data, column, [data])
         this.forceUpdate()
     }
     /**
@@ -363,7 +361,8 @@ export default class DataTable extends Component {
         }
         switch (type) {
             case "check"://复选框
-                label = <input type="checkbox" checked={data.checked} onChange={this.onCheck.bind(this, data, column)} />
+                let handleChnage = val === 'radio' ? this.onRadioCheck.bind(this, data, column) : this.onCheck.bind(this, data, column)
+                label = <input type="checkbox" checked={data.checked} onChange={handleChnage} />
                 break;
             case 'radio':
                 label = <input type="radio" name={this.radioGroup} checked={data.checked} onChange={this.onRadioCheck.bind(this, data, column)} />
