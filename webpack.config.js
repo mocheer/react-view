@@ -1,7 +1,7 @@
 /**
  * @author gyb(mocheer)
  * @email mocheer@foxmail.com  
- * @param date 2017.4.10
+ * @since 2017.4.10
  */
 const webpack = require('webpack');
 const assistant = require('assistant-webpack')

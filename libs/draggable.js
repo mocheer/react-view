@@ -1,7 +1,7 @@
 /**
  * @author gyb(mocheer) 
  * @email mocheer@foxmail.com
- * @param date 2017.6.13
+ * @since 2017.6.13
  * @see https://github.com/gtramontina/draggable.js 简化、重写
  */
 var { setStyle, getStyle } = T, currentElement, fairlyHighZIndex = 10
