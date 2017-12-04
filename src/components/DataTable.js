@@ -1,13 +1,14 @@
 /**
  * @author gyb(mocheer) 
  * @email mocheer@foxmail.com
- * @since 2016.3.24
+ * @param date 2016.3.24
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
 let { stamp, data: $data } = T,
     isMobile = T.isMobile();
 /**
+ * @class DataTable
  * @property columns 
  * {
  *      field      //文本字段
@@ -296,7 +297,7 @@ export default class DataTable extends Component {
     onRadioCheck(data, column) {
         let { props, dataProvider } = this;
         dataProvider.forEach(item => {
-            item.checked = false;
+            if (item !== data) item.checked = false;
         })
         //不一定为true
         data.checked = !data.checked;
