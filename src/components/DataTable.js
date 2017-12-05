@@ -536,7 +536,7 @@ export default class DataTable extends Component {
                         }
                     }
                 }
-            }} className="table-responsive DataTable" style={style}>
+            }} className="table-responsive DataTable" style={T.assign({ position: 'relative' }, style)}>
                 {
                     headerVisible && <div ref={e => {
                         this.header = e;
