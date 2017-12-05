@@ -1,7 +1,7 @@
 /**
  * @author gyb(mocheer) 
  * @email mocheer@foxmail.com
- * @since 2016.3.24
+ * @param date 2016.3.24
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
@@ -11,8 +11,9 @@ let defaultProps = {
     direction: 'dropdown'//dropup 向上/上下展开
 };
 /**
- * @props dataProvider {label,val}
- * @props selIndex 
+ * @class Dropdown
+ * @property dataProvider {label,val}
+ * @property selIndex 
  */
 export default class Dropdown extends Component {
     /**
