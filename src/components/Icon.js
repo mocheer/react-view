@@ -1,7 +1,7 @@
 /**
  * @author gyb(mocheer) 
  * @email mocheer@foxmail.com
- * @since 2016.3.24
+ * @param date 2016.3.24
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
@@ -19,7 +19,6 @@ export default class Icon extends Component {
      */
     constructor(props) {
         super(props)
-
         this.state = {
             selIndex: props.selIndex || 0,
             tag: props.tag || 'img'
@@ -83,7 +82,7 @@ export default class Icon extends Component {
      * @param {*} onClick 
      */
     createI(data, style, onClick) {
-        return <i role='button' className={data} style={style} onClick={onClick} />
+        return <i role='button' className={data} style={style} onClick={onClick} >{this.props.label}</i>
     }
     /**
      * 

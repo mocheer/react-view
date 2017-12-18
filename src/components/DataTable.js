@@ -264,7 +264,22 @@ export default class DataTable extends Component {
                     // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((dataItem, itemIndex) => {
-                            dataRows.push(rowFn(dataItem, rowid++, itemIndex));//key 一样的话展不开
+                            if (dataItem.children) {
+                                dataRows.push(
+                                    <tr style={styleFunc && styleFunc(dataItem)} onClick={e => {
+                                        dataItem.expanded = !dataItem.expanded;
+                                        this.forceUpdate();
+                                    }} role='button' >
+                                        <td style={{ paddingLeft: 20 }} colSpan={columns.length} dangerouslySetInnerHTML={{ __html: '<span class="caret" style="margin-right: 5px;" ></span>' + dataItem.label }} />
+                                    </tr>
+                                )
+                                dataItem.expanded && dataItem.children.forEach((dataItem, itemIndex) => {
+                                    dataRows.push(rowFn(dataItem, rowid++, itemIndex));
+                                })
+                            } else {
+                                dataRows.push(rowFn(dataItem, rowid++, itemIndex));//key 一样的话展不开
+                            }
+
                         })
                     }
 
@@ -422,7 +437,7 @@ export default class DataTable extends Component {
                 let { source } = sc;
                 if (source !== dataProvider) {
                     sc.source = dataProvider;
-                    sc.children = T.helper.sortOn(dataProvider.concat(), sort)//dataProvider.concat()
+                    sc.children = T.sortOn(dataProvider.concat(), sort)//dataProvider.concat()
                 }
                 dataProvider = sc.children;
             }
@@ -453,8 +468,9 @@ export default class DataTable extends Component {
 
                             gs.forEach(label => {
                                 let items = temp[label]
-                                label = groupLabel && T.helper.fmt(groupLabel, { label: label, count: items.length }) || label
+                                label = groupLabel && T.fmt(groupLabel, { label: label, count: items.length }) || label
                                 let item = { lv: index, label: label, children: items, expanded: expandAll || expand > children.length };
+
                                 if (index + 1 < len) {
                                     fn(index + 1, item)
                                 }
@@ -464,6 +480,7 @@ export default class DataTable extends Component {
                     fn(0, gc)
                 }
                 dataProvider = this.gc.children;
+
             }
             //倒序
             if (reverse) {
@@ -478,8 +495,8 @@ export default class DataTable extends Component {
             dataRows = this.createRows(columns, dataProvider, selIndex, group),
             tableClass = classNames("table", { "table-hover": hover }, { "table-condensed": condensed }, { "table-striped": striped }, { "table-bordered": border }),
             bodyStyle = { overflowX: 'hidden', overflowY: 'auto', borderLeft: 0, borderRight: 0, display: 'inline-block', float: 'left' };
-        headerStyle = Object.assign(headerStyle || {}, { display: 'inline-block', float: 'left' })//float 消除inline-block 间距
-        bodyStyle.height = headerVisible ? height : height - 33 * headerRows.length;
+        headerStyle = T.assign({ display: 'inline-block', float: 'left' }, headerStyle)//float 消除inline-block 间距
+        bodyStyle.height = headerVisible ? height - 33 * headerRows.length : height;
         while (dataRows.length < minRows) {
             let tds = columns.map(item => {
                 return <td />

@@ -111,7 +111,7 @@ else {
 u = l.$dpPath;
 
 if (l.$wdate) {
-    window.require(['css!' + T + 'plugins/My97DatePicker/skin/WdatePicker'])
+    T.require(['css!' + T + 'plugins/My97DatePicker/skin/WdatePicker'])
 }
 
 E = n;

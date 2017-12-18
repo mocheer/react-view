@@ -18,7 +18,7 @@ export default class DatePicker extends Component {
         style = Object.assign({ display: 'inline-block' }, style)
         if (T.isDate(value)) {
             let fmt = format && format.replace(/y/g, 'Y').replace(/d/g, 'D').replace(/H/g, 'h') || 'YYYY-MM-DD hh:mm:ss'
-            value = T.helper.fmt(value, fmt)
+            value = T.fmt(value, fmt)
         } else {
             value = value && value.replace('T', ' ')
         }

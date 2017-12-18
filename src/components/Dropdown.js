@@ -5,7 +5,6 @@
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-let { helper } = T;
 let defaultProps = {
     opened: false,  //是否展开
     direction: 'dropdown'//dropup 向上/上下展开
@@ -27,7 +26,7 @@ export default class Dropdown extends Component {
 
         selIndex = selIndex || 0;
         if (dataProvider) {
-            selItem = helper.find(dataProvider, { checked: true }) || dataProvider[selIndex]
+            selItem = T.find(dataProvider, { checked: true }) || dataProvider[selIndex]
         }
         this.state = {
             selIndex: dataProvider ? dataProvider.indexOf(selItem) : -1,

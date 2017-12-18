@@ -12,12 +12,19 @@ export default class TextArea extends Component {
         super(props);
     }
     render() {
+        let { props } = this,
+            { auto } = props;
+
         return (
-            <textarea className="form-control" rows={this.props.rows}></textarea>
+            <textarea ref={textarea => {
+                if (textarea && auto) {
+                    textarea.style.height = textarea.scrollHeight + 'px';
+                }
+            }} className="form-control" rows={this.props.rows}></textarea>
         );
     }
 }
 TextArea.defaultProps = {
-    rows: 3
+    rows: 1
 };//设置默认属性
 
