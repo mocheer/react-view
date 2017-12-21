@@ -13,7 +13,7 @@ let { stamp, data: $data } = T,
  * {
  *      field      //文本字段
  *      label      //表头文本
- *      itemGroup  //按顺序合并同组数据行
+ *      itemGroup  //{Boolean}按顺序合并同组数据行
  *      icon       //默认图标
  *      itemIcon   //子项图标
  *      group      //合并表头
@@ -224,6 +224,7 @@ export default class DataTable extends Component {
                                     break;
                                 }
                             }
+                            tdProps.rowSpan = rowSpan;
                             return <td {...tdProps} >{label}</td>;
                         }
                         return null;
