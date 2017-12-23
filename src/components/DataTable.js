@@ -250,7 +250,7 @@ export default class DataTable extends Component {
             dataProvider.forEach((item, index) => {
                 //分组
                 if (item.children) {
-                    dataRows.push(
+                    let tr = (
                         <tr style={styleFunc && styleFunc(item)} onClick={e => {
                             item.expanded = !item.expanded;
                             this.forceUpdate();
@@ -262,6 +262,8 @@ export default class DataTable extends Component {
                             <td colSpan={columns.length} dangerouslySetInnerHTML={{ __html: '<span class="caret" style="margin-right: 5px;" ></span>' + item.label }} />
                         </tr>
                     )
+                    $data(tr, item)
+                    dataRows.push(tr)
                     // rowid++
                     if (item.expanded && item.children) {
                         item.children.forEach((dataItem, itemIndex) => {
@@ -346,13 +348,18 @@ export default class DataTable extends Component {
      */
     onTableClick(event) {
         let info = this.getEventInfo(event),
-            { onItemClick } = this.props;
+            { onItemClick, onGroupClick, onClick } = this.props;
         if (!info) return;
         let { data } = info;
-        if (!data || (data && data.children)) {//分组行点击
+        if (!data) {//分组行点击
             return;
         } else {
-            onItemClick && onItemClick(info)
+            if (data.children) {
+                onGroupClick && onGroupClick(info);
+            } else {
+                onItemClick && onItemClick(info)
+            }
+            onClick && onClick(info)
         }
         this.setState({
             selIndex: +info.rowid
