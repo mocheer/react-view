@@ -1,7 +1,7 @@
 /**
  * @author gyb(mocheer) 
  * @email mocheer@foxmail.com
- * @since 2016.3.24
+ * @param date 2016.3.24
  */
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
@@ -23,10 +23,19 @@ export default class CheckBox extends Component {
         let { props, state } = this,
             { onChange } = props,
             checked = !state.checked;
-        onChange && onChange({ target: this, checked: checked })
+        onChange && onChange({ checked: checked })
         this.setState({
             checked: checked
         })
+    }
+    /**
+     * 
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.checked !== this.props.checked) {
+            nextState.checked = nextProps.checked;
+        }
+        return true;
     }
     /**
      * 渲染
@@ -40,7 +49,7 @@ export default class CheckBox extends Component {
         }
         return (
             <div className="checkbox CheckBox" style={style}  >
-                <label >
+                <label>
                     <input type="checkbox" checked={checked} onClick={this.onChange.bind(this)} />
                     {icon}
                     {label}

@@ -18,7 +18,7 @@ let { stamp, data: $data } = T,
  *      itemIcon   //子项图标
  *      group      //合并表头
  *      fmt        //{type,val}|string
- *      html        
+ *      html       
  * }
  * @property {*} group         分组
  * @property {*} showNoData    当dataProvider为空时显示no data提示框
@@ -55,8 +55,8 @@ export default class DataTable extends Component {
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
         }
-
     }
+
     /**
      * colSpan 合并列
      * 统一列表列宽
@@ -401,7 +401,7 @@ export default class DataTable extends Component {
                 }
                 break;
             case "date"://时间
-                label = T.clock(data[field]).fmt(val)
+                label = data[field] && T.clock(data[field]).fmt(val)
                 break;
             case "rowid"://序号，从1开始
                 label = rowid + 1;
@@ -523,7 +523,8 @@ export default class DataTable extends Component {
                     position: 'absolute',
                     top: '50%',
                     left: '35%',
-                    height: 50
+                    height: 50,
+                    opacity: .6
                 }}>
                     <div style={{
                         width: 120,

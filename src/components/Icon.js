@@ -73,7 +73,9 @@ export default class Icon extends Component {
      * @param {*} onClick 
      */
     createImg(data, style, onClick) {
-        return <img role='button' style={style} src={data} onClick={onClick} />
+        style = style || {};
+        style.margin = 0
+        return <label style={style} onClick={onClick} role='button' ><img src={data} />{this.props.label}</label>
     }
     /**
      * 
