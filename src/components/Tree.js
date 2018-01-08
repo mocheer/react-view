@@ -20,6 +20,6 @@ export default class Tree extends Component {
      * 
      */
     render() {
-
+        return null
     }
 }
