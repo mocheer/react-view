@@ -18,13 +18,13 @@ export default class thumbnail extends Component {
         }
     }
     render() {
-        let { props } = this;
+        let { props, state } = this;
         return (
             <div className="thumbnail">
                 <img src={props.url} />
                 <div className="caption">
-                    <h3>{this.state.caption}</h3>
-                    <p>{this.state.text}</p>
+                    <h3>{state.caption}</h3>
+                    <p>{state.text}</p>
                     <p>
                         <a href="javascript:void(0)" className="btn btn-primary" role="button">Button</a>
                         <a href="javascript:void(0)" className="btn btn-default" role="button">Button</a>
