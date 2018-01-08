@@ -18,9 +18,10 @@ export default class thumbnail extends Component {
         }
     }
     render() {
+        let { props } = this;
         return (
             <div className="thumbnail">
-                <img src="..." alt="..." ></img>
+                <img src={props.url} />
                 <div className="caption">
                     <h3>{this.state.caption}</h3>
                     <p>{this.state.text}</p>
