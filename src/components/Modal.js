@@ -35,7 +35,7 @@ export default class Modal extends Component {
         let { props, state } = this,
             { closed } = state || {},
             { title, content, footer, onConfirm, onClosed, confirmLabel, cancelLabel, visible,
-                width, height, showCancel, showConfirm, iframe, url } = props
+                width, height, showFooter, showCancel, showConfirm, iframe, url } = props
         //
         if (closed) {
             state.closed = false;
@@ -46,7 +46,7 @@ export default class Modal extends Component {
             content = <iframe src={url} width={width} height={height} frameBorder='0' scrolling='none' />
         } else {
             content = content && <div className="modal-body">{content}</div>
-            footer = (
+            footer = showFooter && (
                 <div className="modal-footer" style={content ? { paddingTop: 8, borderTop: 0 } : null} >
                     {
                         showCancel !== false && <button ref={btn => this.cancelBtn = btn} type="button" className="btn btn-default" onClick={e => this.setState({ closed: true })}>{cancelLabel || '取消'}</button>
