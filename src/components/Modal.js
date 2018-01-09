@@ -35,7 +35,7 @@ export default class Modal extends Component {
         let { props, state } = this,
             { closed } = state || {},
             { title, content, footer, onConfirm, onClosed, confirmLabel, cancelLabel, visible,
-                width, height, showCancel, iframe, url } = props
+                width, height, showCancel, showConfirm, iframe, url } = props
         //
         if (closed) {
             state.closed = false;
@@ -51,10 +51,12 @@ export default class Modal extends Component {
                     {
                         showCancel !== false && <button ref={btn => this.cancelBtn = btn} type="button" className="btn btn-default" onClick={e => this.setState({ closed: true })}>{cancelLabel || '取消'}</button>
                     }
-                    <button ref={btn => this.submitBtn = btn} type="button" className="btn btn-primary" onClick={e => {
-                        onConfirm && onConfirm()
-                        this.setState({ closed: true })
-                    }} >{confirmLabel || '确定'}</button>
+                    {
+                        showConfirm !== false && <button ref={btn => this.submitBtn = btn} type="button" className="btn btn-primary" onClick={e => {
+                            onConfirm && onConfirm()
+                            this.setState({ closed: true })
+                        }} >{confirmLabel || '确定'}</button>
+                    }
                 </div>
             )
         }
