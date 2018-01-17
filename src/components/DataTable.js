@@ -346,13 +346,13 @@ export default class DataTable extends Component {
     /**
      * 表格点击
      */
-    onTableClick(event, count) {
+    onTableClick(count, event) {
         clearTimeout(this._clickTimer);
         let info = this.getEventInfo(event);
         this._clickTimer = setTimeout(() => {
             let { props } = this;
             let { onGroupClick, onClick } = props;
-            let onItemClick = count ? props.onItemDoubleClick : props.onItemClick;
+            let onItemClick = count === 2 ? props.onItemDoubleClick : props.onItemClick;
             if (!info) return;
             let { data } = info;
             if (!data) {//分组行点击
@@ -367,10 +367,6 @@ export default class DataTable extends Component {
             }
             this.setState({ selIndex: +info.rowid })
         }, 300);
-    }
-
-    onItemDoubleClick(event) {
-        this.onTableClick(event, 2)
     }
     /**
      * 列表项移入效果
@@ -519,8 +515,8 @@ export default class DataTable extends Component {
             dataRows.push(<tr style={{ height: 28 }} >{tds}</tr>)
         }
         //
-        let onTableClick = this.onTableClick.bind(this);
-        let onItemDoubleClick = this.onItemDoubleClick.bind(this);
+        let onTableClick = this.onTableClick.bind(this, 1);
+        let onItemDoubleClick = this.onTableClick.bind(this, 2);
         let onTableOver = this.onTableOver.bind(this);
         //
         let NoData;
