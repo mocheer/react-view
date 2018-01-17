@@ -346,24 +346,31 @@ export default class DataTable extends Component {
     /**
      * 表格点击
      */
-    onTableClick(event) {
-        let info = this.getEventInfo(event),
-            { onItemClick, onGroupClick, onClick } = this.props;
-        if (!info) return;
-        let { data } = info;
-        if (!data) {//分组行点击
-            return;
-        } else {
-            if (data.children) {
-                onGroupClick && onGroupClick(info);
+    onTableClick(event, count) {
+        clearTimeout(this._clickTimer);
+        let info = this.getEventInfo(event);
+        this._clickTimer = setTimeout(() => {
+            let { props } = this;
+            let { onGroupClick, onClick } = props;
+            let onItemClick = count ? props.onItemDoubleClick : props.onItemClick;
+            if (!info) return;
+            let { data } = info;
+            if (!data) {//分组行点击
+                return;
             } else {
-                onItemClick && onItemClick(info)
+                if (data.children) {
+                    onGroupClick && onGroupClick(info);
+                } else {
+                    onItemClick && onItemClick(info)
+                }
+                onClick && onClick(info)
             }
-            onClick && onClick(info)
-        }
-        this.setState({
-            selIndex: +info.rowid
-        })
+            this.setState({ selIndex: +info.rowid })
+        }, 300);
+    }
+
+    onItemDoubleClick(event) {
+        this.onTableClick(event, 2)
     }
     /**
      * 列表项移入效果
@@ -512,8 +519,9 @@ export default class DataTable extends Component {
             dataRows.push(<tr style={{ height: 28 }} >{tds}</tr>)
         }
         //
-        let onTableClick = this.onTableClick.bind(this),
-            onTableOver = this.onTableOver.bind(this);
+        let onTableClick = this.onTableClick.bind(this);
+        let onItemDoubleClick = this.onItemDoubleClick.bind(this);
+        let onTableOver = this.onTableOver.bind(this);
         //
         let NoData;
         // 无数据
@@ -587,6 +595,7 @@ export default class DataTable extends Component {
                     className="content"
                     style={bodyStyle}
                     onClick={onTableClick}
+                    onDoubleClick={onItemDoubleClick}
                     onMouseOver={onTableOver}
                     onMouseOut={onTableOut}>
                     <table className={tableClass} style={{ borderTop: 0 }} >
