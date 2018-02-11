@@ -15,6 +15,7 @@ export default class Radio extends Component {
             selIndex: 0,
             checked: props.checked
         }
+
         props.group.push(this)
     }
     /**

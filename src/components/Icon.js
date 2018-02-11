@@ -28,9 +28,9 @@ export default class Icon extends Component {
      * 
      */
     onClick() {
-        let { props, state } = this,
-            { dataProvider, onClick, group } = props,
-            { selIndex } = state
+        let { props, state } = this;
+        let { dataProvider, onClick, group } = props;
+        let { selIndex } = state;
         //单选
         if (dataProvider) {
             selIndex++
@@ -43,7 +43,9 @@ export default class Icon extends Component {
             }
             if (group) {
                 group.forEach(item => {
-                    item !== this && item.setState({ selIndex: 0 })
+                    if (item !== this) {
+                        item.setState({ selIndex: 0 })
+                    }
                 })
             }
             this.setState({ selIndex: selIndex })
@@ -54,9 +56,9 @@ export default class Icon extends Component {
      * 
      */
     onHover() {
-        let { props, state } = this,
-            { dataProvider, onClick } = props,
-            { selIndex } = state
+        let { props, state } = this;
+        let { dataProvider, onClick } = props;
+        let { selIndex } = state;
         if (dataProvider && dataProvider.length > 1) {
             selIndex++;
             if (selIndex < 0 || selIndex >= dataProvider.length) {

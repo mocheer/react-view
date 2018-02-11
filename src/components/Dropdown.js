@@ -131,11 +131,14 @@ export default class Dropdown extends Component {
                 </li>
             )
         });
+        this._initPopup = true;
         //跟按钮同宽度
-        return <ul className='dropdown-menu'
-            style={{ display: opened ? 'block' : 'none', left: type === 'btn' ? 0 : -8, width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >
-            {dataRows}
-        </ul>;//160
+        return (
+            <ul className='dropdown-menu'
+                style={{ display: opened ? 'block' : 'none', left: type === 'btn' ? 0 : -8, width: width, minWidth: 50, maxHeight: 320, overflowY: dataRows.length > 12 ? 'scroll' : 'auto', marginTop: type === 'btn' ? 10 : 0 }} >
+                {dataRows}
+            </ul>//160
+        )
     }
 
     /**
@@ -169,12 +172,15 @@ export default class Dropdown extends Component {
 
         if (opened) {
             dataList = render.call(this, dataProvider, selItem)
+            this._initPopup = true;//用于标识已经初始化Popup
         } else if (selItem && selItem.popup) {//暂时这样做，水情快速时间选择
             opened = true;
             dataList = selItem.popup;
             if (typeof dataList === 'function') {
                 dataList = dataList()
             }
+        } else if (this._initPopup) {
+            dataList = render.call(this, dataProvider, selItem)
         }
         // 
         let caretStyle = { marginTop: 8, float: 'right', marginLeft: 3 };//确保按钮宽度太宽时右对齐
