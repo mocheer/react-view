@@ -50,6 +50,7 @@ export default class Icon extends Component {
             }
             this.setState({ selIndex: selIndex })
         }
+
         onClick && onClick(selIndex, state)
     }
     /**
@@ -75,6 +76,7 @@ export default class Icon extends Component {
      * @param {*} onClick 
      */
     createImg(data, style, onClick) {
+
         style = style || {};
         style.margin = 0
         return <label style={style} onClick={onClick} role='button' ><img src={data} />{this.props.label}</label>
@@ -92,7 +94,7 @@ export default class Icon extends Component {
      * 
      */
     render() {
-        let { props, state, onClick } = this,
+        let { props, state } = this,
             { tag, src, dataProvider, dataField, group } = props,
             { selIndex } = state,
             item, style;
@@ -102,20 +104,30 @@ export default class Icon extends Component {
         if (group && group.indexOf(this) === -1) {
             group.push(this)
         }
+        let icon;
         if (dataProvider) {
             item = dataProvider[selIndex]
             if (typeof (item) !== "string" && dataField) {
                 item = item[dataField]
             }
             style = item.style || props.style;
-            onClick = onClick.bind(this)
+            let onClick = this.onClick.bind(this)
+            if (props.wrapper === 'button') {
+                onClick = null;
+            }
+
             switch (tag) {
                 case 'i':
-                    return this.createI(item, style, onClick)
+                    icon = this.createI(item, style, onClick)
+                    break;
                 default:
-                    return this.createImg(item, style, onClick)
+                    icon = this.createImg(item, style, onClick)
+                    break;
             }
         }
-        return null;
+        if (props.wrapper === 'button') {
+            icon = <button type="button" className="btn btn-default" onClick={this.onClick.bind(this)}>{icon}</button>
+        }
+        return icon;
     }
 }
