@@ -50,11 +50,15 @@ export default class DataTable extends Component {
      */
     componentDidUpdate() {
         let { tablebody, refs } = this,
-            { seltr } = refs;
+            { seltr, selGrouptr } = refs;
         //滚轮移动
         if (seltr && (tablebody.scrollTop > seltr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < seltr.offsetTop)) {
             tablebody.scrollTop = seltr.offsetTop;
+        } else if (selGrouptr && (tablebody.scrollTop > selGrouptr.offsetTop || tablebody.scrollTop + tablebody.clientHeight < selGrouptr.offsetTop)) {
+            tablebody.scrollTop = selGrouptr.offsetTop;
         }
+
+
     }
 
     /**
@@ -251,9 +255,11 @@ export default class DataTable extends Component {
                 //分组
                 if (item.children) {
                     let tr = (
-                        <tr style={styleFunc && styleFunc(item)} onClick={e => {
+                        <tr ref={this.clickGroupData === item ? 'selGrouptr' : T.stmap} style={styleFunc && styleFunc(item)} onClick={e => {
                             item.expanded = !item.expanded;
+                            this.clickGroupData = item;
                             this.forceUpdate();
+
                         }} role='button' >
                             {/* <td colSpan={columns.length}>
                                 <span className="caret" style={{ marginRight: 5 }} />
@@ -355,17 +361,20 @@ export default class DataTable extends Component {
             let onItemClick = count === 2 ? props.onItemDoubleClick : props.onItemClick;
             if (!info) return;
             let { data } = info;
+
             if (!data) {//分组行点击
                 return;
             } else {
                 if (data.children) {
+                    //
                     onGroupClick && onGroupClick(info);
                 } else {
-                    onItemClick && onItemClick(info)
+                    onItemClick && onItemClick(info);
+                    this.setState({ selIndex: +info.rowid })
                 }
                 onClick && onClick(info)
             }
-            this.setState({ selIndex: +info.rowid })
+
         }, 300);
     }
     /**
